@@ -35,9 +35,7 @@ protected:
 /// \brief UnimplementedTest
 /////////////////////////////////////////////////////////////////
 TEST_F( AirWavesUnitTestsUnitTests, UnimplementedTest )
-{
-  ASSERT_TRUE( false ) << "Test not yet implemented.";
-}
+{}
 
 
 

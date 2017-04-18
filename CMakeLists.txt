@@ -79,7 +79,7 @@ set(
     ${SRC_DIR}/testing/AirWavesUnitTests.cpp
     )
 
-list( APPEND TESTING_INCLUDE_DIRS ${SRC_DIR} )
+list( APPEND TESTING_INCLUDE_DIRS ${PROJECT_INCLUDE_DIRS} )
 
 
 ###

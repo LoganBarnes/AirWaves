@@ -52,6 +52,7 @@ main(
     //
     // return driver.exec( argc - 1, &argv[ 1 ] );
     std::cout << "It works!" << std::endl;
+    return EXIT_SUCCESS;
   }
   catch ( const std::exception &e )
   {

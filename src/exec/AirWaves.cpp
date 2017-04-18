@@ -3,9 +3,9 @@
 #include <iostream>
 #include <memory>
 
-// #include "shared/core/EventDriver.hpp"
-// #include "shared/core/World.hpp"
-// #include "shared/core/IOHandler.hpp"
+#include "shared/core/ContinuousDriver.hpp"
+#include "shared/core/World.hpp"
+#include "AirWavesIOHandler.hpp"
 
 #include "AirWavesConfig.hpp"
 
@@ -23,12 +23,12 @@ main(
      )
 {
 
-  // shared::Driver::printProjectInfo(
-  //                                  cnc::PROJECT_NAME,
-  //                                  cnc::VERSION_MAJOR,
-  //                                  cnc::VERSION_MINOR,
-  //                                  cnc::VERSION_PATCH
-  //                                  );
+  shared::Driver::printProjectInfo(
+                                   vmp::PROJECT_NAME,
+                                   vmp::VERSION_MAJOR,
+                                   vmp::VERSION_MINOR,
+                                   vmp::VERSION_PATCH
+                                   );
 
   try
   {
@@ -37,22 +37,19 @@ main(
     // and ioHandler to interface between the
     // world and the user
     //
-    // shared::World world;
-    // cnc::HeightsIOHandler io( world );
+    shared::World world;
+    vmp::AirWavesIOHandler io( world );
 
     //
     // pass world and ioHandler to driver
     // to manage event loop
     //
-    // shared::EventDriver driver( world, io );
-
+    shared::ContinuousDriver driver( world, io );
 
     //
     // run program
     //
-    // return driver.exec( argc - 1, &argv[ 1 ] );
-    std::cout << "It works!" << std::endl;
-    return EXIT_SUCCESS;
+    return driver.exec( argc - 1, &argv[ 1 ] );
   }
   catch ( const std::exception &e )
   {

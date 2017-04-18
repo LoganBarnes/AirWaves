@@ -117,6 +117,6 @@ before_script:
 script:
   # - ./unixConfigureAndBuild.sh -sf -t
   # - ./testbin/testAirWaves
-  - ./unixConfigureAndBuild.sh -sf
+  - ./unixConfigureAndBuild.sh -sf -t
   - ./bin/runAirWaves
 

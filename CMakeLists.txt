@@ -27,11 +27,11 @@ set( PROJECT_CONFIG_FILE ${SHARED_PATH}/src/common/ProjectConfig.hpp.in )
 # set( USE_GLM  ON CACHE BOOL "" FORCE )
 # set( USE_GUI  ON CACHE BOOL "" FORCE )
 
-# set( USE_GMOCK ${BUILD_TESTS} CACHE BOOL "" FORCE )
+set( USE_GMOCK ${BUILD_TESTS} CACHE BOOL "" FORCE )
 
 
-# # set variables from shared simulation project
-# add_subdirectory( ${SHARED_PATH} )
+# set variables from shared simulation project
+add_subdirectory( ${SHARED_PATH} )
 
 
 # header dirs

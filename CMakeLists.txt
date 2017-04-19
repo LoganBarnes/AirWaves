@@ -74,13 +74,16 @@ set(
 ###
 ### Unit tests for the AirWaves lib
 ###
-set(
-    TESTING_SOURCE
-    ${SRC_DIR}/testing/AirWavesUnitTests.cpp
-    )
+if ( ${BUILD_TESTS} )
 
-list( APPEND TESTING_INCLUDE_DIRS ${PROJECT_INCLUDE_DIRS} )
+  set(
+      TESTING_SOURCE
+      ${SRC_DIR}/testing/AirWavesUnitTests.cpp
+      )
 
+  list( APPEND TESTING_INCLUDE_DIRS ${PROJECT_INCLUDE_DIRS} )
+
+endif ( ${BUILD_TESTS} )
 
 ###
 ### file with main function to execute the program

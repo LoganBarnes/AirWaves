@@ -48,15 +48,15 @@ matrix:
       env: SCRIPT_OPTIONS="-sf -t"
     - os: linux
       compiler: "clang-3.8"
-      env: LLVM=3.8 CXXFLAGS=-stdlib=libc++ SCRIPT_OPTIONS="-sf -t"
+      env: SCRIPT_OPTIONS="-sf -t" CXXFLAGS=-stdlib=libc++
       addons: *clang38
     # - os: linux
     #   compiler: "clang-3.9"
-    #   env: LLVM=3.9 CXXFLAGS=-stdlib=libc++
+    #   env: CXXFLAGS=-stdlib=libc++
     #   addons: *clang39
     # - os: linux
     #   compiler: "clang-4.0"
-    #   env: LLVM=4.0 CXXFLAGS=-stdlib=libc++
+    #   env: CXXFLAGS=-stdlib=libc++
     #   addons: *clang40
     # - os: linux
     #   compiler: "g++-4.9"
@@ -78,7 +78,7 @@ matrix:
     #   env: SHARED=ON
     # - os: linux
     #   compiler: "clang-3.8"
-    #   env: LLVM=default CXXFLAGS=-stdlib=libc++ SHARED=ON
+    #   env: CXXFLAGS=-stdlib=libc++ SHARED=ON
     #   addons: *clang38
 
     # # DEBUG
@@ -88,7 +88,7 @@ matrix:
     #   env: BUILD_TYPE=Debug
     # - os: linux
     #   compiler: "clang-3.8"
-    #   env: LLVM=default CXXFLAGS=-stdlib=libc++ BUILD_TYPE=Debug
+    #   env: CXXFLAGS=-stdlib=libc++ BUILD_TYPE=Debug
     #   addons: *clang38
 
     # # DEBUG SHARED LIBS
@@ -98,7 +98,7 @@ matrix:
     #   env: SHARED=ON BUILD_TYPE=Debug
     # - os: linux
     #   compiler: "clang-3.8"
-    #   env: LLVM=default CXXFLAGS=-stdlib=libc++ SHARED=ON BUILD_TYPE=Debug
+    #   env: CXXFLAGS=-stdlib=libc++ SHARED=ON BUILD_TYPE=Debug
     #   addons: *clang38
 
 
@@ -126,7 +126,7 @@ before_script:
   - cd ${TRAVIS_BUILD_DIR}/run
 
 script:
-  - ./unixConfigureAndBuild ${SCRIPT_OPTIONS}
+  - ./unixConfigureAndBuild.sh ${SCRIPT_OPTIONS}
   # run tests if they were created
   - |
     if [ -f testbin/testAirWaves ]; then

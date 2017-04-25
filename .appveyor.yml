@@ -1,0 +1,35 @@
+version: 1.0.{build}
+
+branches:
+  only:
+  - master
+
+skip_tags: true
+clone_folder: c:\projects\AirWaves
+
+environment:
+  matrix:
+    - BUILD_MODE: Debug
+      UNIT_TESTS: OFF
+    - BUILD_MODE: Debug
+      UNIT_TESTS: ON
+    - BUILD_MODE: Release
+      UNIT_TESTS: OFF
+    - BUILD_MODE: Release
+      UNIT_TESTS: ON
+
+platform: x64
+
+build_script:
+  - cd %APPVEYOR_BUILD_FOLDER%\run
+  - mkdir build
+  - cd build
+  - cmake -DCMAKE_GENERATOR_PLATFORM=%PLATFORM% ^
+          -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/run ^
+          -DBUILD_TESTS=%UNIT_TESTS% ^
+          ..\..
+  - cmake --build . --target INSTALL --config %BUILD_TYPE% -- /m"
+
+test_script:
+  - cd %APPVEYOR_BUILD_FOLDER%\run
+  - testbin\testAirWaves.exe

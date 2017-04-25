@@ -63,10 +63,11 @@ AirWavesIOHandler::_onGuiRender( )
 {
   bool alwaysOpen = true;
 
-  ImGui::SetNextWindowPos ( ImVec2( 0, 0 ), ImGuiSetCond_FirstUseEver );
-  ImGui::SetNextWindowSize( ImVec2( 0, 0 ), ImGuiSetCond_FirstUseEver ); // auto scale size not working right now?
+  ImGui::SetNextWindowPos ( ImVec2( 0, 0 ) );
+  ImGui::PushStyleVar( ImGuiStyleVar_WindowRounding, 0.0f );
 
-  ImGui::Begin( "Settings", &alwaysOpen );
+  ImGui::Begin( "Settings", &alwaysOpen, ImGuiWindowFlags_AlwaysAutoResize );
+
 
   //
   // FPS
@@ -78,6 +79,8 @@ AirWavesIOHandler::_onGuiRender( )
               );
 
   ImGui::End( );
+  ImGui::PopStyleVar( );
+
 } // AirWavesIOHandler::onGuiRender
 
 

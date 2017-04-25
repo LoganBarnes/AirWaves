@@ -4,6 +4,7 @@
 BUILD_MODE=Release
 STRICT_FLAGS=OFF
 TESTING=OFF
+SHARED_LIBS=OFF
 
 CLEAN=false
 
@@ -14,6 +15,8 @@ function printUsage() {
   echo "        -sf or --strict-flags -> enable strict compile flags";
   echo "        -t  or --test         -> compile unit tests";
   echo "        -d  or --debug        -> compile in debug mode";
+  echo "        -s  or --shared       -> compile as shared libraries";
+  echo "        -c  or --clean        -> clean project (delete all build/install directories)";
   echo "        -h  or --help         -> print this message";
 }
 
@@ -38,6 +41,9 @@ case $key in
     ;;
     -d|--debug)
     BUILD_MODE=Debug
+    ;;
+    -s|--shared)
+    SHARED_LIBS=ON
     ;;
     -c|--clean)
     CLEAN=true
@@ -80,10 +86,12 @@ RUN_DIR=$(pwd)
 cmake -E make_directory _build
 
 # run cmake from the build directory to configure the project
-cmake -E chdir _build cmake -DCMAKE_BUILD_TYPE=$BUILD_MODE \
-                            -DSTRICT_FLAGS=$STRICT_FLAGS \
-                            -DBUILD_TESTS=$TESTING \
-                            -DCMAKE_INSTALL_PREFIX=$RUN_DIR ../..
+cmake -E chdir _build cmake -DCMAKE_BUILD_TYPE=$BUILD_MODE   \
+                            -DSTRICT_FLAGS=$STRICT_FLAGS     \
+                            -DBUILD_TESTS=$TESTING           \
+                            -DBUILD_SHARED_LIBS=$SHARED_LIBS \
+                            -DCMAKE_INSTALL_PREFIX=$RUN_DIR  \
+                            ../..
 
 # run the cmake build command to build the project with the native build system
 cmake -E chdir _build cmake --build . --target install --config $BUILD_MODE -- -j12

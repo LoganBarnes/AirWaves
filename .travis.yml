@@ -48,15 +48,15 @@ matrix:
     #   env: SCRIPT_OPTIONS="-sf -t"
     - os: linux
       compiler: "clang-3.8"
-      env: SCRIPT_OPTIONS="-sf -t" CXXFLAGS=-stdlib=libc++
+      env: SCRIPT_OPTIONS="-sf -t" LLVM=3.8 CXXFLAGS=-stdlib=libc++
       addons: *clang38
     # - os: linux
     #   compiler: "clang-3.9"
-    #   env: CXXFLAGS=-stdlib=libc++
+    #   env: LLVM=3.9 CXXFLAGS=-stdlib=libc++
     #   addons: *clang39
     # - os: linux
     #   compiler: "clang-4.0"
-    #   env: CXXFLAGS=-stdlib=libc++
+    #   env: LLVM=4.0 CXXFLAGS=-stdlib=libc++
     #   addons: *clang40
     # - os: linux
     #   compiler: "g++-4.9"
@@ -78,7 +78,7 @@ matrix:
     #   env: SHARED=ON
     # - os: linux
     #   compiler: "clang-3.8"
-    #   env: CXXFLAGS=-stdlib=libc++ SHARED=ON
+    #   env: LLVM=default CXXFLAGS=-stdlib=libc++ SHARED=ON
     #   addons: *clang38
 
     # # DEBUG
@@ -88,7 +88,7 @@ matrix:
     #   env: BUILD_TYPE=Debug
     # - os: linux
     #   compiler: "clang-3.8"
-    #   env: CXXFLAGS=-stdlib=libc++ BUILD_TYPE=Debug
+    #   env: LLVM=default CXXFLAGS=-stdlib=libc++ BUILD_TYPE=Debug
     #   addons: *clang38
 
     # # DEBUG SHARED LIBS
@@ -98,9 +98,33 @@ matrix:
     #   env: SHARED=ON BUILD_TYPE=Debug
     # - os: linux
     #   compiler: "clang-3.8"
-    #   env: CXXFLAGS=-stdlib=libc++ SHARED=ON BUILD_TYPE=Debug
+    #   env: LLVM=default CXXFLAGS=-stdlib=libc++ SHARED=ON BUILD_TYPE=Debug
     #   addons: *clang38
 
+before_install:
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+      brew update
+    fi
+
+  ############################################################################
+  # Set build type to default Release value
+  ############################################################################
+  - if [[ "${BUILD_TYPE}" == "" ]]; then BUILD_TYPE=Release; fi
+
+  ############################################################################
+  # Setup default versions and override compiler if needed
+  ############################################################################
+  - if [[ "${LLVM}" == "default" ]]; then LLVM=3.8; fi
+  - |
+    if [[ "${LLVM}" != "" ]]; then
+      export CXX=clang++-${LLVM}
+    fi
+  - |
+    if [[ "${GCC}" != "" ]]; then
+      export CXX=g++-${GCC}
+    fi
+  - ${CXX} --version
 
 install:
   ############################################################################

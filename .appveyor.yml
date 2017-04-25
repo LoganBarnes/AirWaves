@@ -11,12 +11,12 @@ image: Visual Studio 2015
 
 environment:
   matrix:
-    - BUILD_MODE: Debug
-      UNIT_TESTS: OFF
-    - BUILD_MODE: Debug
-      UNIT_TESTS: ON
-    - BUILD_MODE: Release
-      UNIT_TESTS: OFF
+    # - BUILD_MODE: Debug
+    #   UNIT_TESTS: OFF
+    # - BUILD_MODE: Debug
+    #   UNIT_TESTS: ON
+    # - BUILD_MODE: Release
+    #   UNIT_TESTS: OFF
     - BUILD_MODE: Release
       UNIT_TESTS: ON
 

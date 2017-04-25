@@ -40,4 +40,4 @@ build_script:
 
 test_script:
   - cd %APPVEYOR_BUILD_FOLDER%\run
-  - testbin\testAirWaves.exe
+  - IF EXIST testbin\testAirWaves.exe ( testbin\testAirWaves.exe )

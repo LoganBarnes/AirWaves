@@ -11,27 +11,27 @@ dist: trusty
 addons_shortcuts:
   addons_clang38: &clang38
     apt:
-      sources: [ 'llvm-toolchain-trusty-3.8' ]
+      sources: [ 'llvm-toolchain-trusty-3.8', 'xorg-dev', libglu1-mesa-dev' ]
       packages: [ 'clang-3.8', 'libc++-dev' ]
   addons_clang39: &clang39
     apt:
-      sources: [ 'llvm-toolchain-trusty-3.9' ]
+      sources: [ 'llvm-toolchain-trusty-3.9', 'xorg-dev', libglu1-mesa-dev' ]
       packages: [ 'clang-3.9', 'libc++-dev' ]
   addons_clang35: &clang40
     apt:
-      sources: [ 'llvm-toolchain-trusty-4.0' ]
+      sources: [ 'llvm-toolchain-trusty-4.0', 'xorg-dev', libglu1-mesa-dev' ]
       packages: [ 'clang-4.0', 'libc++-dev' ]
   addons_gcc49: &gcc49
     apt:
-      sources: [ 'ubuntu-toolchain-r-test' ]
+      sources: [ 'ubuntu-toolchain-r-test', 'xorg-dev', libglu1-mesa-dev' ]
       packages: [ 'gcc-4.9', 'g++-4.9' ]
   addons_gcc5: &gcc5
     apt:
-      sources: [ 'ubuntu-toolchain-r-test' ]
+      sources: [ 'ubuntu-toolchain-r-test', 'xorg-dev', libglu1-mesa-dev' ]
       packages: [ 'gcc-5', 'g++-5' ]
   addons_gcc6: &gcc6
     apt:
-      sources: [ 'ubuntu-toolchain-r-test' ]
+      sources: [ 'ubuntu-toolchain-r-test', 'xorg-dev', libglu1-mesa-dev' ]
       packages: [ 'gcc-6', 'g++-6', 'doxygen' ]
 
 matrix:

@@ -63,21 +63,21 @@ matrix:
 
     # SHARED LIBS
     - os: linux
-      compiler: "clang-3.8"
+      compiler: "clang-3.9"
       env: SCRIPT_OPTIONS="-sf -s" LLVM=default CXXFLAGS=-stdlib=libc++
-      addons: *clang38
+      addons: *clang39
 
     # DEBUG
     - os: linux
-      compiler: "clang-3.8"
+      compiler: "clang-3.9"
       env: SCRIPT_OPTIONS="-sf -d" LLVM=default CXXFLAGS=-stdlib=libc++
-      addons: *clang38
+      addons: *clang39
 
     # DEBUG SHARED LIBS
     - os: linux
-      compiler: "clang-3.8"
+      compiler: "clang-3.9"
       env: SCRIPT_OPTIONS="-sf -d -s" LLVM=default CXXFLAGS=-stdlib=libc++
-      addons: *clang38
+      addons: *clang39
 
 before_install:
   - |

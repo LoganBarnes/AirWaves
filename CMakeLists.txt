@@ -1,5 +1,5 @@
 cmake_minimum_required ( VERSION 3.7.1 )
-project ( AirWaves )
+project ( AirWaves CXX )
 
 option( BUILD_TESTS OFF "Build unit tests created with gmock/gtest framework"  )
 

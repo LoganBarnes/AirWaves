@@ -38,46 +38,46 @@ matrix:
   include:
     - os: linux
       compiler: "clang-3.8"
-      env: SCRIPT_OPTIONS="-sf" LLVM=3.8 CXXFLAGS=-stdlib=libc++
+      env: SCRIPT_OPTIONS="-sf" LLVM=3.8 # CXXFLAGS=-stdlib=libc++
       addons: *clang38
-    - os: linux
-      compiler: "clang-3.9"
-      env: SCRIPT_OPTIONS="-sf" LLVM=3.9 CXXFLAGS=-stdlib=libc++
-      addons: *clang39
-    - os: linux
-      compiler: "clang-4.0"
-      env: SCRIPT_OPTIONS="-sf" LLVM=4.0 CXXFLAGS=-stdlib=libc++
-      addons: *clang40
-    - os: linux
-      compiler: "g++-4.9"
-      env: SCRIPT_OPTIONS="-sf" GCC=4.9
-      addons: *gcc49
-    - os: linux
-      compiler: "g++-5"
-      env: SCRIPT_OPTIONS="-sf" GCC=5
-      addons: *gcc5
-    - os: linux
-      compiler: "g++-6"
-      env: SCRIPT_OPTIONS="-sf" GCC=6
-      addons: *gcc6
+    # - os: linux
+    #   compiler: "clang-3.9"
+    #   env: SCRIPT_OPTIONS="-sf" LLVM=3.9 # CXXFLAGS=-stdlib=libc++
+    #   addons: *clang39
+    # - os: linux
+    #   compiler: "clang-4.0"
+    #   env: SCRIPT_OPTIONS="-sf" LLVM=4.0 # CXXFLAGS=-stdlib=libc++
+    #   addons: *clang40
+    # - os: linux
+    #   compiler: "g++-4.9"
+    #   env: SCRIPT_OPTIONS="-sf" GCC=4.9
+    #   addons: *gcc49
+    # - os: linux
+    #   compiler: "g++-5"
+    #   env: SCRIPT_OPTIONS="-sf" GCC=5
+    #   addons: *gcc5
+    # - os: linux
+    #   compiler: "g++-6"
+    #   env: SCRIPT_OPTIONS="-sf" GCC=6
+    #   addons: *gcc6
 
-    # SHARED LIBS
-    - os: linux
-      compiler: "clang-3.8"
-      env: SCRIPT_OPTIONS="-sf -s" LLVM=default CXXFLAGS=-stdlib=libc++
-      addons: *clang38
+    # # SHARED LIBS
+    # - os: linux
+    #   compiler: "clang-3.8"
+    #   env: SCRIPT_OPTIONS="-sf -s" LLVM=default # CXXFLAGS=-stdlib=libc++
+    #   addons: *clang38
 
-    # DEBUG
-    - os: linux
-      compiler: "clang-3.8"
-      env: SCRIPT_OPTIONS="-sf -d" LLVM=default CXXFLAGS=-stdlib=libc++
-      addons: *clang38
+    # # DEBUG
+    # - os: linux
+    #   compiler: "clang-3.8"
+    #   env: SCRIPT_OPTIONS="-sf -d" LLVM=default # CXXFLAGS=-stdlib=libc++
+    #   addons: *clang38
 
-    # DEBUG SHARED LIBS
-    - os: linux
-      compiler: "clang-3.8"
-      env: SCRIPT_OPTIONS="-sf -d -s" LLVM=default CXXFLAGS=-stdlib=libc++
-      addons: *clang38
+    # # DEBUG SHARED LIBS
+    # - os: linux
+    #   compiler: "clang-3.8"
+    #   env: SCRIPT_OPTIONS="-sf -d -s" LLVM=default # CXXFLAGS=-stdlib=libc++
+    #   addons: *clang38
 
 before_install:
   - |
@@ -96,10 +96,12 @@ before_install:
   - if [[ "${LLVM}" == "default" ]]; then LLVM=3.9; fi
   - |
     if [[ "${LLVM}" != "" ]]; then
+      export CC=clang-${LLVM}
       export CXX=clang++-${LLVM}
     fi
   - |
     if [[ "${GCC}" != "" ]]; then
+      export CC=gcc-${GCC}
       export CXX=g++-${GCC}
     fi
   - ${CXX} --version

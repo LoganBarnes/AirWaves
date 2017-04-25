@@ -36,18 +36,6 @@ addons_shortcuts:
 
 matrix:
   include:
-    - os: osx
-      osx_image: xcode6
-      compiler: clang
-      env: SCRIPT_OPTIONS="-sf"
-    - os: osx
-      osx_image: xcode7
-      compiler: clang
-      env: SCRIPT_OPTIONS="-sf"
-    - os: osx
-      osx_image: xcode8
-      compiler: clang
-      env: SCRIPT_OPTIONS="-sf"
     - os: linux
       compiler: "clang-3.8"
       env: SCRIPT_OPTIONS="-sf" LLVM=3.8 CXXFLAGS=-stdlib=libc++
@@ -74,30 +62,18 @@ matrix:
       addons: *gcc6
 
     # SHARED LIBS
-    - os: osx
-      osx_image: xcode8
-      compiler: clang
-      env: SCRIPT_OPTIONS="-sf -s"
     - os: linux
       compiler: "clang-3.8"
       env: SCRIPT_OPTIONS="-sf -s" LLVM=default CXXFLAGS=-stdlib=libc++
       addons: *clang38
 
     # DEBUG
-    - os: osx
-      osx_image: xcode8
-      compiler: clang
-      env: SCRIPT_OPTIONS="-sf -d"
     - os: linux
       compiler: "clang-3.8"
       env: SCRIPT_OPTIONS="-sf -d" LLVM=default CXXFLAGS=-stdlib=libc++
       addons: *clang38
 
     # DEBUG SHARED LIBS
-    - os: osx
-      osx_image: xcode8
-      compiler: clang
-      env: SCRIPT_OPTIONS="-sf -d -s"
     - os: linux
       compiler: "clang-3.8"
       env: SCRIPT_OPTIONS="-sf -d -s" LLVM=default CXXFLAGS=-stdlib=libc++
@@ -117,7 +93,7 @@ before_install:
   ############################################################################
   # Setup default versions and override compiler if needed
   ############################################################################
-  - if [[ "${LLVM}" == "default" ]]; then LLVM=3.8; fi
+  - if [[ "${LLVM}" == "default" ]]; then LLVM=3.9; fi
   - |
     if [[ "${LLVM}" != "" ]]; then
       export CXX=clang++-${LLVM}

@@ -38,9 +38,10 @@ set( PROJECT_CONFIG_FILE ${SHARED_PATH}/src/common/ProjectConfig.hpp.in )
 ### Set options for the shared simulation
 ### project then add it to the current build
 ###
-set( USE_GLFW ON CACHE BOOL "" FORCE )
-set( USE_GLM  ON CACHE BOOL "" FORCE )
-set( USE_GUI  ON CACHE BOOL "" FORCE )
+set( USE_GLFW   ON CACHE BOOL "" FORCE )
+set( USE_VULKAN ON CACHE BOOL "" FORCE )
+# set( USE_GLM  ON CACHE BOOL "" FORCE )
+# set( USE_GUI  ON CACHE BOOL "" FORCE )
 
 set( USE_GMOCK ${BUILD_TESTS} CACHE BOOL "" FORCE )
 
@@ -66,8 +67,8 @@ set(
     # ignored by compilers but added to project files
     ${SHARED_UNCRUSTIFY_FILE}
 
-    ${SRC_DIR}/io/AirWavesIOHandler.hpp
-    ${SRC_DIR}/io/AirWavesIOHandler.cpp
+    # ${SRC_DIR}/io/AirWavesIOHandler.hpp
+    # ${SRC_DIR}/io/AirWavesIOHandler.cpp
     )
 
 

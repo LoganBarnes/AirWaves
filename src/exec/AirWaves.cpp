@@ -5,7 +5,7 @@
 
 #include "shared/core/ContinuousDriver.hpp"
 #include "shared/core/World.hpp"
-#include "AirWavesIOHandler.hpp"
+#include "shared/core/VulkanIOHandler.hpp"
 
 #include "AirWavesConfig.hpp"
 
@@ -38,7 +38,7 @@ main(
     // world and the user
     //
     shared::World world;
-    vmp::AirWavesIOHandler io( world );
+    shared::VulkanIOHandler io( world );
 
     //
     // pass world and ioHandler to driver

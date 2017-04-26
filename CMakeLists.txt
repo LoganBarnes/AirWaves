@@ -57,19 +57,19 @@ set(
     ${SRC_DIR}/io
     )
 
-###
-### project source files that get
-### comipled into the AirWaves lib
-###
-set(
-    PROJECT_SOURCE
+# ###
+# ### project source files that get
+# ### comipled into the AirWaves lib
+# ###
+# set(
+#     PROJECT_SOURCE
 
-    # ignored by compilers but added to project files
-    ${SHARED_UNCRUSTIFY_FILE}
+#     # ignored by compilers but added to project files
+#     ${SHARED_UNCRUSTIFY_FILE}
 
-    # ${SRC_DIR}/io/AirWavesIOHandler.hpp
-    # ${SRC_DIR}/io/AirWavesIOHandler.cpp
-    )
+#     # ${SRC_DIR}/io/AirWavesIOHandler.hpp
+#     # ${SRC_DIR}/io/AirWavesIOHandler.cpp
+#     )
 
 
 ###

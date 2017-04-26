@@ -25,8 +25,28 @@ matrix:
 
 platform: x64
 
+build:
+  parallel: true  # enable MSBuild parallel builds
+  verbosity: minimal
+
 install:
-  git submodule update --init --recursive
+  # download submodules
+  - git submodule update --init --recursive
+
+  # install Vulkan SDK
+  - set VULKAN_VERSION=1.0.46.0
+
+  - mkdir %APPVEYOR_BUILD_FOLDER%\deps
+  - cd %APPVEYOR_BUILD_FOLDER%\deps
+
+  - echo Downloading Vulkan SDK
+  - appveyor DownloadFile https://www.dropbox.com/s/xrajzwwtuarpvyx/vulkan-%VULKAN_VERSION%.zip?dl=1
+  - 7z x vulkan-%VULKAN_VERSION%.zip
+
+  - echo Setting up Vulkan environment
+  - copy vulkan-%VULKAN_VERSION%\*.dll C:\Windows\System32\
+  - set VULKAN_SDK=%APPVEYOR_BUILD_FOLDER%\deps\vulkan-%VULKAN_VERSION%\%VULKAN_VERSION%
+  - set PATH=%VULKAN_SDK%\Bin;%PATH%
 
 build_script:
   - cd %APPVEYOR_BUILD_FOLDER%\run

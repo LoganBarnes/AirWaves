@@ -1,12 +1,12 @@
 #include "AirWavesIOHandler.hpp"
 
-// shared
-#include "imgui.h"
-#include "shared/graphics/OpenGLWrapper.hpp"
-#include "shared/graphics/ImguiCallback.hpp"
-
 // project
 #include "AirWavesConfig.hpp"
+
+// shared
+#include "shared/graphics/OpenGLWrapper.hpp"
+#include "shared/graphics/ImguiCallback.hpp"
+#include <imgui.h>
 
 
 namespace vmp
@@ -27,7 +27,7 @@ constexpr int defaultHeight = 720;
 ///
 /// \author Logan Barnes
 /////////////////////////////////////////////
-AirWavesIOHandler::AirWavesIOHandler( shared::World &world )
+AirWavesIOHandler::AirWavesIOHandler( shs::World &world )
   : ImguiOpenGLIOHandler( world, true, defaultWidth, defaultHeight )
 {}
 

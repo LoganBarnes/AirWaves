@@ -1,13 +1,12 @@
 // AirWaves.cpp
-
-#include <iostream>
-#include <memory>
+#include "AirWavesConfig.hpp"
 
 #include "shared/core/ContinuousDriver.hpp"
 #include "shared/core/World.hpp"
 #include "shared/core/VulkanIOHandler.hpp"
 
-#include "AirWavesConfig.hpp"
+#include <iostream>
+#include <memory>
 
 
 /////////////////////////////////////////////
@@ -22,13 +21,12 @@ main(
      const char **argv  ///< array of argument strings
      )
 {
-
-  shared::Driver::printProjectInfo(
-                                   vmp::PROJECT_NAME,
-                                   vmp::VERSION_MAJOR,
-                                   vmp::VERSION_MINOR,
-                                   vmp::VERSION_PATCH
-                                   );
+  shs::Driver::printProjectInfo(
+                                vmp::PROJECT_NAME,
+                                vmp::VERSION_MAJOR,
+                                vmp::VERSION_MINOR,
+                                vmp::VERSION_PATCH
+                                );
 
   try
   {
@@ -37,14 +35,14 @@ main(
     // and ioHandler to interface between the
     // world and the user
     //
-    shared::World world;
-    shared::VulkanIOHandler io( world );
+    shs::World world;
+    shs::VulkanIOHandler io( world );
 
     //
     // pass world and ioHandler to driver
     // to manage event loop
     //
-    shared::ContinuousDriver driver( world, io );
+    shs::ContinuousDriver driver( world, io );
 
     //
     // run program

@@ -1,9 +1,8 @@
 // AirWavesIOHandler.hpp
 #pragma once
 
-
-#include <string>
 #include "shared/core/ImguiOpenGLIOHandler.hpp"
+#include <string>
 
 
 namespace shared
@@ -23,7 +22,7 @@ namespace vmp
 ///
 /// \author Logan Barnes
 /////////////////////////////////////////////
-class AirWavesIOHandler : public shared::ImguiOpenGLIOHandler
+class AirWavesIOHandler : public shs::ImguiOpenGLIOHandler
 {
 
 public:
@@ -31,7 +30,7 @@ public:
   ///////////////////////////////////////////////////////////////
   /// \brief AirWavesIOHandler
   ///////////////////////////////////////////////////////////////
-  AirWavesIOHandler( shared::World &world );
+  AirWavesIOHandler( shs::World &world );
 
 
   ///////////////////////////////////////////////////////////////

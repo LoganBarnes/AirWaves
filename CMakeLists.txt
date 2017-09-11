@@ -1,102 +1,48 @@
-cmake_minimum_required ( VERSION 3.7.1 )
-project ( AirWaves LANGUAGES CXX )
+cmake_minimum_required(VERSION 3.8)
+project(AirWaves)
 
-option( BUILD_TESTS OFF "Build unit tests created with gmock/gtest framework"  )
+set(CMAKE_CXX_STANDARD 14)
 
-###
-### namespace used for project
-###
-set ( PROJECT_NAMESPACE vmp ) # visual music project
+option(BUILD_TESTS OFF "Build unit tests created with gtest/gmock framework")
 
-###
-### The version number.
-###
-set ( PROJECT_VERSION_MAJOR 1 )
-set ( PROJECT_VERSION_MINOR 0 )
-set ( PROJECT_VERSION_PATCH 0 )
+#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
+include(cmake/DownloadProject.cmake)
 
-###
-### required before DefaultProjectLibrary.cmake
-###
-set( SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src )
+# Download and unpack simulation driver at configure time
+download_project(PROJ sim
+        PREFIX thirdparty
+        GIT_REPOSITORY https://gitlab.com/LoganBarnes/SimulationDriver.git
+        GIT_TAG master
+        UPDATE_DISCONNECTED 1
+        QUIET
+        )
 
-###
-### other paths
-###
-set( SHARED_PATH ${PROJECT_SOURCE_DIR}/shared )
-set( RES_PATH    ${PROJECT_SOURCE_DIR}/res    )
-set( SHADER_PATH ${SHARED_PATH}/shaders       )
+# compile sim with current project
+add_subdirectory(${sim_SOURCE_DIR} ${sim_BINARY_DIR})
 
 
-###
-###
-###
-set( PROJECT_CONFIG_FILE ${SHARED_PATH}/src/common/ProjectConfig.hpp.in )
+# Download and unpack kfr at configure time
+download_project(PROJ kfr
+        PREFIX thirdparty
+        GIT_REPOSITORY https://github.com/kfrlib/kfr.git
+        GIT_TAG v1.2.0
+        UPDATE_DISCONNECTED 1
+        QUIET
+        )
+
+# compile kfr with current project
+add_library(kfr INTERFACE)
+target_include_directories(kfr SYSTEM INTERFACE ${kfr_SOURCE_DIR}/include)
 
 
-###
-### Set options for the shared simulation
-### project then add it to the current build
-###
-set( USE_GLFW   ON CACHE BOOL "" FORCE )
-set( USE_VULKAN ON CACHE BOOL "" FORCE )
-# set( USE_GLM  ON CACHE BOOL "" FORCE )
-# set( USE_GUI  ON CACHE BOOL "" FORCE )
+set(SOURCE_FILES
+        src/vmp/SimTest.cpp
+        src/vmp/SimTest.hpp
+        )
 
-set( USE_GMOCK ${BUILD_TESTS} CACHE BOOL "" FORCE )
+add_library(vmp ${SOURCE_FILES})
+target_include_directories(vmp PUBLIC src)
+target_link_libraries(vmp SimDriver kfr)
 
-add_subdirectory( ${SHARED_PATH} )
-
-
-###
-### header dirs
-###
-set(
-    PROJECT_INCLUDE_DIRS
-
-    ${SRC_DIR}/io
-    )
-
-# ###
-# ### project source files that get
-# ### comipled into the AirWaves lib
-# ###
-# set(
-#     PROJECT_SOURCE
-
-#     # ignored by compilers but added to project files
-#     ${SHARED_UNCRUSTIFY_FILE}
-
-#     # ${SRC_DIR}/io/AirWavesIOHandler.hpp
-#     # ${SRC_DIR}/io/AirWavesIOHandler.cpp
-#     )
-
-
-###
-### Unit tests for the AirWaves lib
-###
-if ( ${BUILD_TESTS} )
-
-  set(
-      TESTING_SOURCE
-      ${SRC_DIR}/testing/AirWavesUnitTests.cpp
-      )
-
-  list( APPEND TESTING_INCLUDE_DIRS ${PROJECT_INCLUDE_DIRS} )
-
-endif ( ${BUILD_TESTS} )
-
-###
-### file with main function to execute the program
-###
-set( PROJECT_MAIN ${SRC_DIR}/exec/AirWaves.cpp )
-
-###
-### Set the C++ standard for compilation then include
-### a cmake file that will build and link all projects
-### specific libraries, tests, and executables
-###
-set ( FORCE_CUDA_STANDARD 11 )
-set ( FORCE_CPP_STANDARD  14 )
-include( ${SHARED_PATH}/cmake/DefaultProjectLibrary.cmake )
-
+add_executable(AirWaves src/exec/main.cpp)
+target_link_libraries(AirWaves vmp)

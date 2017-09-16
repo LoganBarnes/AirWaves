@@ -54,4 +54,4 @@ build_script:
   - cd build
   - cmake -DCMAKE_BUILD_TYPES=%BUILD_TYPE% -DBUILD_TESTS=ON ..
   - cmake --build . --config %BUILD_TYPE% -- /m
-  - %BUILD_TYPE%\vmp-tests.exe
+  - .\%BUILD_TYPE%\vmp-tests.exe

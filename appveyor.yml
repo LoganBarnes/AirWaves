@@ -1,0 +1,57 @@
+version: 1.0.{build}
+
+branches:
+  only:
+  - master
+
+skip_tags: true
+clone_folder: c:\projects\airwaves
+
+image: Visual Studio 2015
+
+environment:
+  matrix:
+    - BUILD_MODE: Debug
+    - BUILD_MODE: Release
+
+matrix:
+  fast_finish: true
+
+platform: x64
+
+build:
+  parallel: true  # enable MSBuild parallel builds
+  verbosity: minimal
+
+install:
+  ############################################################################
+  # All external dependencies are installed in C:\projects\deps
+  ############################################################################
+  - mkdir C:\projects\deps
+  - cd C:\projects\deps
+
+  ############################################################################
+  # Install a recent CMake
+  ############################################################################
+  - set CMAKE_URL="https://cmake.org/files/v3.8/cmake-3.8.0-win64-x64.zip"
+  - appveyor DownloadFile %CMAKE_URL% -FileName cmake.zip
+  - 7z x cmake.zip -oC:\projects\deps > nul
+  - move C:\projects\deps\cmake-* C:\projects\deps\cmake # Move to a version-agnostic directory
+  - set PATH=C:\projects\deps\cmake\bin;%PATH%
+  - cmake --version
+
+  ############################################################################
+  # Setup the path to Clang-cl
+  ############################################################################
+  - set PATH="C:\Program Files\LLVM\bin";%PATH%
+  - clang-cl -v
+
+before_build:
+  - cd C:\projects\airwaves
+
+build_script:
+  - mkdir build
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPES=%BUILD_TYPE% -DBUILD_TESTS=ON ..
+  - cmake --build . --config %BUILD_TYPE% -- /m
+  - %BUILD_TYPE%\vmp-tests.exe

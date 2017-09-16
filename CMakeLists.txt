@@ -10,7 +10,7 @@ include(cmake/DownloadProject.cmake)
 # Download and unpack simulation driver at configure time
 download_project(PROJ sim
         PREFIX thirdparty
-        GIT_REPOSITORY https://gitlab.com/LoganBarnes/SimulationDriver.git
+        GIT_REPOSITORY https://github.com/LoganBarnes/SimulationDriver.git
         GIT_TAG master
         UPDATE_DISCONNECTED 1
         QUIET

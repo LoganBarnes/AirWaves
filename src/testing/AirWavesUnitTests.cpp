@@ -1,42 +1,6 @@
-// AirWavesUnitTestsUnitTests.cpp
-#include "gmock/gmock.h"
+#include <catch.hpp>
 
+TEST_CASE("Empty test") {
+    CHECK(true);
+}
 
-namespace
-{
-
-
-///
-/// \brief The AirWavesUnitTestsUnitTests class
-///
-class AirWavesUnitTestsUnitTests : public ::testing::Test
-{
-
-protected:
-
-  /////////////////////////////////////////////////////////////////
-  /// \brief AirWavesUnitTestsUnitTests
-  /////////////////////////////////////////////////////////////////
-  AirWavesUnitTestsUnitTests( )
-  {}
-
-
-  /////////////////////////////////////////////////////////////////
-  /// \brief ~AirWavesUnitTestsUnitTests
-  /////////////////////////////////////////////////////////////////
-  virtual
-  ~AirWavesUnitTestsUnitTests( )
-  {}
-
-};
-
-
-/////////////////////////////////////////////////////////////////
-/// \brief UnimplementedTest
-/////////////////////////////////////////////////////////////////
-TEST_F( AirWavesUnitTestsUnitTests, UnimplementedTest )
-{}
-
-
-
-} // namespace

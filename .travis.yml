@@ -1,4 +1,3 @@
-# Need these for a more recent CMake on Linux
 language: c++
 
 branches:
@@ -6,144 +5,30 @@ branches:
     - master
 
 dist: trusty
-
-# Save common build configurations as shortcuts, so we can reference them later.
-addons_shortcuts:
-  addons_clang38: &clang38
-    apt:
-      sources: [ 'llvm-toolchain-trusty-3.8' ]
-      packages: [ 'clang-3.8', 'libc++-dev', 'xorg-dev', 'libglu1-mesa-dev' ]
-  addons_clang39: &clang39
-    apt:
-      sources: [ 'llvm-toolchain-trusty-3.9' ]
-      packages: [ 'clang-3.9', 'libc++-dev', 'xorg-dev', 'libglu1-mesa-dev' ]
-  addons_clang35: &clang40
-    apt:
-      sources: [ 'llvm-toolchain-trusty-4.0' ]
-      packages: [ 'clang-4.0', 'libc++-dev', 'xorg-dev', 'libglu1-mesa-dev' ]
-  addons_gcc5: &gcc5
-    apt:
-      sources: [ 'ubuntu-toolchain-r-test' ]
-      packages: [ 'gcc-5', 'g++-5', 'xorg-dev', 'libglu1-mesa-dev' ]
-  addons_gcc6: &gcc6
-    apt:
-      sources: [ 'ubuntu-toolchain-r-test' ]
-      packages: [ 'gcc-6', 'g++-6', 'xorg-dev', 'libglu1-mesa-dev' ]
-
-
-env:
-  global:
-    - VULKAN_VERSION=1.0.46.0
-
-
-matrix:
-  include:
-    - os: linux
-      compiler: "clang-3.8"
-      env: SCRIPT_OPTIONS="-sf" LLVM=3.8
-      addons: *clang38
-    - os: linux
-      compiler: "clang-3.9"
-      env: SCRIPT_OPTIONS="-sf" LLVM=3.9
-      addons: *clang39
-    - os: linux
-      compiler: "clang-4.0"
-      env: SCRIPT_OPTIONS="-sf" LLVM=4.0
-      addons: *clang40
-    - os: linux
-      compiler: "g++-5"
-      env: SCRIPT_OPTIONS="-sf" GCC=5
-      addons: *gcc5
-    - os: linux
-      compiler: "g++-6"
-      env: SCRIPT_OPTIONS="-sf" GCC=6
-      addons: *gcc6
-
-    # SHARED LIBS
-    - os: linux
-      compiler: "clang-3.9"
-      env: SCRIPT_OPTIONS="-sf -s" LLVM=default
-      addons: *clang39
-
-    # DEBUG
-    - os: linux
-      compiler: "clang-3.9"
-      env: SCRIPT_OPTIONS="-sf -d" LLVM=default
-      addons: *clang39
-
-    # DEBUG SHARED LIBS
-    - os: linux
-      compiler: "clang-3.9"
-      env: SCRIPT_OPTIONS="-sf -d -s" LLVM=default
-      addons: *clang39
-
-before_install:
-  - |
-    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
-      brew update
-    fi
-
-  ############################################################################
-  # Set build type to default Release value
-  ############################################################################
-  - if [[ "${BUILD_TYPE}" == "" ]]; then BUILD_TYPE=Release; fi
-
-  ############################################################################
-  # Setup default versions and override compiler if needed
-  ############################################################################
-  - if [[ "${LLVM}" == "default" ]]; then LLVM=3.9; fi
-  - |
-    if [[ "${LLVM}" != "" ]]; then
-      export CXX=clang++-${LLVM}
-      export CXXFLAGS=-stdlib=libc++
-    fi
-  - |
-    if [[ "${GCC}" != "" ]]; then
-      export CXX=g++-${GCC}
-    fi
-  - ${CXX} --version
+os: osx
 
 install:
   ############################################################################
-  # All compiled dependencies are installed in ${TRAVIS_BUILD_DIR}/deps/
-  ############################################################################
-  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
-  - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
-
-  ############################################################################
   # Install a recent CMake
   ############################################################################
-  - |
-    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-      CMAKE_URL="https://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.tar.gz"
-      mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
-      export PATH=${DEPS_DIR}/cmake/bin:${PATH}
-    else
-      brew upgrade cmake || brew install cmake
-    fi
+  - brew upgrade cmake || brew install cmake
   - cmake --version
 
-  ############################################################################
-  # Install Vulkan
-  ############################################################################
-  - |
-    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-      VULKAN_DIR=${TRAVIS_BUILD_DIR}/deps/vulkan
-      VULKAN_URL="https://vulkan.lunarg.com/sdk/download/${VULKAN_VERSION}/linux/vulkansdk-linux-x86_64-${VULKAN_VERSION}.run"
-      mkdir -p ${VULKAN_DIR} && cd ${VULKAN_DIR} && travis_retry wget ${VULKAN_URL}
-      bash vulkansdk-linux-x86_64-${VULKAN_VERSION}.run ${VULKAN_DIR}/
-      cd ${VULKAN_DIR}/VulkanSDK/${VULKAN_VERSION}
-      source setup-env.sh
-    fi
-
-before_script:
-  - cd ${TRAVIS_BUILD_DIR}/run
-
 script:
-  - ./unixConfigureAndBuild.sh ${SCRIPT_OPTIONS}    # first without tests
-  - ./unixConfigureAndBuild.sh -c                   # clean
-  - ./unixConfigureAndBuild.sh ${SCRIPT_OPTIONS} -t # now with tests
-  - ./testbin/testAirWaves
+  - mkdir cmake-build-debug
+  - cd cmake-build-debug
+  - cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON ..
+  - make -j
+  - ./vmp-tests
+  - cd ..
+
+  - mkdir cmake-build-release
+  - cd cmake-build-release
+  - cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON ..
+  - make -j
+  - ./vmp-tests
+  - cd ..
+
 
 notifications:
   on_success: never

@@ -1,11 +1,10 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.7)
 project(AirWaves)
 
 set(CMAKE_CXX_STANDARD 14)
 
-option(BUILD_TESTS OFF "Build unit tests created with gtest/gmock framework")
+option(BUILD_TESTS OFF "Build unit tests created with Catch framework")
 
-#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 include(cmake/DownloadProject.cmake)
 
 # Download and unpack simulation driver at configure time
@@ -16,6 +15,9 @@ download_project(PROJ sim
         UPDATE_DISCONNECTED 1
         QUIET
         )
+
+set(SIM_BUILD_EXECS OFF CACHE BOOL "" FORCE)
+set(SIM_BUILD_CUDA OFF CACHE BOOL "" FORCE)
 
 # compile sim with current project
 add_subdirectory(${sim_SOURCE_DIR} ${sim_BINARY_DIR})
@@ -46,3 +48,24 @@ target_link_libraries(vmp SimDriver kfr)
 
 add_executable(AirWaves src/exec/main.cpp)
 target_link_libraries(AirWaves vmp)
+
+if (${BUILD_TESTS})
+    # Download and unpack catch at configure time
+    download_project(PROJ catch
+            PREFIX thirdparty
+            GIT_REPOSITORY https://github.com/philsquared/Catch.git
+            GIT_TAG v1.10.0
+            UPDATE_DISCONNECTED 1
+            QUIET
+            )
+
+    set(TEST_SOURCE_FILES
+            src/testing/CatchMain.cpp
+            src/testing/AirWavesUnitTests.cpp
+            )
+
+    add_executable(vmp-tests ${TEST_SOURCE_FILES})
+    add_test(NAME empty-test COMMAND vmp-tests)
+    target_include_directories(vmp-tests PUBLIC ${catch_SOURCE_DIR}/include)
+    target_link_libraries(vmp-tests vmp)
+endif ()

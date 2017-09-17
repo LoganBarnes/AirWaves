@@ -41,6 +41,7 @@ install:
   - cmake --version
 
 before_build:
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
   - cd C:\projects\airwaves
 
 build_script:

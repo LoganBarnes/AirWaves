@@ -40,6 +40,11 @@ install:
   - set PATH=C:\projects\deps\cmake\bin;%PATH%
   - cmake --version
 
+  ############################################################################
+  # Check for clang
+  ############################################################################
+  - clang-cl -v
+
 before_build:
   - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
   - cd C:\projects\airwaves
@@ -47,6 +52,6 @@ before_build:
 build_script:
   - mkdir build
   - cd build
-  - cmake -TV141_clang_c2 -DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DBUILD_TESTS=ON ..
+  - cmake -Tv141_clang_c2 -DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DBUILD_TESTS=ON ..
   - cmake --build . --config %BUILD_TYPE% -- /m
   - .\%BUILD_TYPE%\vmp-tests.exe

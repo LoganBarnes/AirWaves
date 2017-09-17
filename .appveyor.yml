@@ -7,7 +7,7 @@ branches:
 skip_tags: true
 clone_folder: c:\projects\airwaves
 
-image: Visual Studio 2015
+image: Visual Studio 2017
 
 environment:
   matrix:
@@ -40,18 +40,12 @@ install:
   - set PATH=C:\projects\deps\cmake\bin;%PATH%
   - cmake --version
 
-  ############################################################################
-  # Setup the path to Clang-cl
-  ############################################################################
-  - set PATH="C:\Program Files\LLVM\bin";%PATH%
-  - clang-cl -v
-
 before_build:
   - cd C:\projects\airwaves
 
 build_script:
   - mkdir build
   - cd build
-  - cmake -DCMAKE_CXX_COMPILER=clang-cl -DCMAKE_BUILD_TYPES=%BUILD_TYPE% -DBUILD_TESTS=ON ..
+  - cmake -TV141_clang_c2 -DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DBUILD_TESTS=ON ..
   - cmake --build . --config %BUILD_TYPE% -- /m
   - .\%BUILD_TYPE%\vmp-tests.exe

@@ -7,12 +7,12 @@ branches:
 skip_tags: true
 clone_folder: c:\projects\airwaves
 
-image: Visual Studio 2017
+image:
+  - Visual Studio 2017
 
-environment:
-  matrix:
-    - BUILD_MODE: Debug
-    - BUILD_MODE: Release
+configuration:
+  - Debug
+  - Release
 
 matrix:
   fast_finish: true
@@ -47,7 +47,6 @@ before_build:
 build_script:
   - mkdir build
   - cd build
-  - cmake -Tv141_clang_c2 -DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DBUILD_TESTS=ON ..
-  - cmake --build . --config %BUILD_TYPE% -- /m
-  - cd %BUILD_TYPE% 
-  - .\vmp-tests.exe
+  - cmake -Tv141_clang_c2 -DCMAKE_BUILD_TYPE=$(configuration) -DBUILD_TESTS=ON ..
+  - cmake --build . --config $(configuration) -- /m
+  - .\$(configuration)\vmp-tests.exe

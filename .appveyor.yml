@@ -49,4 +49,4 @@ build_script:
   - cd build
   - cmake -Tv141_clang_c2 -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_TESTS=ON ..
   - cmake --build . --config %CONFIGURATION% -- /m
-  - .\$(configuration)\vmp-tests.exe
+  - call %CONFIGURATION%\vmp-tests.exe

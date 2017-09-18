@@ -54,5 +54,8 @@ test_script:
   - call %CONFIGURATION%\vmp-tests.exe
 
 notifications:
-  - on_build_success: false
-  - on_build_failure: true
+  - provider: Email
+  to:
+  - '{{commitAuthorEmail}}'
+  on_build_failure: true
+  on_build_succes: false

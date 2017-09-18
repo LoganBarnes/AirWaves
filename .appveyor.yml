@@ -52,3 +52,7 @@ build_script:
 
 test_script:
   - call %CONFIGURATION%\vmp-tests.exe
+
+notifications:
+  - on_build_success: false
+  - on_build_failure: true

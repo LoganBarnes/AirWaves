@@ -1,7 +1,7 @@
 #include <vmp/SimTest.hpp>
 #include <kfr/math.hpp>
 
-int main(const int argc, const char *argv[])
+int main()
 {
     try
     {

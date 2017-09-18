@@ -2,7 +2,7 @@
 #include <sim-driver/meshes/MeshFunctions.hpp>
 
 Simulator::Simulator(int, int, sim::SimData *pSimData)
-    : renderer_{sim::PosNormTexMesh(sim::create_sphere_mesh_data < sim::PosNormTexVertex > )},
+    : renderer_{sim::PosNormTexMesh(sim::create_sphere_mesh_data<sim::PosNormTexVertex>)},
       simData_{*pSimData}
 {
     simData_.cameraMover.setUsingOrbitMode(true);

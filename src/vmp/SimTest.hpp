@@ -1,3 +1,4 @@
+#pragma once
 #include <sim-driver/OpenGLSimulation.hpp>
 #include <sim-driver/renderers/MeshRenderer.hpp>
 

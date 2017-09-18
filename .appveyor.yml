@@ -58,4 +58,4 @@ notifications:
     to:
       - '{{APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL}}'
     on_build_failure: true
-    on_build_succes: false
+    on_build_success: false

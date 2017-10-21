@@ -75,7 +75,14 @@ install:
     fi
   - cmake --version
 
+
+
 script:
+  ############################################################################
+  # Build project and run CPU based tests
+  ############################################################################
+  - cd ${TRAVIS_BUILD_DIR}
+
   - mkdir cmake-build-debug
   - cd cmake-build-debug
   - cmake -DCMAKE_BUILD_TYPE=Debug -DVMP_BUILD_TESTS=ON ..

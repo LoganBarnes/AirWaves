@@ -12,7 +12,7 @@ install:
   # Install a recent CMake
   ############################################################################
   - brew update
-  - brew outdated <package-name> || brew upgrade <package-name>
+  - brew outdated cmake || brew upgrade cmake
   - cmake --version
 
 script:

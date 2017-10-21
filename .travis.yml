@@ -6,14 +6,6 @@ branches:
 
 dist: trusty
 
-addons:
-  apt:
-    packages:
-      - libasound2
-      - alsa-utils
-      - alsa-oss
-      - libasound2-dev
-
 matrix:
   - os: linux
       addons:
@@ -22,6 +14,10 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-6
+            - libasound2
+            - alsa-utils
+            - alsa-oss
+            - libasound2-dev
       env:
         - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
 
@@ -32,6 +28,10 @@ matrix:
             - llvm-toolchain-trusty-3.9
           packages:
             - clang-3.9
+            - libasound2
+            - alsa-utils
+            - alsa-oss
+            - libasound2-dev
       env:
         - MATRIX_EVAL="CC=clang-3.9 && CXX=clang++-3.9"
 

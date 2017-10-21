@@ -15,6 +15,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-6
+            - mesa-utils
             - xorg-dev
             - libglu1-mesa-dev
             - libasound2
@@ -31,6 +32,9 @@ matrix:
             - llvm-toolchain-trusty-3.9
           packages:
             - clang-3.9
+            - libc++-dev
+            - libc++abi-dev
+            - mesa-utils
             - xorg-dev
             - libglu1-mesa-dev
             - libasound2

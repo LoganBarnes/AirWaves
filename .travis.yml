@@ -42,7 +42,7 @@ matrix:
             - alsa-oss
             - libasound2-dev
       env:
-        - MATRIX_EVAL="CC=clang-3.9 && CXX=clang++-3.9"
+        - MATRIX_EVAL="CC=clang-3.9 && CXX=clang++-3.9 && CXXFLAGS=-stdlib=libc++"
 
 #    - os: osx
 #      osx_image: xcode8

@@ -14,30 +14,20 @@
 // The Visual Music Project
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
-#include "AirWaves.hpp"
-#include <vmp/Transport.hpp>
-#include <imgui.h>
+#include "MainStream.hpp"
 
 namespace vmp
 {
 
-AirWaves::AirWaves(int, int, sim::SimData *pSimData)
-    : simData_(*pSimData)
+MainStream& MainStream::instance()
 {
+    static MainStream stream;
+    return stream;
 }
 
-void AirWaves::onGuiRender(int, int)
+MainStream::MainStream()
 {
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-    ImGui::SetNextWindowPos(ImVec2(0, 0));
-    if (ImGui::Begin("Window", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-        if (!simData_.paused) {
-            ImGui::Text("Framerate: %.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
-        }
-        transport_.configure_gui();
-    }
-    ImGui::End();
-    ImGui::PopStyleVar();
+
 }
 
 } // namespace vmp

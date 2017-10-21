@@ -14,6 +14,7 @@
 // The Visual Music Project
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
+#include <sim-driver/OpenGLSimulation.hpp>
 #include "AirWaves.hpp"
 
 int main()

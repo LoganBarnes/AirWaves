@@ -65,8 +65,11 @@ else ()
 endif ()
 
 set(VMP_SOURCE_FILES
+        src/vmp/MainStream.cpp
+        src/vmp/MainStream.hpp
         src/vmp/Transport.cpp
         src/vmp/Transport.hpp
+        src/vmp/VmpTypes.hpp
         )
 
 add_library(vmp ${VMP_SOURCE_FILES})

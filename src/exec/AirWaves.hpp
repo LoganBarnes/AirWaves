@@ -16,8 +16,9 @@
 // ////////////////////////////////////////////////////////////
 #pragma once
 
-#include <sim-driver/OpenGLSimulation.hpp>
-#include <vmp/Transport.hpp>
+#include <sim-driver/SimData.hpp>
+#include <vmp/VmpTypes.hpp>
+#include <memory>
 
 namespace vmp
 {
@@ -31,8 +32,7 @@ public:
 
 private:
     sim::SimData &simData_;
-
-    vmp::Transport transport_;
+    std::unique_ptr<vmp::Transport> transport_{nullptr};
 };
 
 } // namespace vmp

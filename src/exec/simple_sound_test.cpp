@@ -1,5 +1,6 @@
 #include <cmath>
 #include "RtAudio.h"
+#include <glm/gtc/constants.hpp>
 
 void print_usage() {
     std::cout << "Usage:\n"
@@ -72,7 +73,7 @@ private:
             for (unsigned j = 0; j < 2; j++) {
                 *outputBuffer++ = std::sin(last_values_[j]) * max_amplitude_ * T(3);
                 last_values_[j] += freq_scale_;
-                if (last_values_[j] >= T(M_PI)) last_values_[j] -= T(2) * T(M_PI);
+                if (last_values_[j] >= glm::pi<T>()) last_values_[j] -= T(2) * glm::pi<T>();
             }
         }
         return 0;

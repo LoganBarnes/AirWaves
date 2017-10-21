@@ -6,16 +6,6 @@ branches:
 
 dist: trusty
 
-addons:
-  apt:
-    packages:
-      - xorg-dev
-      - libglu1-mesa-dev
-      - libasound2
-      - alsa-utils
-      - alsa-oss
-      - libasound2-dev
-
 matrix:
   include:
     - os: linux
@@ -25,6 +15,12 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-6
+            - xorg-dev
+            - libglu1-mesa-dev
+            - libasound2
+            - alsa-utils
+            - alsa-oss
+            - libasound2-dev
       env:
         - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
 
@@ -35,6 +31,12 @@ matrix:
             - llvm-toolchain-trusty-3.9
           packages:
             - clang-3.9
+            - xorg-dev
+            - libglu1-mesa-dev
+            - libasound2
+            - alsa-utils
+            - alsa-oss
+            - libasound2-dev
       env:
         - MATRIX_EVAL="CC=clang-3.9 && CXX=clang++-3.9"
 

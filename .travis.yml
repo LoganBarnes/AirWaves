@@ -9,6 +9,8 @@ dist: trusty
 addons:
   apt:
     packages:
+      - xorg-dev
+      - libglu1-mesa-dev
       - libasound2
       - alsa-utils
       - alsa-oss

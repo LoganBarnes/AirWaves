@@ -74,6 +74,7 @@ script:
   - cmake -DCMAKE_BUILD_TYPE=Debug -DVMP_BUILD_TESTS=ON ..
   - make -j
   - ./vmp-tests
+  - ./ci-device-test
   - cd ..
 
   - mkdir cmake-build-release
@@ -81,6 +82,7 @@ script:
   - cmake -DCMAKE_BUILD_TYPE=Release -DVMP_BUILD_TESTS=ON ..
   - make -j
   - ./vmp-tests
+  - ./ci-device-test
   - cd ..
 
 

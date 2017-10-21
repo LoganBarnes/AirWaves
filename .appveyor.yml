@@ -52,6 +52,7 @@ build_script:
 
 test_script:
   - call %CONFIGURATION%\vmp-tests.exe
+  - call %CONFIGURATION%\ci-device-test.exe
 
 notifications:
   - provider: Email

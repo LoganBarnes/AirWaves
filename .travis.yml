@@ -25,32 +25,8 @@ matrix:
       env:
         - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
 
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - llvm-toolchain-trusty-3.9
-          packages:
-            - clang-3.9
-            - libc++-dev
-            - libc++abi-dev
-            - mesa-utils
-            - xorg-dev
-            - libglu1-mesa-dev
-            - libasound2
-            - alsa-utils
-            - alsa-oss
-            - libasound2-dev
-      env:
-        - MATRIX_EVAL="CC=clang-3.9 && CXX=clang++-3.9 && CXXFLAGS=-stdlib=libc++"
-
-#    - os: osx
-#      osx_image: xcode8
-#      env:
-#        - MATRIX_EVAL="brew install gcc6 && CC=gcc-6 && CXX=g++-6"
-#
-#    - os: osx
-#      osx_image: xcode8
+    - os: osx
+      osx_image: xcode8
 
 before_install:
     - eval "${MATRIX_EVAL}"

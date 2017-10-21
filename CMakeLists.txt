@@ -26,7 +26,7 @@ add_subdirectory(${sim_SOURCE_DIR} ${sim_BINARY_DIR})
 # Download and unpack RtAudio at configure time
 download_project(PROJ rtAudio
         PREFIX thirdparty
-        GIT_REPOSITORY https://github.com/thestk/rtaudio.git
+        GIT_REPOSITORY https://github.com/LoganBarnes/rtaudio.git
         GIT_TAG master
         UPDATE_DISCONNECTED 1
         QUIET

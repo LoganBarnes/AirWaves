@@ -66,7 +66,7 @@ if (${VMP_BUILD_TESTS})
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
     # compile googletest with current project
-    add_subdirectory(${gtest_SOURCE_DIR} ${gtest_BINARY_DIR})
+    add_subdirectory(${gtest_SOURCE_DIR}/googletest ${gtest_BINARY_DIR}/googletest)
 
     set(TEST_SOURCE_FILES
             src/testing/AudioDeviceTests.cpp

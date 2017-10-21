@@ -11,7 +11,7 @@ install:
   ############################################################################
   # Install a recent CMake
   ############################################################################
-  - brew upgrade cmake || brew install cmake
+  - brew upgrade cmake
   - cmake --version
 
 script:

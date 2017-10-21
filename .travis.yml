@@ -8,7 +8,6 @@ dist: trusty
 
 addons:
   apt:
-    sources:
     packages:
       - libasound2
       - alsa-utils
@@ -26,16 +25,16 @@ matrix:
       env:
         - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
 
-#  - os: linux
-#      addons:
-#        apt:
-#          sources:
-#            - llvm-toolchain-trusty-3.9
-#          packages:
-#            - clang-3.9
-#      env:
-#        - MATRIX_EVAL="CC=clang-3.9 && CXX=clang++-3.9"
-#
+  - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-3.9
+          packages:
+            - clang-3.9
+      env:
+        - MATRIX_EVAL="CC=clang-3.9 && CXX=clang++-3.9"
+
 #  - os: osx
 #      osx_image: xcode8
 #      env:
@@ -46,6 +45,7 @@ matrix:
 
 before_install:
     - eval "${MATRIX_EVAL}"
+
     ############################################################################
     # Update OS X homebrew
     ############################################################################

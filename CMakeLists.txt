@@ -32,8 +32,7 @@ download_project(PROJ sim
         QUIET
         )
 
-set(SIM_BUILD_EXECS OFF CACHE BOOL "" FORCE)
-set(SIM_BUILD_CUDA OFF CACHE BOOL "" FORCE)
+set(SIM_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
 # compile sim with current project
 add_subdirectory(${sim_SOURCE_DIR} ${sim_BINARY_DIR})
@@ -68,6 +67,9 @@ set(EXEC_SOURCE_FILES
         )
 add_executable(AirWaves ${EXEC_SOURCE_FILES})
 target_link_libraries(AirWaves vmp)
+
+add_executable(sound-test src/exec/simple_sound_test.cpp)
+target_link_libraries(sound-test vmp)
 
 if (${VMP_BUILD_TESTS})
     # Download and unpack googletest at configure time

@@ -15,7 +15,6 @@
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
 #include "AirWaves.hpp"
-#include <vmp/Transport.hpp>
 #include <imgui.h>
 
 namespace vmp

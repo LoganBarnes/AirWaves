@@ -22,11 +22,16 @@ namespace vmp
 class Transport
 {
 public:
+    ~Transport() = default;
+
     void play();
     void pause();
     void stop();
 
     void configure_gui();
+
+private:
+    bool playing_{false};
 };
 
 } // namespace vmp

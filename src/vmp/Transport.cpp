@@ -15,30 +15,50 @@
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
 #include "Transport.hpp"
+#include "MainStream.hpp"
 #include <imgui.h>
 
 namespace vmp
 {
+
 void Transport::play()
 {
-
+    if (!playing_) {
+        MainStream::instance().start_stream();
+        playing_ = true;
+    }
 }
+
 void Transport::pause()
 {
-
+    if (playing_) {
+        MainStream::instance().stop_stream();
+        playing_ = false;
+    }
 }
+
 void Transport::stop()
 {
-
+    if (playing_) {
+        MainStream::instance().stop_stream();
+        playing_ = false;
+    }
 }
+
 void Transport::configure_gui()
 {
     if (ImGui::CollapsingHeader("Transport", "transport", false, true)) {
         if (ImGui::Button("[]")) { stop(); }
         if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Stop"); }
         ImGui::SameLine();
-        if (ImGui::Button(">")) { play(); }
-        if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Play"); }
+        if (playing_) {
+            if (ImGui::Button("||")) { pause(); }
+            if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Pause"); }
+        }
+        else {
+            if (ImGui::Button(">")) { play(); }
+            if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Play"); }
+        }
         ImGui::SameLine();
         if (ImGui::Button("<<")) {}
         if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Back"); }
@@ -47,4 +67,5 @@ void Transport::configure_gui()
         if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Forward"); }
     }
 }
+
 } // namespace vmp

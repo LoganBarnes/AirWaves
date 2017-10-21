@@ -16,6 +16,10 @@
 // ////////////////////////////////////////////////////////////
 #pragma once
 
+#include <memory>
+
+class RtAudio;
+
 namespace vmp
 {
 
@@ -24,8 +28,14 @@ class MainStream
 public:
     static MainStream& instance();
 
+    void start_stream();
+    void stop_stream();
+
 private:
     MainStream();
+    ~MainStream();
+
+    std::unique_ptr<RtAudio> audio_;
 };
 
 } // namespace vmp

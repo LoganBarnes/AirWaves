@@ -17,6 +17,7 @@
 #include "RtAudio.h"
 #include <glm/gtc/constants.hpp>
 #include <cmath>
+#include <thread>
 
 namespace
 {
@@ -153,6 +154,8 @@ int main(const int argc, const char *argv[])
     char input;
     std::cout << "\nPlaying ... press <enter> to quit.\n";
     std::cin.get(input);
+    using namespace std::chrono_literals;
+    std::this_thread::sleep_for(2s);
     try {
         // Stop the stream
         dac.stopStream();

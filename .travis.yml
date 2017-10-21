@@ -6,41 +6,42 @@ branches:
 
 dist: trusty
 
+addons:
+  apt:
+    packages:
+      - libasound2
+      - alsa-utils
+      - alsa-oss
+      - libasound2-dev
+
 matrix:
-  - os: linux
+  include:
+    - os: linux
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
             - g++-6
-            - libasound2
-            - alsa-utils
-            - alsa-oss
-            - libasound2-dev
       env:
         - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
 
-  - os: linux
+    - os: linux
       addons:
         apt:
           sources:
             - llvm-toolchain-trusty-3.9
           packages:
             - clang-3.9
-            - libasound2
-            - alsa-utils
-            - alsa-oss
-            - libasound2-dev
       env:
         - MATRIX_EVAL="CC=clang-3.9 && CXX=clang++-3.9"
 
-#  - os: osx
+#    - os: osx
 #      osx_image: xcode8
 #      env:
 #        - MATRIX_EVAL="brew install gcc6 && CC=gcc-6 && CXX=g++-6"
 #
-#  - os: osx
+#    - os: osx
 #      osx_image: xcode8
 
 before_install:

@@ -18,6 +18,19 @@ cmake_minimum_required(VERSION 3.7)
 project(AirWaves)
 
 set(CMAKE_CXX_STANDARD 14)
+set(INTENSE_FLAGS
+        -Wall
+        -Wextra
+        -Winit-self
+        -Wold-style-cast
+        -Woverloaded-virtual
+        -Wuninitialized
+        -Wmissing-declarations
+        -Winit-self
+        -pedantic
+        -pedantic-errors
+        -Werror
+        )
 
 option(VMP_BUILD_TESTS OFF "Build unit tests created with GoogleTest framework")
 
@@ -49,7 +62,7 @@ download_project(PROJ rtAudio
 
 # compile RtAudio with current project
 add_subdirectory(${rtAudio_SOURCE_DIR} ${rtAudio_BINARY_DIR})
-target_include_directories(rtaudio_static PUBLIC ${rtAudio_SOURCE_DIR})
+target_include_directories(rtaudio_static SYSTEM PUBLIC ${rtAudio_SOURCE_DIR})
 
 set(VMP_SOURCE_FILES
         src/vmp/Transport.cpp
@@ -59,6 +72,7 @@ set(VMP_SOURCE_FILES
 add_library(vmp ${VMP_SOURCE_FILES})
 target_include_directories(vmp PUBLIC src)
 target_link_libraries(vmp SimDriver rtaudio_static)
+target_compile_options(vmp PRIVATE ${INTENSE_FLAGS})
 
 set(EXEC_SOURCE_FILES
         src/exec/AirWaves.cpp
@@ -67,9 +81,11 @@ set(EXEC_SOURCE_FILES
         )
 add_executable(AirWaves ${EXEC_SOURCE_FILES})
 target_link_libraries(AirWaves vmp)
+target_compile_options(AirWaves PRIVATE ${INTENSE_FLAGS})
 
 add_executable(sound-test src/exec/simple_sound_test.cpp)
 target_link_libraries(sound-test vmp)
+target_compile_options(sound-test PRIVATE ${INTENSE_FLAGS})
 
 if (${VMP_BUILD_TESTS})
     # Download and unpack googletest at configure time

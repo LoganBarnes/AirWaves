@@ -2,7 +2,11 @@
 #include "RtAudio.h"
 #include <glm/gtc/constants.hpp>
 
-void print_usage() {
+
+namespace
+{
+void print_usage()
+{
     std::cout << "Usage:\n"
               << "./sound-test [options]\n\n"
               << "Options:\n"
@@ -11,6 +15,7 @@ void print_usage() {
               << "\t-w,--saw    play sawtooth waveform"
               << std::endl;
 }
+} // namespace
 
 template<typename T>
 class Sound
@@ -34,7 +39,7 @@ public:
             std::cout << "Stream underflow detected!" << std::endl;
         }
 
-        return s->play_sound(buffer, nBufferFrames, status);
+        return s->play_sound(buffer, nBufferFrames);
     }
 
 private:
@@ -43,15 +48,15 @@ private:
     T max_amplitude_{0.2};
     T freq_scale_{0.025};
 
-    int play_sound(T *outputBuffer, unsigned int nBufferFrames, RtAudioStreamStatus status)
+    int play_sound(T *outputBuffer, unsigned int nBufferFrames)
     {
-        return sine_ ? sine(outputBuffer, nBufferFrames, status) : saw(outputBuffer, nBufferFrames, status);
+        return sine_ ? sine(outputBuffer, nBufferFrames) : saw(outputBuffer, nBufferFrames);
     }
 
     /**
      * @brief Two-channel sawtooth wave generator.
      */
-    int saw(T *outputBuffer, unsigned int nBufferFrames, RtAudioStreamStatus status)
+    int saw(T *outputBuffer, unsigned int nBufferFrames)
     {
         // Write interleaved audio data.
         for (unsigned i = 0; i < nBufferFrames; i++) {
@@ -61,12 +66,13 @@ private:
                 if (last_values_[j] >= max_amplitude_) last_values_[j] -= T(2) * max_amplitude_;
             }
         }
+        return 0;
     }
 
     /**
      * @brief Two-channel sine wave generator.
      */
-    int sine(T *outputBuffer, unsigned int nBufferFrames, RtAudioStreamStatus status)
+    int sine(T *outputBuffer, unsigned int nBufferFrames)
     {
         // Write interleaved audio data.
         for (unsigned i = 0; i < nBufferFrames; i++) {
@@ -87,12 +93,15 @@ int main(const int argc, const char *argv[])
         std::string arg(argv[argi]);
         if (arg == "-s" || arg == "--sine") {
             use_sine = true;
-        } else if (arg == "-w" || arg == "--saw") {
+        }
+        else if (arg == "-w" || arg == "--saw") {
             use_sine = false;
-        } else if (arg == "-h" || arg == "--help") {
+        }
+        else if (arg == "-h" || arg == "--help") {
             print_usage();
             return EXIT_SUCCESS;
-        } else {
+        }
+        else {
             std::cout << "Unrecognised option: '" << arg << "'\n";
             print_usage();
             return EXIT_SUCCESS;

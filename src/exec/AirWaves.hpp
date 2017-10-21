@@ -14,16 +14,25 @@
 // The Virtual Music Project
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
-#include "AirWaves.hpp"
+#pragma once
 
-int main()
+#include <sim-driver/OpenGLSimulation.hpp>
+#include <vmp/Transport.hpp>
+
+namespace vmp
 {
-    try {
-        sim::OpenGLSimulation<vmp::AirWaves>{{"Air Waves"}}.runNoFasterThanRealTimeLoop();
-    }
-    catch (const std::exception &e) {
-        std::cerr << "ERROR program failed: " << e.what() << std::endl;
-        return EXIT_FAILURE;
-    }
-    return EXIT_SUCCESS;
-}
+
+class AirWaves
+{
+public:
+    AirWaves(int w, int h, sim::SimData *pSimData);
+
+    void onGuiRender(int w, int h);
+
+private:
+    sim::SimData &simData_;
+
+    vmp::Transport transport_;
+};
+
+} // namespace vmp

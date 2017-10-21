@@ -17,14 +17,14 @@ install:
 script:
   - mkdir cmake-build-debug
   - cd cmake-build-debug
-  - cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON ..
+  - cmake -DCMAKE_BUILD_TYPE=Debug -DVMP_BUILD_TESTS=ON ..
   - make -j
   - ./vmp-tests
   - cd ..
 
   - mkdir cmake-build-release
   - cd cmake-build-release
-  - cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON ..
+  - cmake -DCMAKE_BUILD_TYPE=Release -DVMP_BUILD_TESTS=ON ..
   - make -j
   - ./vmp-tests
   - cd ..

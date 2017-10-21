@@ -14,16 +14,27 @@
 // The Virtual Music Project
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
-#include "AirWaves.hpp"
+#include <RtAudio.h>
+#include <gtest/gtest.h>
 
-int main()
+namespace
 {
-    try {
-        sim::OpenGLSimulation<vmp::AirWaves>{{"Air Waves"}}.runNoFasterThanRealTimeLoop();
+
+TEST(RelationUnitTests, LevelsAreCorrect)
+{
+    RtAudio audio;
+    // Determine the number of devices available
+    unsigned int devices = audio.getDeviceCount();
+    // Scan through devices for various capabilities
+    RtAudio::DeviceInfo info;
+    for (unsigned int i = 0; i < devices; i++) {
+        info = audio.getDeviceInfo(i);
+        if (info.probed) {
+            // Print, for example, the maximum number of output channels for each device
+            std::cout << "device = " << i;
+            std::cout << ": maximum output channels = " << info.outputChannels << "\n";
+        }
     }
-    catch (const std::exception &e) {
-        std::cerr << "ERROR program failed: " << e.what() << std::endl;
-        return EXIT_FAILURE;
-    }
-    return EXIT_SUCCESS;
 }
+
+} // namespace

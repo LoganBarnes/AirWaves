@@ -3,7 +3,7 @@ project(AirWaves)
 
 set(CMAKE_CXX_STANDARD 14)
 
-option(BUILD_TESTS OFF "Build unit tests created with Catch framework")
+option(VMP_BUILD_TESTS OFF "Build unit tests created with GoogleTest framework")
 
 include(cmake/DownloadProject.cmake)
 
@@ -23,49 +23,56 @@ set(SIM_BUILD_CUDA OFF CACHE BOOL "" FORCE)
 add_subdirectory(${sim_SOURCE_DIR} ${sim_BINARY_DIR})
 
 
-# Download and unpack kfr at configure time
-download_project(PROJ kfr
+# Download and unpack RtAudio at configure time
+download_project(PROJ rtAudio
         PREFIX thirdparty
-        GIT_REPOSITORY https://github.com/kfrlib/kfr.git
-        GIT_TAG v1.2.0
+        GIT_REPOSITORY https://github.com/thestk/rtaudio.git
+        GIT_TAG master
         UPDATE_DISCONNECTED 1
         QUIET
         )
 
-# compile kfr with current project
-add_library(kfr INTERFACE)
-target_include_directories(kfr SYSTEM INTERFACE ${kfr_SOURCE_DIR}/include)
+# compile RtAudio with current project
+add_subdirectory(${rtAudio_SOURCE_DIR} ${rtAudio_BINARY_DIR})
+target_include_directories(rtaudio_static PUBLIC ${rtAudio_SOURCE_DIR})
 
-
-set(SOURCE_FILES
-        src/vmp/SimTest.cpp
-        src/vmp/SimTest.hpp
+set(VMP_SOURCE_FILES
+        src/vmp/Transport.cpp
+        src/vmp/Transport.hpp
         )
 
-add_library(vmp ${SOURCE_FILES})
+add_library(vmp ${VMP_SOURCE_FILES})
 target_include_directories(vmp PUBLIC src)
-target_link_libraries(vmp SimDriver kfr)
+target_link_libraries(vmp SimDriver rtaudio_static)
 
-add_executable(AirWaves src/exec/main.cpp)
+set(EXEC_SOURCE_FILES
+        src/exec/AirWaves.cpp
+        src/exec/AirWaves.hpp
+        src/exec/main.cpp
+        )
+add_executable(AirWaves ${EXEC_SOURCE_FILES})
 target_link_libraries(AirWaves vmp)
 
-if (${BUILD_TESTS})
-    # Download and unpack catch at configure time
-    download_project(PROJ catch
+if (${VMP_BUILD_TESTS})
+    # Download and unpack googletest at configure time
+    download_project(PROJ gtest
             PREFIX thirdparty
-            GIT_REPOSITORY https://github.com/philsquared/Catch.git
-            GIT_TAG v1.10.0
+            GIT_REPOSITORY https://github.com/google/googletest.git
+            GIT_TAG release-1.8.0
             UPDATE_DISCONNECTED 1
             QUIET
             )
+    # Prevent overriding the parent project's compiler/linker settings on Windows
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+    # compile googletest with current project
+    add_subdirectory(${gtest_SOURCE_DIR} ${gtest_BINARY_DIR})
 
     set(TEST_SOURCE_FILES
-            src/testing/CatchMain.cpp
-            src/testing/AirWavesUnitTests.cpp
+            src/testing/AudioDeviceTests.cpp
             )
 
     add_executable(vmp-tests ${TEST_SOURCE_FILES})
     add_test(NAME empty-test COMMAND vmp-tests)
-    target_include_directories(vmp-tests PUBLIC ${catch_SOURCE_DIR}/include)
-    target_link_libraries(vmp-tests vmp)
+    target_link_libraries(vmp-tests vmp gtest_main)
 endif ()

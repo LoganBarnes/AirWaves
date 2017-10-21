@@ -14,25 +14,37 @@
 // The Virtual Music Project
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
-#include "AirWaves.hpp"
+#include "Transport.hpp"
+#include <imgui.h>
 
 namespace vmp
 {
+void Transport::play()
+{
 
-AirWaves::AirWaves(int, int, sim::SimData *pSimData)
-    : simData_(*pSimData)
-{
 }
-void AirWaves::onGuiRender(int, int)
+void Transport::pause()
 {
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-    ImGui::SetNextWindowPos(ImVec2(0, 0));
-    if (ImGui::Begin("Window", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-        ImGui::Text("Framerate: %.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
-        transport_.configure_gui();
+
+}
+void Transport::stop()
+{
+
+}
+void Transport::configure_gui()
+{
+    if (ImGui::CollapsingHeader("Transport", "transport", false, true)) {
+        if (ImGui::Button("[]")) { stop(); }
+        if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Stop"); }
+        ImGui::SameLine();
+        if (ImGui::Button(">")) { play(); }
+        if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Play"); }
+        ImGui::SameLine();
+        if (ImGui::Button("<<")) {}
+        if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Back"); }
+        ImGui::SameLine();
+        if (ImGui::Button(">>")) {}
+        if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Forward"); }
     }
-    ImGui::End();
-    ImGui::PopStyleVar();
 }
-
 } // namespace vmp

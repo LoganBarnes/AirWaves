@@ -20,6 +20,7 @@ project(AirWaves LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 14)
 
 option(VMP_BUILD_TESTS OFF "Build unit tests created with GoogleTest framework")
+option(VMP_UPDATE_REPOS OFF "Update thirdpary git repos")
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
@@ -28,12 +29,18 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 ######################
 include(DownloadProject)
 
+if (VMP_UPDATE_REPOS)
+    set(UPDATE_STATUS 0)
+else ()
+    set(UPDATE_STATUS 1)
+endif ()
+
 ### SimulationDriver ###
 download_project(PROJ sim
         PREFIX thirdparty
         GIT_REPOSITORY https://github.com/LoganBarnes/SimulationDriver.git
         GIT_TAG master
-        UPDATE_DISCONNECTED 1
+        UPDATE_DISCONNECTED ${UPDATE_STATUS}
         QUIET
         )
 
@@ -47,7 +54,7 @@ download_project(PROJ rtAudio
         PREFIX thirdparty
         GIT_REPOSITORY https://github.com/LoganBarnes/rtaudio.git
         GIT_TAG master
-        UPDATE_DISCONNECTED 1
+        UPDATE_DISCONNECTED ${UPDATE_STATUS}
         QUIET
         )
 
@@ -100,7 +107,7 @@ if (${VMP_BUILD_TESTS})
             PREFIX thirdparty
             GIT_REPOSITORY https://github.com/google/googletest.git
             GIT_TAG release-1.8.0
-            UPDATE_DISCONNECTED 1
+            UPDATE_DISCONNECTED ${UPDATE_STATUS}
             QUIET
             )
     # Prevent overriding the parent project's compiler/linker settings on Windows

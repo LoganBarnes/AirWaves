@@ -34,6 +34,11 @@ public:
     void stop_stream();
     bool is_stream_running() const;
 
+    void add_input_sound(Sound *sound);
+    void add_output_sound(Sound *sound);
+
+    void set_output_amplitude(double amplitude);
+
 private:
     MainStream();
     ~MainStream();

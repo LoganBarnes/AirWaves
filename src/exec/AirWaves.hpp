@@ -34,6 +34,9 @@ public:
 private:
     sim::SimData &simData_;
     std::unique_ptr<vmp::Transport> transport_;
+
+    //TODO: should be stored in VMP::Output()
+    float output_amplitude_{1.0};
 };
 
 } // namespace vmp

@@ -97,10 +97,7 @@ class MainStream::AudioStream
 public:
     explicit AudioStream(unsigned frame_size)
         : buffer_(frame_size * 2)
-    {
-        output_sounds_.emplace_back(saw_source().sound());
-        output_sounds_.emplace_back(sine_source().sound());
-    }
+    {}
 
     static int audio_callback(void *outputBuffer,
                               void *,
@@ -119,24 +116,21 @@ public:
         return s->play_sound(buffer, nBufferFrames);
     }
 
+    std::vector<Sound *> input_sounds;
+    std::vector<Sound *> output_sounds;
+    double amplitude_{1.0};
+
 private:
-    std::vector<Sound *> input_sounds_;
-    std::vector<Sound *> output_sounds_;
-
     std::vector<double> buffer_;
-
-    std::vector<double> last_values_{0, 0};
-    double max_amplitude_{0.2};
-    double freq_scale_{0.025};
 
     int play_sound(double *outputBuffer, unsigned int nBufferFrames)
     {
         std::memset(outputBuffer, 0, sizeof(double) * nBufferFrames * 2);
 
-        for (Sound *s : output_sounds_) {
+        for (Sound *s : output_sounds) {
             s->handle_data(buffer_.data(), nBufferFrames, 2);
             for (unsigned i = 0; i < nBufferFrames * 2; ++i) {
-                outputBuffer[i] += buffer_[i];
+                outputBuffer[i] += buffer_[i] * amplitude_;
             }
         }
         return 0;
@@ -182,6 +176,21 @@ bool MainStream::is_stream_running() const
     return stream_running_;
 }
 
+void MainStream::add_input_sound(Sound *sound)
+{
+    stream_->input_sounds.emplace_back(sound);
+}
+
+void MainStream::add_output_sound(Sound *sound)
+{
+    stream_->output_sounds.emplace_back(sound);
+}
+
+void MainStream::set_output_amplitude(double amplitude)
+{
+    stream_->amplitude_ = std::min(1.2, std::max(0.0, amplitude));
+}
+
 MainStream::MainStream()
     : audio_(std::make_unique<RtAudio>()),
       stream_{nullptr}
@@ -209,6 +218,8 @@ MainStream::MainStream()
     catch (const RtAudioError &e) {
         throw std::runtime_error("Failed to open audio stream. " + e.getMessage());
     }
+    add_output_sound(saw_source().sound());
+    add_output_sound(sine_source().sound());
 }
 
 MainStream::~MainStream()

@@ -47,6 +47,10 @@ void AirWaves::onGuiRender(int, int)
             ImGui::Text("Framerate: %.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
         }
         transport_->configure_gui();
+        ImGui::Separator();
+        if (ImGui::VSliderFloat("Master Volume", ImVec2(45, 150), &output_amplitude_, 0.0f, 1.0f)) {
+            vmp::MainStream::instance().set_output_amplitude(output_amplitude_);
+        }
     }
     ImGui::End();
     ImGui::PopStyleVar();

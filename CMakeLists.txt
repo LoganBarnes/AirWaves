@@ -87,9 +87,6 @@ add_executable(sound-test src/exec/simple_sound_test.cpp)
 target_link_libraries(sound-test vmp)
 target_compile_options(sound-test PRIVATE ${INTENSE_FLAGS})
 
-add_executable(ci-device-test src/exec/test_ci_devices.cpp)
-target_link_libraries(ci-device-test vmp)
-
 if (${VMP_BUILD_TESTS})
     # Download and unpack googletest at configure time
     download_project(PROJ gtest

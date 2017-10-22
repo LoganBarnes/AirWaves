@@ -32,7 +32,11 @@ TEST(AudioDeviceTests, DevicesCanBeQueried)
         if (info.probed) {
             // Print, for example, the maximum number of output channels for each device
             std::cout << "device = " << i;
-            std::cout << ": maximum output channels = " << info.outputChannels << "\n";
+            std::cout << "\n\tmaximum output channels = " << info.outputChannels
+                      << (info.isDefaultOutput ? " (default)\n" : "\n");
+            std::cout << "\tmaximum input channels  = " << info.inputChannels
+                      << (info.isDefaultInput ? " (default)\n" : "\n");
+            std::cout << "\tmaximum duplex channels = " << info.duplexChannels << "\n";
         }
     }
 }

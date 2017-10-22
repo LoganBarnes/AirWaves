@@ -1,11 +1,8 @@
 The Visual Music Project
 ========================
-
-| System  | Environment      | Status |
-|:-------:|:----------------:|:------:|
-| OS X    | Xcode 8          | [![Travis CI](https://travis-ci.org/LoganBarnes/AirWaves.svg?branch=master)](https://travis-ci.org/LoganBarnes/AirWaves)|
-| Linux   | GNU-6.3          | [![Travis CI](https://travis-ci.org/LoganBarnes/AirWaves.svg?branch=master)](https://travis-ci.org/LoganBarnes/AirWaves)|
-| Windows | Visual Studio 15 | [![Build status](https://ci.appveyor.com/api/projects/status/2qojm6s3i7ymwaac?svg=true)](https://ci.appveyor.com/project/LoganBarnes/airwaves) |
+[![Travis CI][travis-badge]][travis-link]
+[![Build status][appveyor-badge]][appveyor-link]
+[![MIT License][license-badge]](LICENSE.md)
 
 Linux
 -----
@@ -14,3 +11,9 @@ Required packages if using ALSA (default):
 ```bash
 sudo apt-get install libasound2 alsa-utils alsa-oss libasound2-dev
 ```
+
+[travis-badge]: https://travis-ci.org/LoganBarnes/AirWaves.svg?branch=master
+[travis-link]: https://travis-ci.org/LoganBarnes/AirWaves
+[appveyor-badge]: https://ci.appveyor.com/api/projects/status/2qojm6s3i7ymwaac?svg=true
+[appveyor-link]: https://ci.appveyor.com/project/LoganBarnes/airwaves
+[license-badge]: https://img.shields.io/badge/License-MIT-blue.svg

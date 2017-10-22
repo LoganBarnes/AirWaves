@@ -17,7 +17,7 @@
 #include "AirWaves.hpp"
 #include <imgui.h>
 #include <vmp/VMP.hpp>
-#include <vmp/Transport.hpp>
+#include <vmp/visual/Transport.hpp>
 
 namespace vmp
 {
@@ -35,7 +35,8 @@ AirWaves::AirWaves(int, int, sim::SimData *pSimData)
 //    VMP::add_source(SawSoundSource{});
 }
 
-AirWaves::~AirWaves() {}
+AirWaves::~AirWaves()
+{}
 
 void AirWaves::onGuiRender(int, int)
 {

@@ -151,22 +151,35 @@ MainStream &MainStream::instance()
 
 void MainStream::start_stream()
 {
+    if (stream_running_) {
+        return;
+    }
     try {
         audio_->startStream();
     }
     catch (const RtAudioError &e) {
         throw std::runtime_error("Failure when starting audio stream. " + e.getMessage());
     }
+    stream_running_ = true;
 }
 
 void MainStream::stop_stream()
 {
+    if (!stream_running_) {
+        return;
+    }
     try {
         audio_->stopStream();
     }
     catch (const RtAudioError &e) {
         throw std::runtime_error("Failure when stopping audio stream. " + e.getMessage());
     }
+    stream_running_ = false;
+}
+
+bool MainStream::is_stream_running() const
+{
+    return stream_running_;
 }
 
 MainStream::MainStream()

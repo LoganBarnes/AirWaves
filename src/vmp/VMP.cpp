@@ -60,3 +60,19 @@ private:
     std::unique_ptr<UpdateEntity> self_;
 };
 }
+void VMP::resume()
+{
+    vmp::MainStream::instance().start_stream();
+}
+void VMP::pause()
+{
+    vmp::MainStream::instance().stop_stream();
+}
+void VMP::reset()
+{
+    vmp::MainStream::instance().stop_stream();
+}
+bool VMP::is_paused()
+{
+    return !vmp::MainStream::instance().is_stream_running();
+}

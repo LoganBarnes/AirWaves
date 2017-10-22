@@ -16,22 +16,33 @@
 // ////////////////////////////////////////////////////////////
 #pragma once
 
+#include <vmp/VmpTypes.hpp>
+#include <memory>
+#include <vector>
+
+class RtAudio;
+
 namespace vmp
 {
 
-class Transport
+class MainStream
 {
 public:
-    ~Transport() = default;
+    static MainStream &instance();
 
-    void play();
-    void pause();
-    void stop();
-
-    void configure_gui();
+    void start_stream();
+    void stop_stream();
+    bool is_stream_running() const;
 
 private:
-    bool playing_{false};
+    MainStream();
+    ~MainStream();
+
+    class AudioStream;
+    std::unique_ptr<RtAudio> audio_;
+    std::unique_ptr<AudioStream> stream_;
+
+    bool stream_running_{false};
 };
 
 } // namespace vmp

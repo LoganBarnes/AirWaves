@@ -15,49 +15,25 @@
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
 #include "Transport.hpp"
-#include "MainStream.hpp"
+#include "vmp/VMP.hpp"
 #include <imgui.h>
 
 namespace vmp
 {
 
-void Transport::play()
-{
-    if (!playing_) {
-        MainStream::instance().start_stream();
-        playing_ = true;
-    }
-}
-
-void Transport::pause()
-{
-    if (playing_) {
-        MainStream::instance().stop_stream();
-        playing_ = false;
-    }
-}
-
-void Transport::stop()
-{
-    if (playing_) {
-        MainStream::instance().stop_stream();
-        playing_ = false;
-    }
-}
-
 void Transport::configure_gui()
 {
     if (ImGui::CollapsingHeader("Transport", "transport", false, true)) {
-        if (ImGui::Button("[]")) { stop(); }
+        if (ImGui::Button("[]")) { VMP::reset(); }
         if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Stop"); }
         ImGui::SameLine();
-        if (playing_) {
-            if (ImGui::Button("||")) { pause(); }
-            if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Pause"); }
+        if (VMP::is_paused()) {
+            if (ImGui::Button(">")) { VMP::resume(); }
+            if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Play"); }
         }
         else {
-            if (ImGui::Button(">")) { play(); }
-            if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Play"); }
+            if (ImGui::Button("||")) { VMP::pause(); }
+            if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Pause"); }
         }
         ImGui::SameLine();
         if (ImGui::Button("<<")) {}

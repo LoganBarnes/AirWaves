@@ -16,11 +16,17 @@
 // ////////////////////////////////////////////////////////////
 #pragma once
 
-#include "MainStream.hpp"
-#include "Source.hpp"
+#include "vmp/audio/MainStream.hpp"
+#include "vmp/audio/Source.hpp"
 class VMP
 {
 public:
+
+    static void resume();
+    static void pause();
+    static void reset();
+    static bool is_paused();
+
     template<typename T>
     static vmp::Source add_source(T source)
     {

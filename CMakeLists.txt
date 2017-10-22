@@ -11,32 +11,22 @@
 # |    \$  /    $$ |\$  /$$ | \__|           | ||
 # |_____\_/_____$$ |_\_/_$$ |________________|_||
 #               \__|     \__|
-# The Virtual Music Project
+# The Visual Music Project
 # Created by Logan Barnes
-###############################################################
-cmake_minimum_required(VERSION 3.7)
-project(AirWaves)
+##############################################################
+cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
+project(AirWaves LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 14)
-set(INTENSE_FLAGS
-        -Wall
-        -Wextra
-        -Winit-self
-        -Wold-style-cast
-        -Woverloaded-virtual
-        -Wuninitialized
-        -Wmissing-declarations
-        -Winit-self
-        -pedantic
-        -pedantic-errors
-        -Werror
-        )
 
 option(VMP_BUILD_TESTS OFF "Build unit tests created with GoogleTest framework")
 
+######################
+### EXTERNAL REPOS ###
+######################
 include(cmake/DownloadProject.cmake)
 
-# Download and unpack simulation driver at configure time
+### SimulationDriver ###
 download_project(PROJ sim
         PREFIX thirdparty
         GIT_REPOSITORY https://github.com/LoganBarnes/SimulationDriver.git
@@ -50,8 +40,7 @@ set(SIM_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 # compile sim with current project
 add_subdirectory(${sim_SOURCE_DIR} ${sim_BINARY_DIR})
 
-
-# Download and unpack RtAudio at configure time
+### RtAudio ###
 download_project(PROJ rtAudio
         PREFIX thirdparty
         GIT_REPOSITORY https://github.com/LoganBarnes/rtaudio.git
@@ -63,6 +52,17 @@ download_project(PROJ rtAudio
 # compile RtAudio with current project
 add_subdirectory(${rtAudio_SOURCE_DIR} ${rtAudio_BINARY_DIR})
 target_include_directories(rtaudio_static SYSTEM PUBLIC ${rtAudio_SOURCE_DIR})
+
+############################
+### Visual Music Project ###
+############################
+if (NOT MSVC)
+    set(INTENSE_FLAGS -Wall -Wextra -Winit-self -Winit-self
+            -Wold-style-cast -Woverloaded-virtual -Werror
+            -Wmissing-declarations -pedantic -Wuninitialized)
+else ()
+    set(INTENSE_FLAGS -W4 -WX)
+endif ()
 
 set(VMP_SOURCE_FILES
         src/vmp/Transport.cpp

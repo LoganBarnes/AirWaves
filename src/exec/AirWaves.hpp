@@ -11,12 +11,14 @@
 // |    \$  /    $$ |\$  /$$ | \__|           | ||
 // |_____\_/_____$$ |_\_/_$$ |________________|_||
 //               \__|     \__|
-// The Virtual Music Project
+// The Visual Music Project
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
 #pragma once
 
+#pragma warning(push, 0) // thirdparty headers only
 #include <sim-driver/OpenGLSimulation.hpp>
+#pragma warning(pop)
 #include <vmp/Transport.hpp>
 
 namespace vmp

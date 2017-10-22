@@ -11,11 +11,14 @@
 // |    \$  /    $$ |\$  /$$ | \__|           | ||
 // |_____\_/_____$$ |_\_/_$$ |________________|_||
 //               \__|     \__|
-// The Virtual Music Project
+// The Visual Music Project
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
 #include "Transport.hpp"
+// stupid msvc and no system headers
+#pragma warning(push, 0)
 #include <imgui.h>
+#pragma warning(pop)
 
 namespace vmp
 {

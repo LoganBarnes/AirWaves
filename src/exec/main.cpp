@@ -11,7 +11,7 @@
 // |    \$  /    $$ |\$  /$$ | \__|           | ||
 // |_____\_/_____$$ |_\_/_$$ |________________|_||
 //               \__|     \__|
-// The Virtual Music Project
+// The Visual Music Project
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
 #include "AirWaves.hpp"
@@ -19,7 +19,7 @@
 int main()
 {
     try {
-        sim::OpenGLSimulation<vmp::AirWaves>{{"Air Waves"}}.runNoFasterThanRealTimeLoop();
+        sim::OpenGLSimulation<vmp::AirWaves>({"Air Waves"}).runNoFasterThanRealTimeLoop();
     }
     catch (const std::exception &e) {
         std::cerr << "ERROR program failed: " << e.what() << std::endl;

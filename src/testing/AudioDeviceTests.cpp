@@ -11,7 +11,7 @@
 // |    \$  /    $$ |\$  /$$ | \__|           | ||
 // |_____\_/_____$$ |_\_/_$$ |________________|_||
 //               \__|     \__|
-// The Virtual Music Project
+// The Visual Music Project
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
 #include <RtAudio.h>

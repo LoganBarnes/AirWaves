@@ -61,7 +61,7 @@ if (NOT MSVC)
             -Wold-style-cast -Woverloaded-virtual -Werror
             -Wmissing-declarations -pedantic -Wuninitialized)
 else ()
-    set(INTENSE_FLAGS -W4 -WX)
+    set(INTENSE_FLAGS -WX)
 endif ()
 
 set(VMP_SOURCE_FILES

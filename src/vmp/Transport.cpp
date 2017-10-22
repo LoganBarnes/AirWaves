@@ -15,10 +15,7 @@
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
 #include "Transport.hpp"
-// stupid msvc and no system headers
-#pragma warning(push, 0)
 #include <imgui.h>
-#pragma warning(pop)
 
 namespace vmp
 {

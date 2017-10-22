@@ -14,10 +14,8 @@
 // The Visual Music Project
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
-#pragma warning(push, 0) // ignore thirdparty header warnings
 #include "RtAudio.h"
 #include <glm/gtc/constants.hpp>
-#pragma warning(pop)
 
 namespace
 {

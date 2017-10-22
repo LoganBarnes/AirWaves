@@ -16,6 +16,7 @@
 // ////////////////////////////////////////////////////////////
 #include "RtAudio.h"
 #include <glm/gtc/constants.hpp>
+#include <cmath>
 
 namespace
 {

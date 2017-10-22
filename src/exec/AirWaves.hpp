@@ -25,9 +25,9 @@ namespace vmp
 class AirWaves
 {
 public:
-    AirWaves(int w, int h, sim::SimData *pSimData);
+    AirWaves(int width, int height, sim::SimData *pSimData);
 
-    void onGuiRender(int w, int h);
+    void onGuiRender(int width, int height);
 
 private:
     sim::SimData &simData_;

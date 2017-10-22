@@ -14,26 +14,13 @@
 // The Visual Music Project
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
-#pragma once
-
-#include <sim-driver/SimData.hpp>
-#include <vmp/VmpTypes.hpp>
-#include <memory>
+#include "Source.hpp"
 
 namespace vmp
 {
 
-class AirWaves
+Sound *Source::sound() const
 {
-public:
-    AirWaves(int width, int height, sim::SimData *pSimData);
-    ~AirWaves();
-
-    void onGuiRender(int width, int height);
-
-private:
-    sim::SimData &simData_;
-    std::unique_ptr<vmp::Transport> transport_;
-};
-
+    return self_.get();
+}
 } // namespace vmp

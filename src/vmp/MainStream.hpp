@@ -16,7 +16,9 @@
 // ////////////////////////////////////////////////////////////
 #pragma once
 
+#include <vmp/VmpTypes.hpp>
 #include <memory>
+#include <vector>
 
 class RtAudio;
 
@@ -26,7 +28,7 @@ namespace vmp
 class MainStream
 {
 public:
-    static MainStream& instance();
+    static MainStream &instance();
 
     void start_stream();
     void stop_stream();
@@ -35,7 +37,9 @@ private:
     MainStream();
     ~MainStream();
 
+    class AudioStream;
     std::unique_ptr<RtAudio> audio_;
+    std::unique_ptr<AudioStream> stream_;
 };
 
 } // namespace vmp

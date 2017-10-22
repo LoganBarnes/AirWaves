@@ -16,24 +16,14 @@
 // ////////////////////////////////////////////////////////////
 #pragma once
 
-#include <sim-driver/SimData.hpp>
-#include <vmp/VmpTypes.hpp>
-#include <memory>
-
 namespace vmp
 {
 
-class AirWaves
+class Sound
 {
 public:
-    AirWaves(int width, int height, sim::SimData *pSimData);
-    ~AirWaves();
-
-    void onGuiRender(int width, int height);
-
-private:
-    sim::SimData &simData_;
-    std::unique_ptr<vmp::Transport> transport_;
+    virtual ~Sound() = default;
+    virtual void handle_data(double *buffer, unsigned num_frames, unsigned channels) = 0;
 };
 
 } // namespace vmp

@@ -81,8 +81,15 @@ endif ()
 set(VMP_SOURCE_FILES
         src/vmp/MainStream.cpp
         src/vmp/MainStream.hpp
+        src/vmp/Output.cpp
+        src/vmp/Output.hpp
+        src/vmp/Sound.hpp
+        src/vmp/Source.cpp
+        src/vmp/Source.hpp
         src/vmp/Transport.cpp
         src/vmp/Transport.hpp
+        src/vmp/VMP.cpp
+        src/vmp/VMP.hpp
         src/vmp/VmpTypes.hpp
         )
 

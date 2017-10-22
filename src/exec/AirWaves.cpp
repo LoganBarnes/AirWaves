@@ -16,14 +16,26 @@
 // ////////////////////////////////////////////////////////////
 #include "AirWaves.hpp"
 #include <imgui.h>
+#include <vmp/VMP.hpp>
+#include <vmp/Transport.hpp>
 
 namespace vmp
 {
 
-AirWaves::AirWaves(int, int, sim::SimData *pSimData)
-    : simData_(*pSimData)
+class SawSoundSource
 {
+    void create_sound_data()
+    {}
+};
+
+AirWaves::AirWaves(int, int, sim::SimData *pSimData)
+    : simData_(*pSimData),
+      transport_{std::make_unique<vmp::Transport>()}
+{
+//    VMP::add_source(SawSoundSource{});
 }
+
+AirWaves::~AirWaves() {}
 
 void AirWaves::onGuiRender(int, int)
 {
@@ -33,7 +45,7 @@ void AirWaves::onGuiRender(int, int)
         if (!simData_.paused) {
             ImGui::Text("Framerate: %.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
         }
-        transport_.configure_gui();
+        transport_->configure_gui();
     }
     ImGui::End();
     ImGui::PopStyleVar();

@@ -15,9 +15,12 @@
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
 #include "MainStream.hpp"
+#include "Source.hpp"
+#include "Sound.hpp"
 #include <RtAudio.h>
 #include <cmath>
 #include <glm/gtc/constants.hpp>
+#include <cstring>
 
 namespace vmp
 {
@@ -25,23 +28,89 @@ namespace vmp
 namespace
 {
 
-template<typename T>
-class Sound
+/**
+ * @brief Two-channel sawtooth wave generator.
+ */
+class SawSource
 {
 public:
-    explicit Sound(bool sine = true)
-        : sine_(sine)
-    {}
-
-    static int play_sound(void *outputBuffer,
-                          void *,
-                          unsigned int nBufferFrames,
-                          double,
-                          RtAudioStreamStatus status,
-                          void *userData)
+    SawSource() = default;
+    void create_data(double *buffer, unsigned num_frames, unsigned channels)
     {
-        auto *buffer = static_cast<T *>(outputBuffer);
-        auto *s = static_cast<Sound<T> *>(userData);
+        // Write interleaved audio data.
+        for (unsigned i = 0; i < num_frames; i++) {
+            for (unsigned j = 0; j < channels; j++) {
+                *buffer++ = last_values_[j];
+                last_values_[j] += freq_scale_ * max_amplitude_ / 2.0;
+                if (last_values_[j] >= max_amplitude_) last_values_[j] -= 2.0 * max_amplitude_;
+            }
+        }
+    }
+private:
+    std::array<double, 2> last_values_{{0, 0}};
+    double max_amplitude_{0.2};
+    double freq_scale_{0.025};
+};
+
+/**
+ * @brief Two-channel sine wave generator.
+ */
+class SineSource
+{
+public:
+    SineSource() = default;
+    void create_data(double *buffer, unsigned num_frames, unsigned channels)
+    {
+        // Write interleaved audio data.
+        for (unsigned i = 0; i < num_frames; i++) {
+            for (unsigned j = 0; j < channels; j++) {
+                *buffer++ = std::sin(last_values_[j]) * max_amplitude_ * double(3);
+                last_values_[j] += freq_scale_;
+                if (last_values_[j] >= glm::pi<double>()) last_values_[j] -= double(2) * glm::pi<double>();
+            }
+        }
+    }
+private:
+    std::array<double, 2> last_values_{{0, 0}};
+    double max_amplitude_{0.2};
+    double freq_scale_{0.025};
+};
+
+Source &saw_source()
+{
+    SawSource saw;
+    static Source s(saw);
+    return s;
+}
+
+Source &sine_source()
+{
+    SineSource sine;
+    static Source s(sine);
+    return s;
+}
+
+} // namespace
+
+class MainStream::AudioStream
+{
+public:
+    explicit AudioStream(unsigned frame_size)
+        : buffer_(frame_size * 2)
+    {
+        output_sounds_.emplace_back(saw_source().sound());
+        output_sounds_.emplace_back(sine_source().sound());
+    }
+
+    static int audio_callback(void *outputBuffer,
+                              void *,
+                              unsigned int nBufferFrames,
+                              double,
+                              RtAudioStreamStatus status,
+                              void *userData)
+    {
+        auto *buffer = static_cast<double *>(outputBuffer);
+        auto *s = static_cast<AudioStream *>(userData);
 
         if (status) {
             std::cout << "Stream underflow detected!" << std::endl;
@@ -51,51 +120,28 @@ public:
     }
 
 private:
-    bool sine_;
-    std::vector<T> last_values_{0, 0};
-    T max_amplitude_{0.2};
-    T freq_scale_{0.025};
+    std::vector<Sound *> input_sounds_;
+    std::vector<Sound *> output_sounds_;
 
-    int play_sound(T *outputBuffer, unsigned int nBufferFrames)
-    {
-        return sine_ ? sine(outputBuffer, nBufferFrames) : saw(outputBuffer, nBufferFrames);
-    }
+    std::vector<double> buffer_;
 
-    /**
-     * @brief Two-channel sawtooth wave generator.
-     */
-    int saw(T *outputBuffer, unsigned int nBufferFrames)
-    {
-        // Write interleaved audio data.
-        for (unsigned i = 0; i < nBufferFrames; i++) {
-            for (unsigned j = 0; j < 2; j++) {
-                *outputBuffer++ = last_values_[j];
-                last_values_[j] += freq_scale_ * max_amplitude_ / T(2);
-                if (last_values_[j] >= max_amplitude_) last_values_[j] -= T(2) * max_amplitude_;
-            }
-        }
-        return 0;
-    }
+    std::vector<double> last_values_{0, 0};
+    double max_amplitude_{0.2};
+    double freq_scale_{0.025};
 
-    /**
-     * @brief Two-channel sine wave generator.
-     */
-    int sine(T *outputBuffer, unsigned int nBufferFrames)
+    int play_sound(double *outputBuffer, unsigned int nBufferFrames)
     {
-        // Write interleaved audio data.
-        for (unsigned i = 0; i < nBufferFrames; i++) {
-            for (unsigned j = 0; j < 2; j++) {
-                *outputBuffer++ = std::sin(last_values_[j]) * max_amplitude_ * T(3);
-                last_values_[j] += freq_scale_;
-                if (last_values_[j] >= glm::pi<T>()) last_values_[j] -= T(2) * glm::pi<T>();
+        std::memset(outputBuffer, 0, sizeof(double) * nBufferFrames * 2);
+
+        for (Sound *s : output_sounds_) {
+            s->handle_data(buffer_.data(), nBufferFrames, 2);
+            for (unsigned i = 0; i < nBufferFrames * 2; ++i) {
+                outputBuffer[i] += buffer_[i];
             }
         }
         return 0;
     }
 };
-
-Sound<double> s;
-}
 
 MainStream &MainStream::instance()
 {
@@ -124,14 +170,19 @@ void MainStream::stop_stream()
 }
 
 MainStream::MainStream()
-    : audio_(std::make_unique<RtAudio>())
+    : audio_(std::make_unique<RtAudio>()),
+      stream_{nullptr}
 {
     RtAudio::StreamParameters parameters;
+
     parameters.deviceId = audio_->getDefaultOutputDevice();
     parameters.nChannels = 2;
     parameters.firstChannel = 0;
+
     unsigned sampleRate = 44100;
     unsigned bufferFrames = 256; // 256 sample frames
+
+    stream_ = std::make_unique<AudioStream>(bufferFrames);
 
     try {
         audio_->openStream(&parameters,
@@ -139,8 +190,8 @@ MainStream::MainStream()
                            RTAUDIO_FLOAT64,
                            sampleRate,
                            &bufferFrames,
-                           &Sound<double>::play_sound,
-                           &s);
+                           &MainStream::AudioStream::audio_callback,
+                           stream_.get());
     }
     catch (const RtAudioError &e) {
         throw std::runtime_error("Failed to open audio stream. " + e.getMessage());
@@ -151,3 +202,5 @@ MainStream::~MainStream()
 {}
 
 } // namespace vmp
+
+

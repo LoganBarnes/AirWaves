@@ -14,26 +14,49 @@
 // The Visual Music Project
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
-#pragma once
-
-#include <sim-driver/SimData.hpp>
-#include <vmp/VmpTypes.hpp>
+#include "VMP.hpp"
 #include <memory>
 
 namespace vmp
 {
-
-class AirWaves
+struct SeanEntity
 {
-public:
-    AirWaves(int width, int height, sim::SimData *pSimData);
-    ~AirWaves();
+private:
+    template<typename T>
+    struct Entity;
 
-    void onGuiRender(int width, int height);
+public:
+    template<typename T>
+    explicit SeanEntity(T entity)
+        : self_{std::make_unique<Entity<T >>(std::move(entity))}
+    {}
+
+    void update(double t, double dt)
+    {
+        self_->update(t, dt);
+    }
 
 private:
-    sim::SimData &simData_;
-    std::unique_ptr<vmp::Transport> transport_;
-};
+    struct UpdateEntity
+    {
+        virtual ~UpdateEntity() = default;
+        virtual void update(double, double) = 0;
+    };
 
-} // namespace vmp
+    template<typename T>
+    struct Entity: public UpdateEntity
+    {
+        explicit Entity(T entity)
+            : data_{std::move(entity)}
+        {}
+
+        void update(double t, double dt) final
+        {
+            data_.update(t, dt);
+        }
+        T data_;
+    };
+
+    std::unique_ptr<UpdateEntity> self_;
+};
+}

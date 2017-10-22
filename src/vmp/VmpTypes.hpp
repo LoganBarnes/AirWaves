@@ -18,6 +18,7 @@
 
 namespace vmp
 {
+class Sound;
 class MainStream;
 class Transport;
 } // namespace vmp

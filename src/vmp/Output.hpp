@@ -16,24 +16,17 @@
 // ////////////////////////////////////////////////////////////
 #pragma once
 
-#include <sim-driver/SimData.hpp>
-#include <vmp/VmpTypes.hpp>
-#include <memory>
-
 namespace vmp
 {
 
-class AirWaves
+class Output
 {
 public:
-    AirWaves(int width, int height, sim::SimData *pSimData);
-    ~AirWaves();
+    template<typename T>
+    static void add_source(T)
+    {
 
-    void onGuiRender(int width, int height);
-
-private:
-    sim::SimData &simData_;
-    std::unique_ptr<vmp::Transport> transport_;
+    }
 };
 
 } // namespace vmp

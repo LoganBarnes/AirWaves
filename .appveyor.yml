@@ -51,7 +51,7 @@ build_script:
   - cmake --build . --config %CONFIGURATION% -- /m
 
 test_script:
-  - call %CONFIGURATION%\vmp-tests.exe
+  - ctest -C %CONFIGURATION%
 
 notifications:
   - provider: Email

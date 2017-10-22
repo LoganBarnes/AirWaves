@@ -73,7 +73,8 @@ script:
   - cd cmake-build-debug
   - cmake -DCMAKE_BUILD_TYPE=Debug -DVMP_BUILD_TESTS=ON ..
   - make -j
-  - [[ "${TRAVIS_OS_NAME}" == "linux" ]] && make AirWaves_coverage -j
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then make AirWaves_coverage -j; fi;
   - ctest
 
   - cd ${TRAVIS_BUILD_DIR}

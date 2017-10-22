@@ -21,10 +21,12 @@ set(CMAKE_CXX_STANDARD 14)
 
 option(VMP_BUILD_TESTS OFF "Build unit tests created with GoogleTest framework")
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
 ######################
 ### EXTERNAL REPOS ###
 ######################
-include(cmake/DownloadProject.cmake)
+include(DownloadProject)
 
 ### SimulationDriver ###
 download_project(PROJ sim
@@ -53,9 +55,9 @@ download_project(PROJ rtAudio
 add_subdirectory(${rtAudio_SOURCE_DIR} ${rtAudio_BINARY_DIR})
 target_include_directories(rtaudio_static SYSTEM PUBLIC ${rtAudio_SOURCE_DIR})
 
-############################
-### Visual Music Project ###
-############################
+#############################
+### Project Configuration ###
+#############################
 if (NOT MSVC)
     set(INTENSE_FLAGS -Wall -Wextra -Winit-self -Winit-self
             -Wold-style-cast -Woverloaded-virtual -Werror
@@ -63,6 +65,11 @@ if (NOT MSVC)
 else ()
     set(INTENSE_FLAGS -WX)
 endif ()
+
+
+############################
+### Visual Music Project ###
+############################
 
 set(VMP_SOURCE_FILES
         src/vmp/Transport.cpp
@@ -72,7 +79,7 @@ set(VMP_SOURCE_FILES
 add_library(vmp ${VMP_SOURCE_FILES})
 target_include_directories(vmp PUBLIC src)
 target_link_libraries(vmp SimDriver rtaudio_static)
-target_compile_options(vmp PRIVATE ${INTENSE_FLAGS})
+target_compile_options(vmp PRIVATE ${INTENSE_FLAGS} $<$<CONFIG:Debug>:${PROFILE_FLAGS}>)
 
 set(EXEC_SOURCE_FILES
         src/exec/AirWaves.cpp
@@ -102,11 +109,25 @@ if (${VMP_BUILD_TESTS})
     # compile googletest with current project
     add_subdirectory(${gtest_SOURCE_DIR}/googletest ${gtest_BINARY_DIR}/googletest)
 
+    # add test coverage capabilities
+    if (CMAKE_COMPILER_IS_GNUCXX AND CMAKE_BUILD_TYPE MATCHES "Debug")
+        include(CodeCoverage)
+        setup_target_for_coverage(${PROJECT_NAME}_coverage vmp-tests coverage)
+        set(PROFILE_FLAGS -fprofile-arcs -ftest-coverage)
+        set(PROFILE_LIBS gcov)
+        target_compile_options(vmp PRIVATE ${PROFILE_FLAGS})
+        target_link_libraries(vmp ${PROFILE_LIBS})
+    endif ()
+
+    include(CTest)
+    enable_testing()
+
     set(TEST_SOURCE_FILES
             src/testing/AudioDeviceTests.cpp
             )
 
     add_executable(vmp-tests ${TEST_SOURCE_FILES})
-    add_test(NAME empty-test COMMAND vmp-tests)
-    target_link_libraries(vmp-tests vmp gtest_main)
+    add_test(NAME vmp-test COMMAND vmp-tests)
+    target_link_libraries(vmp-tests vmp gtest_main ${PROFILE_LIBS})
+    target_compile_options(vmp-tests PRIVATE ${INTENSE_FLAGS} ${PROFILE_FLAGS})
 endif ()

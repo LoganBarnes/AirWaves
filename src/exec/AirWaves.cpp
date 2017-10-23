@@ -15,14 +15,23 @@
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
 #include "AirWaves.hpp"
+#include <imgui.h>
+#include <vmp/VMP.hpp>
+#include <vmp/visual/Transport.hpp>
+#include <vmp/audio/sources/SawSource.hpp>
+#include <vmp/audio/sources/SineSource.hpp>
 
 namespace vmp
 {
 
 AirWaves::AirWaves(int, int, sim::SimData *pSimData)
-    : simData_(*pSimData)
+    : simData_(*pSimData),
+      transport_{std::make_unique<vmp::Transport>()}
 {
 }
+
+AirWaves::~AirWaves()
+{}
 
 void AirWaves::onGuiRender(int, int)
 {
@@ -32,7 +41,30 @@ void AirWaves::onGuiRender(int, int)
         if (!simData_.paused) {
             ImGui::Text("Framerate: %.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
         }
-        transport_.configure_gui();
+        transport_->configure_gui();
+
+        ImGui::Separator();
+        if (ImGui::VSliderFloat("Master Volume", ImVec2(45, 150), &output_amplitude_, 0.0f, 1.0f)) {
+            VMP::Output().set_amplitude(output_amplitude_);
+        }
+
+        ImGui::Separator();
+        if (ImGui::Button("Add Sine Source")) {
+            sines_.emplace_back(VMP::Output().add_source(SineSource<double, 256, 2>{}));
+        }
+        if (ImGui::Button("Add Sawtooth Source")) {
+            saws_.emplace_back(VMP::Output().add_source(SawSource<double, 256, 2>{}));
+        }
+
+        ImGui::Separator();
+        if (ImGui::Button("Remove Sine Source") && !sines_.empty()) {
+            VMP::Output().remove_source(sines_.back());
+            sines_.pop_back();
+        }
+        if (ImGui::Button("Remove Sawtooth Source") && !saws_.empty()) {
+            VMP::Output().remove_source(saws_.back());
+            saws_.pop_back();
+        }
     }
     ImGui::End();
     ImGui::PopStyleVar();

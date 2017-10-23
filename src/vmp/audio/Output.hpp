@@ -16,31 +16,43 @@
 // ////////////////////////////////////////////////////////////
 #pragma once
 
-#include <sim-driver/SimData.hpp>
 #include <vmp/VmpTypes.hpp>
+#include <vmp/audio/Source.hpp>
 #include <memory>
-#include <vector>
+#include <unordered_map>
 
 namespace vmp
 {
 
-class AirWaves
+class Output
 {
 public:
-    AirWaves(int width, int height, sim::SimData *pSimData);
-    ~AirWaves();
+    // There can only be one!
+    Output(const Output &) = delete;
+    Output(Output &&) noexcept = delete;
+    Output &operator=(const Output &) = delete;
+    Output &operator=(Output &&) noexcept = delete;
 
-    void onGuiRender(int width, int height);
+    template<typename T>
+    Source &add_source(T source)
+    {
+        return add_and_register_source(std::make_unique<Source>(source));
+    }
+
+    void remove_source(const Source &source);
+
+    void set_amplitude(double amplitude);
 
 private:
-    sim::SimData &simData_;
-    std::unique_ptr<vmp::Transport> transport_;
+    friend class ::VMP;
 
-    //TODO: should be stored in VMP::Output()
-    float output_amplitude_{1.0};
+    explicit Output(vmp::MainStream &main_stream);
+    ~Output() = default;
 
-    std::vector<Source> sines_;
-    std::vector<Source> saws_;
+    vmp::MainStream &main_stream_;
+    std::unordered_map<Sound *, std::unique_ptr<Source>> sources_;
+
+    Source &add_and_register_source(std::unique_ptr<Source> source);
 };
 
 } // namespace vmp

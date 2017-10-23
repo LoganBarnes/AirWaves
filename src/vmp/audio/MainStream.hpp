@@ -14,37 +14,43 @@
 // The Visual Music Project
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
-#include "Transport.hpp"
-#include <imgui.h>
+#pragma once
+
+#include <vmp/VmpTypes.hpp>
+#include <memory>
+#include <vector>
+
+class RtAudio;
 
 namespace vmp
 {
-void Transport::play()
-{
 
-}
-void Transport::pause()
+class MainStream
 {
+public:
+    static MainStream &instance();
 
-}
-void Transport::stop()
-{
+    void start_stream();
+    void stop_stream();
+    bool is_stream_running() const;
 
-}
-void Transport::configure_gui()
-{
-    if (ImGui::CollapsingHeader("Transport", "transport", false, true)) {
-        if (ImGui::Button("[]")) { stop(); }
-        if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Stop"); }
-        ImGui::SameLine();
-        if (ImGui::Button(">")) { play(); }
-        if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Play"); }
-        ImGui::SameLine();
-        if (ImGui::Button("<<")) {}
-        if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Back"); }
-        ImGui::SameLine();
-        if (ImGui::Button(">>")) {}
-        if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Forward"); }
-    }
-}
+    void add_input_sound(Sound *sound);
+    void add_output_sound(Sound *sound);
+
+    void remove_input_sound(Sound *sound);
+    void remove_output_sound(Sound *sound);
+
+    void set_output_amplitude(double amplitude);
+
+private:
+    MainStream();
+    ~MainStream();
+
+    class AudioStream;
+    std::unique_ptr<RtAudio> audio_;
+    std::unique_ptr<AudioStream> stream_;
+
+    bool stream_running_{false};
+};
+
 } // namespace vmp

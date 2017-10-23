@@ -1,6 +1,7 @@
 // ////////////////////////////////////////////////////////////
-// Created on 10/21/2017.
+// Created on 10/23/17.
 // Copyright (c) 2017. All rights reserved.
+//
 //  ___________________________$$$$$$$\__________
 // | $$\    $$\                $$  __$$\      | ||
 // |_$$ |___$$ |_$$\______$$\__$$ |__$$ |_____|_||
@@ -12,35 +13,39 @@
 // |_____\_/_____$$ |_\_/_$$ |________________|_||
 //               \__|     \__|
 // The Visual Music Project
-// Created by Logan Barnes
+// Created by Logan T. Barnes
 // ////////////////////////////////////////////////////////////
 #pragma once
 
-#include <sim-driver/SimData.hpp>
-#include <vmp/VmpTypes.hpp>
-#include <memory>
-#include <vector>
+#include <array>
 
 namespace vmp
 {
 
-class AirWaves
+/**
+ * @brief Sawtooth wave generator.
+ */
+template<typename T, int frames, int channels>
+class SawSource
 {
 public:
-    AirWaves(int width, int height, sim::SimData *pSimData);
-    ~AirWaves();
-
-    void onGuiRender(int width, int height);
+    void create_data(T *buffer, unsigned, unsigned)
+    {
+        // Write interleaved audio data.
+        for (unsigned i = 0; i < frames; i++) {
+            for (unsigned j = 0; j < channels; j++) {
+                *buffer++ = last_values_[j] * max_amplitude_;
+                last_values_[j] += freq_scale_;
+                if (last_values_[j] >= 1.0) last_values_[j] -= 2.0;
+            }
+        }
+    }
 
 private:
-    sim::SimData &simData_;
-    std::unique_ptr<vmp::Transport> transport_;
-
-    //TODO: should be stored in VMP::Output()
-    float output_amplitude_{1.0};
-
-    std::vector<Source> sines_;
-    std::vector<Source> saws_;
+    std::array<T, 2> last_values_{{0, 0}};
+    static constexpr T max_amplitude_{0.2};
+    static constexpr T freq_scale_{0.005};
 };
 
-} // namespace vmp
+} // namespace
+

@@ -16,31 +16,13 @@
 // ////////////////////////////////////////////////////////////
 #pragma once
 
-#include <sim-driver/SimData.hpp>
-#include <vmp/VmpTypes.hpp>
-#include <memory>
-#include <vector>
-
 namespace vmp
 {
 
-class AirWaves
+class Transport
 {
 public:
-    AirWaves(int width, int height, sim::SimData *pSimData);
-    ~AirWaves();
-
-    void onGuiRender(int width, int height);
-
-private:
-    sim::SimData &simData_;
-    std::unique_ptr<vmp::Transport> transport_;
-
-    //TODO: should be stored in VMP::Output()
-    float output_amplitude_{1.0};
-
-    std::vector<Source> sines_;
-    std::vector<Source> saws_;
+    void configure_gui();
 };
 
 } // namespace vmp

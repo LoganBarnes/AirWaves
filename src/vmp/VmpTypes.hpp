@@ -16,17 +16,13 @@
 // ////////////////////////////////////////////////////////////
 #pragma once
 
+class VMP;
+
 namespace vmp
 {
-
-class Transport
-{
-public:
-    void play();
-    void pause();
-    void stop();
-
-    void configure_gui();
-};
-
+class MainStream;
+class Output;
+class Sound;
+class Source;
+class Transport;
 } // namespace vmp

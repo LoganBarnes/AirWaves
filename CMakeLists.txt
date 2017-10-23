@@ -79,8 +79,20 @@ endif ()
 ############################
 
 set(VMP_SOURCE_FILES
-        src/vmp/Transport.cpp
-        src/vmp/Transport.hpp
+        src/vmp/audio/sources/SawSource.hpp
+        src/vmp/audio/sources/SineSource.hpp
+        src/vmp/audio/MainStream.cpp
+        src/vmp/audio/MainStream.hpp
+        src/vmp/audio/Output.cpp
+        src/vmp/audio/Output.hpp
+        src/vmp/audio/Sound.hpp
+        src/vmp/audio/Source.cpp
+        src/vmp/audio/Source.hpp
+        src/vmp/visual/Transport.cpp
+        src/vmp/visual/Transport.hpp
+        src/vmp/VMP.cpp
+        src/vmp/VMP.hpp
+        src/vmp/VmpTypes.hpp
         )
 
 add_library(vmp ${VMP_SOURCE_FILES})

@@ -16,31 +16,38 @@
 // ////////////////////////////////////////////////////////////
 #pragma once
 
-#include <sim-driver/SimData.hpp>
-#include <vmp/VmpTypes.hpp>
 #include <memory>
-#include <vector>
+#include "Sound.hpp"
 
 namespace vmp
 {
 
-class AirWaves
+class Source
 {
 public:
-    AirWaves(int width, int height, sim::SimData *pSimData);
-    ~AirWaves();
+    template<typename T>
+    class SourceSound: public Sound
+    {
+    public:
+        explicit SourceSound(T entity)
+            : data_{std::move(entity)}
+        {}
 
-    void onGuiRender(int width, int height);
+        void handle_data(double *buffer, unsigned num_frames, unsigned channels) final
+        {
+            data_.create_data(buffer, num_frames, channels);
+        }
+        T data_;
+    };
 
-private:
-    sim::SimData &simData_;
-    std::unique_ptr<vmp::Transport> transport_;
+    template<typename T>
+    explicit Source(T source)
+        : self_{std::make_unique<SourceSound<T>>(std::move(source))}
+    {}
 
-    //TODO: should be stored in VMP::Output()
-    float output_amplitude_{1.0};
+    Sound *sound() const;
 
-    std::vector<Source> sines_;
-    std::vector<Source> saws_;
+    std::shared_ptr<Sound> self_;
 };
 
 } // namespace vmp

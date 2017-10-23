@@ -14,33 +14,27 @@
 // The Visual Music Project
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
-#pragma once
+#include "VMP.hpp"
+#include <vmp/audio/MainStream.hpp>
 
-#include <sim-driver/SimData.hpp>
-#include <vmp/VmpTypes.hpp>
-#include <memory>
-#include <vector>
-
-namespace vmp
+void VMP::resume()
 {
-
-class AirWaves
+    vmp::MainStream::instance().start_stream();
+}
+void VMP::pause()
 {
-public:
-    AirWaves(int width, int height, sim::SimData *pSimData);
-    ~AirWaves();
-
-    void onGuiRender(int width, int height);
-
-private:
-    sim::SimData &simData_;
-    std::unique_ptr<vmp::Transport> transport_;
-
-    //TODO: should be stored in VMP::Output()
-    float output_amplitude_{1.0};
-
-    std::vector<Source> sines_;
-    std::vector<Source> saws_;
-};
-
-} // namespace vmp
+    vmp::MainStream::instance().stop_stream();
+}
+void VMP::reset()
+{
+    vmp::MainStream::instance().stop_stream();
+}
+bool VMP::is_paused()
+{
+    return !vmp::MainStream::instance().is_stream_running();
+}
+vmp::Output &VMP::Output()
+{
+    static vmp::Output output(vmp::MainStream::instance());
+    return output;
+}

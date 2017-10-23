@@ -16,17 +16,43 @@
 // ////////////////////////////////////////////////////////////
 #pragma once
 
+#include <vmp/VmpTypes.hpp>
+#include <vmp/audio/Source.hpp>
+#include <memory>
+#include <vector>
+
 namespace vmp
 {
 
 class Output
 {
 public:
-    template<typename T>
-    static void add_source(T)
-    {
+    // There can only be one!
+    Output(const Output &) = delete;
+    Output(Output &&) noexcept = delete;
+    Output &operator=(const Output &) = delete;
+    Output &operator=(Output &&) noexcept = delete;
 
+    template<typename T>
+    Source add_source(T source)
+    {
+        sources_.emplace_back(std::make_unique<Source>(source));
+        register_source(sources_.back());
+        return *sources_.back();
     }
+
+    void set_amplitude(double amplitude);
+
+private:
+    friend class ::VMP;
+
+    explicit Output(vmp::MainStream &main_stream);
+    ~Output() = default;
+
+    vmp::MainStream &main_stream_;
+    std::vector<std::unique_ptr<Source>> sources_;
+
+    void register_source(const std::unique_ptr<Source> &source);
 };
 
 } // namespace vmp

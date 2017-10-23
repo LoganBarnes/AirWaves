@@ -15,51 +15,8 @@
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
 #include "VMP.hpp"
-#include <memory>
+#include <vmp/audio/MainStream.hpp>
 
-namespace vmp
-{
-struct SeanEntity
-{
-private:
-    template<typename T>
-    struct Entity;
-
-public:
-    template<typename T>
-    explicit SeanEntity(T entity)
-        : self_{std::make_unique<Entity<T >>(std::move(entity))}
-    {}
-
-    void update(double t, double dt)
-    {
-        self_->update(t, dt);
-    }
-
-private:
-    struct UpdateEntity
-    {
-        virtual ~UpdateEntity() = default;
-        virtual void update(double, double) = 0;
-    };
-
-    template<typename T>
-    struct Entity: public UpdateEntity
-    {
-        explicit Entity(T entity)
-            : data_{std::move(entity)}
-        {}
-
-        void update(double t, double dt) final
-        {
-            data_.update(t, dt);
-        }
-        T data_;
-    };
-
-    std::unique_ptr<UpdateEntity> self_;
-};
-}
 void VMP::resume()
 {
     vmp::MainStream::instance().start_stream();
@@ -75,4 +32,9 @@ void VMP::reset()
 bool VMP::is_paused()
 {
     return !vmp::MainStream::instance().is_stream_running();
+}
+vmp::Output &VMP::Output()
+{
+    static vmp::Output output(vmp::MainStream::instance());
+    return output;
 }

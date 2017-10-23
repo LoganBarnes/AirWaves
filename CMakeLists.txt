@@ -79,6 +79,8 @@ endif ()
 ############################
 
 set(VMP_SOURCE_FILES
+        src/vmp/audio/sources/SawSource.hpp
+        src/vmp/audio/sources/SineSource.hpp
         src/vmp/audio/MainStream.cpp
         src/vmp/audio/MainStream.hpp
         src/vmp/audio/Output.cpp

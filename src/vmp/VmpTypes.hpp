@@ -16,9 +16,13 @@
 // ////////////////////////////////////////////////////////////
 #pragma once
 
+class VMP;
+
 namespace vmp
 {
-class Sound;
 class MainStream;
+class Output;
+class Sound;
+class Source;
 class Transport;
 } // namespace vmp

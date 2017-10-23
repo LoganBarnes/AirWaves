@@ -25,73 +25,6 @@
 namespace vmp
 {
 
-namespace
-{
-
-/**
- * @brief Two-channel sawtooth wave generator.
- */
-class SawSource
-{
-public:
-    SawSource() = default;
-    void create_data(double *buffer, unsigned num_frames, unsigned channels)
-    {
-        // Write interleaved audio data.
-        for (unsigned i = 0; i < num_frames; i++) {
-            for (unsigned j = 0; j < channels; j++) {
-                *buffer++ = last_values_[j];
-                last_values_[j] += freq_scale_ * max_amplitude_ / 2.0;
-                if (last_values_[j] >= max_amplitude_) last_values_[j] -= 2.0 * max_amplitude_;
-            }
-        }
-    }
-private:
-    std::array<double, 2> last_values_{{0, 0}};
-    double max_amplitude_{0.2};
-    double freq_scale_{0.025};
-};
-
-/**
- * @brief Two-channel sine wave generator.
- */
-class SineSource
-{
-public:
-    SineSource() = default;
-    void create_data(double *buffer, unsigned num_frames, unsigned channels)
-    {
-        // Write interleaved audio data.
-        for (unsigned i = 0; i < num_frames; i++) {
-            for (unsigned j = 0; j < channels; j++) {
-                *buffer++ = std::sin(last_values_[j]) * max_amplitude_ * double(3);
-                last_values_[j] += freq_scale_;
-                if (last_values_[j] >= glm::pi<double>()) last_values_[j] -= double(2) * glm::pi<double>();
-            }
-        }
-    }
-private:
-    std::array<double, 2> last_values_{{0, 0}};
-    double max_amplitude_{0.2};
-    double freq_scale_{0.025};
-};
-
-Source &saw_source()
-{
-    SawSource saw;
-    static Source s(saw);
-    return s;
-}
-
-Source &sine_source()
-{
-    SineSource sine;
-    static Source s(sine);
-    return s;
-}
-
-} // namespace
-
 class MainStream::AudioStream
 {
 public:
@@ -116,9 +49,10 @@ public:
         return s->play_sound(buffer, nBufferFrames);
     }
 
+    // TODO: store these in VMP::Input() and VMP::Output() respectively?
     std::vector<Sound *> input_sounds;
     std::vector<Sound *> output_sounds;
-    double amplitude_{1.0};
+    double amplitude_{1.0}; // TODO: move this to VMP::Output() and add one for each channel
 
 private:
     std::vector<double> buffer_;
@@ -132,6 +66,9 @@ private:
             for (unsigned i = 0; i < nBufferFrames * 2; ++i) {
                 outputBuffer[i] += buffer_[i] * amplitude_;
             }
+        }
+        for (unsigned i = 0; i < nBufferFrames * 2; ++i) {
+            outputBuffer[i] += std::min(1.0, std::max(-1.0, outputBuffer[i]));
         }
         return 0;
     }
@@ -218,8 +155,6 @@ MainStream::MainStream()
     catch (const RtAudioError &e) {
         throw std::runtime_error("Failed to open audio stream. " + e.getMessage());
     }
-    add_output_sound(saw_source().sound());
-    add_output_sound(sine_source().sound());
 }
 
 MainStream::~MainStream()

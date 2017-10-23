@@ -16,8 +16,8 @@
 // ////////////////////////////////////////////////////////////
 #pragma once
 
-#include "vmp/audio/MainStream.hpp"
-#include "vmp/audio/Source.hpp"
+#include <vmp/audio/Output.hpp>
+
 class VMP
 {
 public:
@@ -27,10 +27,6 @@ public:
     static void reset();
     static bool is_paused();
 
-    template<typename T>
-    static vmp::Source add_source(T source)
-    {
-        return vmp::Source(std::move(source));
-    }
+    static vmp::Output &Output();
 };
 

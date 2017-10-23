@@ -15,8 +15,23 @@
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
 #include "Output.hpp"
+#include "MainStream.hpp"
 
 namespace vmp
 {
+
+Output::Output(vmp::MainStream &main_stream)
+    : main_stream_(main_stream)
+{}
+
+void Output::set_amplitude(double amplitude)
+{
+    vmp::MainStream::instance().set_output_amplitude(amplitude);
+}
+
+void Output::register_source(const std::unique_ptr<Source> &source)
+{
+    vmp::MainStream::instance().add_output_sound(source->sound());
+}
 
 } // namespace vmp

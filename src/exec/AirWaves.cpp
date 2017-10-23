@@ -18,21 +18,16 @@
 #include <imgui.h>
 #include <vmp/VMP.hpp>
 #include <vmp/visual/Transport.hpp>
+#include <vmp/audio/sources/SawSource.hpp>
+#include <vmp/audio/sources/SineSource.hpp>
 
 namespace vmp
 {
-
-class SawSoundSource
-{
-    void create_sound_data()
-    {}
-};
 
 AirWaves::AirWaves(int, int, sim::SimData *pSimData)
     : simData_(*pSimData),
       transport_{std::make_unique<vmp::Transport>()}
 {
-//    VMP::add_source(SawSoundSource{});
 }
 
 AirWaves::~AirWaves()
@@ -47,9 +42,18 @@ void AirWaves::onGuiRender(int, int)
             ImGui::Text("Framerate: %.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
         }
         transport_->configure_gui();
+
         ImGui::Separator();
         if (ImGui::VSliderFloat("Master Volume", ImVec2(45, 150), &output_amplitude_, 0.0f, 1.0f)) {
-            vmp::MainStream::instance().set_output_amplitude(output_amplitude_);
+            VMP::Output().set_amplitude(output_amplitude_);
+        }
+
+        ImGui::Separator();
+        if (ImGui::Button("Add Sine Source")) {
+            VMP::Output().add_source(SineSource<double, 256, 2>{});
+        }
+        if (ImGui::Button("Add Sawtooth Source")) {
+            VMP::Output().add_source(SawSource<double, 256, 2>{});
         }
     }
     ImGui::End();

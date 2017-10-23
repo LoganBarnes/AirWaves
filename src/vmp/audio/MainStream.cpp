@@ -18,9 +18,10 @@
 #include "Source.hpp"
 #include "Sound.hpp"
 #include <RtAudio.h>
-#include <cmath>
 #include <glm/gtc/constants.hpp>
+#include <cmath>
 #include <cstring>
+#include <algorithm>
 
 namespace vmp
 {
@@ -67,8 +68,10 @@ private:
                 outputBuffer[i] += buffer_[i] * amplitude_;
             }
         }
+
+        // clamp output to [-1, 1] for now
         for (unsigned i = 0; i < nBufferFrames * 2; ++i) {
-            outputBuffer[i] += std::min(1.0, std::max(-1.0, outputBuffer[i]));
+            outputBuffer[i] = std::min(1.0, std::max(-1.0, outputBuffer[i]));
         }
         return 0;
     }
@@ -121,6 +124,23 @@ void MainStream::add_input_sound(Sound *sound)
 void MainStream::add_output_sound(Sound *sound)
 {
     stream_->output_sounds.emplace_back(sound);
+}
+
+void MainStream::remove_input_sound(Sound *sound)
+{
+    // TODO: use a more efficient data structure(s)...maybe
+    // might be better to keep the vec for fast iterating in the callback
+    auto &sounds = stream_->input_sounds;
+    auto iter = std::find(sounds.begin(), sounds.end(), sound);
+    sounds.erase(iter);
+}
+
+void MainStream::remove_output_sound(Sound *sound)
+{
+    // TODO: use a more efficient data structure(s)
+    auto &sounds = stream_->output_sounds;
+    auto iter = std::find(sounds.begin(), sounds.end(), sound);
+    sounds.erase(iter);
 }
 
 void MainStream::set_output_amplitude(double amplitude)

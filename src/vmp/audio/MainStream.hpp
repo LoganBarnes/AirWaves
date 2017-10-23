@@ -37,6 +37,9 @@ public:
     void add_input_sound(Sound *sound);
     void add_output_sound(Sound *sound);
 
+    void remove_input_sound(Sound *sound);
+    void remove_output_sound(Sound *sound);
+
     void set_output_amplitude(double amplitude);
 
 private:

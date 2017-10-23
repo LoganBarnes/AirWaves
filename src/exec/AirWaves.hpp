@@ -19,6 +19,7 @@
 #include <sim-driver/SimData.hpp>
 #include <vmp/VmpTypes.hpp>
 #include <memory>
+#include <vector>
 
 namespace vmp
 {
@@ -37,6 +38,9 @@ private:
 
     //TODO: should be stored in VMP::Output()
     float output_amplitude_{1.0};
+
+    std::vector<Source> sines_;
+    std::vector<Source> saws_;
 };
 
 } // namespace vmp

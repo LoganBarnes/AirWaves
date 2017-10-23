@@ -14,6 +14,7 @@
 // The Visual Music Project
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
+#include <iostream>
 #include "Output.hpp"
 #include "MainStream.hpp"
 
@@ -29,9 +30,22 @@ void Output::set_amplitude(double amplitude)
     vmp::MainStream::instance().set_output_amplitude(amplitude);
 }
 
-void Output::register_source(const std::unique_ptr<Source> &source)
+void Output::remove_source(const Source &source)
+{
+    auto iter = sources_.find(source.sound());
+    if (iter == sources_.end()) {
+        std::cerr << "WARNING: Attempting to remove a source that doesn't exist" << std::endl;
+        return;
+    }
+    vmp::MainStream::instance().remove_output_sound(source.sound());
+    sources_.erase(iter);
+}
+
+Source &Output::add_and_register_source(std::unique_ptr<Source> source)
 {
     vmp::MainStream::instance().add_output_sound(source->sound());
+    auto iter = sources_.emplace(source->sound(), std::move(source)).first;
+    return *(iter->second);
 }
 
 } // namespace vmp

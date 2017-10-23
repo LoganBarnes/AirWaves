@@ -50,10 +50,20 @@ void AirWaves::onGuiRender(int, int)
 
         ImGui::Separator();
         if (ImGui::Button("Add Sine Source")) {
-            VMP::Output().add_source(SineSource<double, 256, 2>{});
+            sines_.emplace_back(VMP::Output().add_source(SineSource<double, 256, 2>{}));
         }
         if (ImGui::Button("Add Sawtooth Source")) {
-            VMP::Output().add_source(SawSource<double, 256, 2>{});
+            saws_.emplace_back(VMP::Output().add_source(SawSource<double, 256, 2>{}));
+        }
+
+        ImGui::Separator();
+        if (ImGui::Button("Remove Sine Source") && !sines_.empty()) {
+            VMP::Output().remove_source(sines_.back());
+            sines_.pop_back();
+        }
+        if (ImGui::Button("Remove Sawtooth Source") && !saws_.empty()) {
+            VMP::Output().remove_source(saws_.back());
+            saws_.pop_back();
         }
     }
     ImGui::End();

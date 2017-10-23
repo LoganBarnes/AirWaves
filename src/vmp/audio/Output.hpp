@@ -19,7 +19,7 @@
 #include <vmp/VmpTypes.hpp>
 #include <vmp/audio/Source.hpp>
 #include <memory>
-#include <vector>
+#include <unordered_map>
 
 namespace vmp
 {
@@ -34,12 +34,12 @@ public:
     Output &operator=(Output &&) noexcept = delete;
 
     template<typename T>
-    Source add_source(T source)
+    Source &add_source(T source)
     {
-        sources_.emplace_back(std::make_unique<Source>(source));
-        register_source(sources_.back());
-        return *sources_.back();
+        return add_and_register_source(std::make_unique<Source>(source));
     }
+
+    void remove_source(const Source &source);
 
     void set_amplitude(double amplitude);
 
@@ -50,9 +50,9 @@ private:
     ~Output() = default;
 
     vmp::MainStream &main_stream_;
-    std::vector<std::unique_ptr<Source>> sources_;
+    std::unordered_map<Sound *, std::unique_ptr<Source>> sources_;
 
-    void register_source(const std::unique_ptr<Source> &source);
+    Source &add_and_register_source(std::unique_ptr<Source> source);
 };
 
 } // namespace vmp

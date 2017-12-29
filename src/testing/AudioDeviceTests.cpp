@@ -15,7 +15,7 @@
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
 #include <RtAudio.h>
-#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 namespace
 {

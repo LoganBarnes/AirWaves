@@ -119,7 +119,7 @@ if (${VMP_BUILD_TESTS})
     download_project(PROJ googletest
             PREFIX thirdparty
             GIT_REPOSITORY https://github.com/google/googletest.git
-            GIT_TAG release-1.8.0
+            GIT_TAG master
             UPDATE_DISCONNECTED ${UPDATE_STATUS}
             QUIET
             )

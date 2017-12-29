@@ -30,7 +30,6 @@ TEST(AudioDeviceTests, DevicesCanBeQueried)
     for (unsigned int i = 0; i < devices; i++) {
         info = audio.getDeviceInfo(i);
         if (info.probed) {
-            // Print, for example, the maximum number of output channels for each device
             std::cout << "device = " << i;
             std::cout << "\n\tmaximum output channels = " << info.outputChannels
                       << (info.isDefaultOutput ? " (default)\n" : "\n");

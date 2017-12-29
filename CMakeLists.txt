@@ -14,10 +14,11 @@
 # The Visual Music Project
 # Created by Logan Barnes
 ##############################################################
-cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.7.0 FATAL_ERROR)
 project(AirWaves LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(VMP_BUILD_TESTS OFF "Build unit tests created with GoogleTest framework")
 option(VMP_UPDATE_REPOS OFF "Update thirdpary git repos")
@@ -115,7 +116,7 @@ target_compile_options(sound-test PRIVATE ${INTENSE_FLAGS})
 
 if (${VMP_BUILD_TESTS})
     # Download and unpack googletest at configure time
-    download_project(PROJ gtest
+    download_project(PROJ googletest
             PREFIX thirdparty
             GIT_REPOSITORY https://github.com/google/googletest.git
             GIT_TAG release-1.8.0
@@ -126,7 +127,11 @@ if (${VMP_BUILD_TESTS})
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
     # compile googletest with current project
-    add_subdirectory(${gtest_SOURCE_DIR}/googletest ${gtest_BINARY_DIR}/googletest)
+    add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR} EXCLUDE_FROM_ALL)
+
+    target_include_directories(gmock_main SYSTEM BEFORE INTERFACE
+            "${googletest_SOURCE_DIR}/googletest/include"
+            "${googletest_SOURCE_DIR}/googlemock/include")
 
     # add test coverage capabilities
     if (CMAKE_COMPILER_IS_GNUCXX AND CMAKE_BUILD_TYPE MATCHES "Debug")
@@ -147,6 +152,6 @@ if (${VMP_BUILD_TESTS})
 
     add_executable(vmp-tests ${TEST_SOURCE_FILES})
     add_test(NAME vmp-test COMMAND vmp-tests)
-    target_link_libraries(vmp-tests vmp gtest_main ${PROFILE_LIBS})
+    target_link_libraries(vmp-tests vmp gmock_main ${PROFILE_LIBS})
     target_compile_options(vmp-tests PRIVATE ${INTENSE_FLAGS} ${PROFILE_FLAGS})
 endif ()

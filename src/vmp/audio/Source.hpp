@@ -19,19 +19,16 @@
 #include <memory>
 #include "Sound.hpp"
 
-namespace vmp
-{
+namespace vmp {
 
 class Source
 {
 public:
-    template<typename T>
-    class SourceSound: public Sound
+    template <typename T>
+    class SourceSound : public Sound
     {
     public:
-        explicit SourceSound(T entity)
-            : data_{std::move(entity)}
-        {}
+        explicit SourceSound(T entity) : data_{std::move(entity)} {}
 
         void handle_data(double *buffer, unsigned num_frames, unsigned channels) final
         {
@@ -40,10 +37,10 @@ public:
         T data_;
     };
 
-    template<typename T>
-    explicit Source(T source)
-        : self_{std::make_unique<SourceSound<T>>(std::move(source))}
-    {}
+    template <typename T>
+    explicit Source(T source) : self_{std::make_unique<SourceSound<T>>(std::move(source))}
+    {
+    }
 
     Sound *sound() const;
 

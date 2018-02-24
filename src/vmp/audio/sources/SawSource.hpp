@@ -19,13 +19,12 @@
 
 #include <array>
 
-namespace vmp
-{
+namespace vmp {
 
 /**
  * @brief Sawtooth wave generator.
  */
-template<typename T, int frames, int channels>
+template <typename T, int frames, int channels>
 class SawSource
 {
 public:
@@ -36,7 +35,8 @@ public:
             for (unsigned j = 0; j < channels; j++) {
                 *buffer++ = last_values_[j] * max_amplitude_;
                 last_values_[j] += freq_scale_;
-                if (last_values_[j] >= 1.0) last_values_[j] -= 2.0;
+                if (last_values_[j] >= 1.0)
+                    last_values_[j] -= 2.0;
             }
         }
     }
@@ -48,4 +48,3 @@ private:
 };
 
 } // namespace
-

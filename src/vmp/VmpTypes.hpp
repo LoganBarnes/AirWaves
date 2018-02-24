@@ -18,8 +18,7 @@
 
 class VMP;
 
-namespace vmp
-{
+namespace vmp {
 class MainStream;
 class Output;
 class Sound;

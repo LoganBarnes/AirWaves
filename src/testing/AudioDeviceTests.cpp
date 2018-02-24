@@ -17,8 +17,7 @@
 #include <RtAudio.h>
 #include <gmock/gmock.h>
 
-namespace
-{
+namespace {
 
 TEST(AudioDeviceTests, DevicesCanBeQueried)
 {

@@ -21,13 +21,12 @@
 #include <array>
 #include <cmath>
 
-namespace vmp
-{
+namespace vmp {
 
 /**
  * @brief Sine wave generator.
  */
-template<typename T, int frames, int channels>
+template <typename T, int frames, int channels>
 class SineSource
 {
 public:
@@ -38,7 +37,8 @@ public:
             for (unsigned j = 0; j < channels; j++) {
                 *buffer++ = std::sin(last_values_[j]) * max_amplitude_;
                 last_values_[j] += freq_scale_;
-                if (last_values_[j] >= glm::pi<T>()) last_values_[j] -= glm::two_pi<T>();
+                if (last_values_[j] >= glm::pi<T>())
+                    last_values_[j] -= glm::two_pi<T>();
             }
         }
     }
@@ -50,4 +50,3 @@ private:
 };
 
 } // namespace
-

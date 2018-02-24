@@ -22,8 +22,7 @@
 
 class RtAudio;
 
-namespace vmp
-{
+namespace vmp {
 
 class MainStream
 {

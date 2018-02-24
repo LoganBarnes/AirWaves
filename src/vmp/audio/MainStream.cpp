@@ -23,22 +23,15 @@
 #include <cstring>
 #include <algorithm>
 
-namespace vmp
-{
+namespace vmp {
 
 class MainStream::AudioStream
 {
 public:
-    explicit AudioStream(unsigned frame_size)
-        : buffer_(frame_size * 2)
-    {}
+    explicit AudioStream(unsigned frame_size) : buffer_(frame_size * 2) {}
 
-    static int audio_callback(void *outputBuffer,
-                              void *,
-                              unsigned int nBufferFrames,
-                              double,
-                              RtAudioStreamStatus status,
-                              void *userData)
+    static int audio_callback(
+        void *outputBuffer, void *, unsigned int nBufferFrames, double, RtAudioStreamStatus status, void *userData)
     {
         auto *buffer = static_cast<double *>(outputBuffer);
         auto *s = static_cast<AudioStream *>(userData);
@@ -90,8 +83,7 @@ void MainStream::start_stream()
     }
     try {
         audio_->startStream();
-    }
-    catch (const RtAudioError &e) {
+    } catch (const RtAudioError &e) {
         throw std::runtime_error("Failure when starting audio stream. " + e.getMessage());
     }
     stream_running_ = true;
@@ -104,8 +96,7 @@ void MainStream::stop_stream()
     }
     try {
         audio_->stopStream();
-    }
-    catch (const RtAudioError &e) {
+    } catch (const RtAudioError &e) {
         throw std::runtime_error("Failure when stopping audio stream. " + e.getMessage());
     }
     stream_running_ = false;
@@ -148,9 +139,7 @@ void MainStream::set_output_amplitude(double amplitude)
     stream_->amplitude_ = std::min(1.2, std::max(0.0, amplitude));
 }
 
-MainStream::MainStream()
-    : audio_(std::make_unique<RtAudio>()),
-      stream_{nullptr}
+MainStream::MainStream() : audio_(std::make_unique<RtAudio>()), stream_{nullptr}
 {
     RtAudio::StreamParameters parameters;
 
@@ -171,15 +160,13 @@ MainStream::MainStream()
                            &bufferFrames,
                            &MainStream::AudioStream::audio_callback,
                            stream_.get());
-    }
-    catch (const RtAudioError &e) {
+    } catch (const RtAudioError &e) {
         throw std::runtime_error("Failed to open audio stream. " + e.getMessage());
     }
 }
 
 MainStream::~MainStream()
-{}
+{
+}
 
 } // namespace vmp
-
-

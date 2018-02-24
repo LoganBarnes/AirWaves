@@ -21,8 +21,7 @@
 #include <memory>
 #include <vector>
 
-namespace vmp
-{
+namespace vmp {
 
 class AirWaves
 {

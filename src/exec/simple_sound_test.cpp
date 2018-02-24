@@ -19,8 +19,7 @@
 #include <cmath>
 #include <thread>
 
-namespace
-{
+namespace {
 void print_usage()
 {
     std::cout << "Usage:\n"
@@ -28,25 +27,18 @@ void print_usage()
               << "Options:\n"
               << "\t-h,--help   show this message\n"
               << "\t-s,--sine   play sine waveform (default)\n"
-              << "\t-w,--saw    play sawtooth waveform"
-              << std::endl;
+              << "\t-w,--saw    play sawtooth waveform" << std::endl;
 }
 } // namespace
 
-template<typename T>
+template <typename T>
 class Sound
 {
 public:
-    explicit Sound(bool sine = true)
-        : sine_(sine)
-    {}
+    explicit Sound(bool sine = true) : sine_(sine) {}
 
-    static int play_sound(void *outputBuffer,
-                          void *,
-                          unsigned int nBufferFrames,
-                          double,
-                          RtAudioStreamStatus status,
-                          void *userData)
+    static int play_sound(
+        void *outputBuffer, void *, unsigned int nBufferFrames, double, RtAudioStreamStatus status, void *userData)
     {
         auto *buffer = static_cast<T *>(outputBuffer);
         auto *s = static_cast<Sound<T> *>(userData);
@@ -79,7 +71,8 @@ private:
             for (unsigned j = 0; j < 2; j++) {
                 *outputBuffer++ = last_values_[j];
                 last_values_[j] += freq_scale_ * max_amplitude_ / T(2);
-                if (last_values_[j] >= max_amplitude_) last_values_[j] -= T(2) * max_amplitude_;
+                if (last_values_[j] >= max_amplitude_)
+                    last_values_[j] -= T(2) * max_amplitude_;
             }
         }
         return 0;
@@ -95,7 +88,8 @@ private:
             for (unsigned j = 0; j < 2; j++) {
                 *outputBuffer++ = std::sin(last_values_[j]) * max_amplitude_ * T(3);
                 last_values_[j] += freq_scale_;
-                if (last_values_[j] >= glm::pi<T>()) last_values_[j] -= T(2) * glm::pi<T>();
+                if (last_values_[j] >= glm::pi<T>())
+                    last_values_[j] -= T(2) * glm::pi<T>();
             }
         }
         return 0;
@@ -109,15 +103,12 @@ int main(const int argc, const char *argv[])
         std::string arg(argv[argi]);
         if (arg == "-s" || arg == "--sine") {
             use_sine = true;
-        }
-        else if (arg == "-w" || arg == "--saw") {
+        } else if (arg == "-w" || arg == "--saw") {
             use_sine = false;
-        }
-        else if (arg == "-h" || arg == "--help") {
+        } else if (arg == "-h" || arg == "--help") {
             print_usage();
             return EXIT_SUCCESS;
-        }
-        else {
+        } else {
             std::cout << "Unrecognised option: '" << arg << "'\n";
             print_usage();
             return EXIT_SUCCESS;
@@ -145,8 +136,7 @@ int main(const int argc, const char *argv[])
                        &Sound<double>::play_sound,
                        &s);
         dac.startStream();
-    }
-    catch (const RtAudioError &e) {
+    } catch (const RtAudioError &e) {
         e.printMessage();
         return EXIT_FAILURE;
     }
@@ -159,12 +149,13 @@ int main(const int argc, const char *argv[])
     try {
         // Stop the stream
         dac.stopStream();
-    }
-    catch (const RtAudioError &e) {
+    } catch (const RtAudioError &e) {
         e.printMessage();
         return EXIT_FAILURE;
     }
-    if (dac.isStreamOpen()) { dac.closeStream(); }
+    if (dac.isStreamOpen()) {
+        dac.closeStream();
+    }
 
     return EXIT_SUCCESS;
 }

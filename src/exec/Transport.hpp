@@ -16,8 +16,7 @@
 // ////////////////////////////////////////////////////////////
 #pragma once
 
-namespace vmp
-{
+namespace vmp {
 
 class Transport
 {

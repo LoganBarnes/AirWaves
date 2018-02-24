@@ -20,8 +20,8 @@ project(AirWaves LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-option(VMP_BUILD_TESTS OFF "Build unit tests created with GoogleTest framework")
-option(VMP_UPDATE_REPOS OFF "Update thirdpary git repos")
+option(VMP_BUILD_TESTS "Build unit tests created with GoogleTest framework" OFF)
+option(VMP_UPDATE_REPOS "Update thirdpary git repos" OFF)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
@@ -63,6 +63,23 @@ download_project(PROJ rtAudio
 add_subdirectory(${rtAudio_SOURCE_DIR} ${rtAudio_BINARY_DIR})
 target_include_directories(rtaudio_static SYSTEM PUBLIC ${rtAudio_SOURCE_DIR})
 
+### Graphics Library ###
+# currently an internal directory with the
+# intent of becoming its own project
+set(GL_SOURCE
+        src/gl/buffer.hpp
+        src/gl/framebuffer.cpp
+        src/gl/framebuffer.hpp
+        src/gl/gl_types.hpp
+        src/gl/vertex_array.cpp
+        src/gl/vertex_array.hpp
+        )
+
+add_library(graphics ${GL_SOURCE})
+target_include_directories(graphics PUBLIC src
+        ${sim_BINARY_DIR}/thirdparty/glm-src
+        ${sim_SOURCE_DIR}/src/thirdparty)
+
 #############################
 ### Project Configuration ###
 #############################
@@ -89,8 +106,6 @@ set(VMP_SOURCE_FILES
         src/vmp/audio/Sound.hpp
         src/vmp/audio/Source.cpp
         src/vmp/audio/Source.hpp
-        src/vmp/visual/Transport.cpp
-        src/vmp/visual/Transport.hpp
         src/vmp/VMP.cpp
         src/vmp/VMP.hpp
         src/vmp/VmpTypes.hpp
@@ -98,16 +113,18 @@ set(VMP_SOURCE_FILES
 
 add_library(vmp ${VMP_SOURCE_FILES})
 target_include_directories(vmp PUBLIC src)
-target_link_libraries(vmp SimDriver rtaudio_static)
+target_link_libraries(vmp rtaudio_static graphics)
 target_compile_options(vmp PRIVATE ${INTENSE_FLAGS} $<$<CONFIG:Debug>:${PROFILE_FLAGS}>)
 
 set(EXEC_SOURCE_FILES
         src/exec/AirWaves.cpp
         src/exec/AirWaves.hpp
         src/exec/main.cpp
+        src/exec/Transport.cpp
+        src/exec/Transport.hpp
         )
 add_executable(AirWaves ${EXEC_SOURCE_FILES})
-target_link_libraries(AirWaves vmp)
+target_link_libraries(AirWaves vmp SimDriver)
 target_compile_options(AirWaves PRIVATE ${INTENSE_FLAGS})
 
 add_executable(sound-test src/exec/simple_sound_test.cpp)

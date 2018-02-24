@@ -15,23 +15,20 @@
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
 #include "AirWaves.hpp"
+#include "Transport.hpp"
 #include <imgui.h>
 #include <vmp/VMP.hpp>
-#include <vmp/visual/Transport.hpp>
 #include <vmp/audio/sources/SawSource.hpp>
 #include <vmp/audio/sources/SineSource.hpp>
 
-namespace vmp
-{
+namespace vmp {
 
 AirWaves::AirWaves(int, int, sim::SimData *pSimData)
-    : simData_(*pSimData),
-      transport_{std::make_unique<vmp::Transport>()}
+    : simData_(*pSimData), transport_{std::make_unique<vmp::Transport>()}
 {
 }
 
-AirWaves::~AirWaves()
-{}
+AirWaves::~AirWaves() = default;
 
 void AirWaves::onGuiRender(int, int)
 {

@@ -21,8 +21,7 @@
 #include <memory>
 #include <unordered_map>
 
-namespace vmp
-{
+namespace vmp {
 
 class Output
 {
@@ -33,7 +32,7 @@ public:
     Output &operator=(const Output &) = delete;
     Output &operator=(Output &&) noexcept = delete;
 
-    template<typename T>
+    template <typename T>
     Source &add_source(T source)
     {
         return add_and_register_source(std::make_unique<Source>(source));

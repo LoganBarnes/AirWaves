@@ -16,8 +16,7 @@
 // ////////////////////////////////////////////////////////////
 #include "Source.hpp"
 
-namespace vmp
-{
+namespace vmp {
 
 Sound *Source::sound() const
 {

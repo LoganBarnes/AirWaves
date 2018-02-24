@@ -21,7 +21,6 @@
 class VMP
 {
 public:
-
     static void resume();
     static void pause();
     static void reset();
@@ -29,4 +28,3 @@ public:
 
     static vmp::Output &Output();
 };
-

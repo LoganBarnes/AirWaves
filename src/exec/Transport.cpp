@@ -18,29 +18,45 @@
 #include "vmp/VMP.hpp"
 #include <imgui.h>
 
-namespace vmp
-{
+namespace vmp {
 
 void Transport::configure_gui()
 {
     if (ImGui::CollapsingHeader("Transport", "transport", false, true)) {
-        if (ImGui::Button("[]")) { VMP::reset(); }
-        if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Stop"); }
+        if (ImGui::Button("[]")) {
+            VMP::reset();
+        }
+        if (ImGui::IsItemHovered()) {
+            ImGui::SetTooltip("Stop");
+        }
         ImGui::SameLine();
         if (VMP::is_paused()) {
-            if (ImGui::Button(">")) { VMP::resume(); }
-            if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Play"); }
-        }
-        else {
-            if (ImGui::Button("||")) { VMP::pause(); }
-            if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Pause"); }
+            if (ImGui::Button(">")) {
+                VMP::resume();
+            }
+            if (ImGui::IsItemHovered()) {
+                ImGui::SetTooltip("Play");
+            }
+        } else {
+            if (ImGui::Button("||")) {
+                VMP::pause();
+            }
+            if (ImGui::IsItemHovered()) {
+                ImGui::SetTooltip("Pause");
+            }
         }
         ImGui::SameLine();
-        if (ImGui::Button("<<")) {}
-        if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Back"); }
+        if (ImGui::Button("<<")) {
+        }
+        if (ImGui::IsItemHovered()) {
+            ImGui::SetTooltip("Back");
+        }
         ImGui::SameLine();
-        if (ImGui::Button(">>")) {}
-        if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Forward"); }
+        if (ImGui::Button(">>")) {
+        }
+        if (ImGui::IsItemHovered()) {
+            ImGui::SetTooltip("Forward");
+        }
     }
 }
 

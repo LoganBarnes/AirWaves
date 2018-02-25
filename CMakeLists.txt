@@ -101,8 +101,6 @@ add_library(thirdparty
         # glad
         src/thirdparty/glad/glad.c
         src/thirdparty/glad/glad.h
-        src/thirdparty/glad/glad_egl.c
-        src/thirdparty/glad/glad_egl.h
         src/thirdparty/KHR/khrplatform.h
         )
 

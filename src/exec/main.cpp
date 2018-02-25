@@ -19,4 +19,5 @@
 int main()
 {
     vmp::AirWavesDriver driver;
+    driver.run();
 }

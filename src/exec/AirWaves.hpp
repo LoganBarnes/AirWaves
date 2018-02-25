@@ -29,6 +29,7 @@ public:
     ~AirWaves();
 
     void configure_gui(int width, int height);
+    void render(int width, int height, double alpha);
 
 private:
     std::unique_ptr<vmp::Transport> transport_;

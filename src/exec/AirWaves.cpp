@@ -66,4 +66,8 @@ void AirWaves::configure_gui(int, int)
     ImGui::PopStyleVar();
 }
 
+void AirWaves::render(int, int, double)
+{
+}
+
 } // namespace vmp

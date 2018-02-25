@@ -22,6 +22,7 @@
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
 #include <iostream>
+#include <chrono>
 
 namespace vmp {
 
@@ -138,5 +139,65 @@ AirWavesDriver::AirWavesDriver(const std::string &title, int width, int height, 
 }
 
 AirWavesDriver::~AirWavesDriver() = default;
+
+void AirWavesDriver::run(double timestep, double max_timestep)
+{
+    auto current_time = std::chrono::steady_clock::now();
+    double accumulator = 0.0;
+
+    do {
+        auto new_time = std::chrono::steady_clock::now();
+        double frame_time = std::chrono::duration<double>{new_time - current_time}.count();
+        current_time = new_time;
+
+        frame_time = std::min(max_timestep, frame_time);
+
+        if (!paused_) {
+            accumulator += frame_time;
+
+            while (accumulator >= timestep) {
+                //                air_waves_.update();
+                total_time_ += timestep;
+                accumulator -= timestep;
+                ++frames_;
+            }
+        }
+
+        const double alpha = accumulator / timestep;
+
+        render(alpha);
+
+        if (paused_) {
+            glfwWaitEvents();
+        } else {
+            glfwPollEvents();
+        }
+    } while (!glfwWindowShouldClose(window_.get()));
+}
+
+void AirWavesDriver::render(double alpha)
+{
+    int w, h;
+    glfwGetFramebufferSize(window_.get(), &w, &h);
+
+    glViewport(0, 0, w, h);
+
+    // If the program is paused, ImGui may doesn't always register resize updates in a single frame.
+    // Therefore we create the frame twice so we the updates will be present by the time we render.
+    if (paused_) {
+        ImGui_ImplGlfwGL3_NewFrame();
+        air_waves_->configure_gui(w, h);
+        ImGui::Render();
+    }
+
+    ImGui_ImplGlfwGL3_NewFrame();
+    air_waves_->configure_gui(w, h);
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    air_waves_->render(w, h, alpha);
+    ImGui::Render();
+    glfwSwapBuffers(window_.get());
+}
 
 } // namespace vmp

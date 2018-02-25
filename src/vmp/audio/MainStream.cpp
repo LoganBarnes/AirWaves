@@ -165,8 +165,6 @@ MainStream::MainStream() : audio_(std::make_unique<RtAudio>()), stream_{nullptr}
     }
 }
 
-MainStream::~MainStream()
-{
-}
+MainStream::~MainStream() = default;
 
 } // namespace vmp

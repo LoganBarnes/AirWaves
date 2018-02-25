@@ -45,10 +45,10 @@ private:
 
     std::unique_ptr<AirWaves> air_waves_;
 
-    bool paused_ = false;
+    bool paused_{false};
 
-    std::size_t frames_ = 0;
-    double total_time_ = 0.0;
+    std::size_t frames_{0};
+    double total_time_{0.0};
 
     void register_callbacks();
     void render(double alpha);

@@ -25,11 +25,11 @@ class VertexArray;
 template <typename VboType = float, typename IboType = unsigned>
 struct Pipeline
 {
-    std::shared_ptr<GLuint> program = nullptr;
-    std::shared_ptr<Buffer<VboType>> vbo = nullptr;
-    std::shared_ptr<Buffer<IboType>> ibo = nullptr;
-    std::shared_ptr<VertexArray> vao = nullptr;
-    std::shared_ptr<Framebuffer<2>> fbo = nullptr;
+    std::shared_ptr<GLuint> program{nullptr};
+    std::shared_ptr<Buffer<VboType>> vbo{nullptr};
+    std::shared_ptr<Buffer<IboType>> ibo{nullptr};
+    std::shared_ptr<VertexArray> vao{nullptr};
+    std::shared_ptr<Framebuffer<2>> fbo{nullptr};
 };
 
 } // namespace

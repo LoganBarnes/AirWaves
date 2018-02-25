@@ -24,7 +24,11 @@ void Transport::configure_gui()
 {
     if (ImGui::CollapsingHeader("Transport", "transport", false, true)) {
         if (ImGui::Button("[]")) {
-            VMP::reset();
+            if (VMP::is_paused()) {
+                VMP::reset();
+            } else {
+                VMP::pause();
+            }
         }
         if (ImGui::IsItemHovered()) {
             ImGui::SetTooltip("Stop");

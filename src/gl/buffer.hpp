@@ -1,6 +1,6 @@
 #pragma once
 
-#include <proj/gl/gl_types.hpp>
+#include <gl/gl_types.hpp>
 #include <vector>
 
 namespace gl {

@@ -116,12 +116,16 @@ target_link_libraries(thirdparty glfw)
 # currently an internal directory with the
 # intent of becoming its own project
 set(GL_SOURCE
-        src/gl/buffer.hpp
-        src/gl/framebuffer.cpp
-        src/gl/framebuffer.hpp
-        src/gl/gl_types.hpp
-        src/gl/vertex_array.cpp
-        src/gl/vertex_array.hpp
+        src/gl/Buffer.hpp
+        src/gl/Framebuffer.cpp
+        src/gl/Framebuffer.hpp
+        src/gl/GLTypes.hpp
+        src/gl/Program.cpp
+        src/gl/Program.hpp
+        src/gl/ProgramManager.cpp
+        src/gl/ProgramManager.hpp
+        src/gl/VertexArray.cpp
+        src/gl/VertexArray.hpp
         )
 
 add_library(graphics ${GL_SOURCE})
@@ -220,6 +224,8 @@ if (${VMP_BUILD_TESTS})
     enable_testing()
 
     set(TEST_SOURCE_FILES
+            src/testing/gl/ProgramManagerTests.cpp
+
             src/testing/AudioDeviceTests.cpp
             )
 

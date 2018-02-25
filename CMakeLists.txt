@@ -141,6 +141,7 @@ if (VMP_USE_DEV_FLAGS)
     endif ()
 endif ()
 
+add_definitions(-DNOMINMAX) # silly microsoft
 
 ############################
 ### Visual Music Project ###

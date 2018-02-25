@@ -102,8 +102,7 @@
 #elif defined (__SYMBIAN32__)
 #   define KHRONOS_APICALL IMPORT_C
 #elif defined(__ANDROID__)
-#   include <sys/cdefs.h>
-#   define KHRONOS_APICALL __attribute__((visibility("default"))) __NDK_FPABI__
+#   define KHRONOS_APICALL __attribute__((visibility("default")))
 #else
 #   define KHRONOS_APICALL
 #endif
@@ -115,7 +114,7 @@
  * name in the function prototype.
  */
 #if defined(_WIN32) && !defined(_WIN32_WCE) && !defined(__SCITECH_SNAP__)
-/* Win32 but not WinCE */
+    /* Win32 but not WinCE */
 #   define KHRONOS_APIENTRY __stdcall
 #else
 #   define KHRONOS_APIENTRY

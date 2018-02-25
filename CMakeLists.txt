@@ -101,6 +101,8 @@ add_library(thirdparty
         # glad
         src/thirdparty/glad/glad.c
         src/thirdparty/glad/glad.h
+        src/thirdparty/glad/glad_egl.c
+        src/thirdparty/glad/glad_egl.h
         src/thirdparty/KHR/khrplatform.h
         )
 
@@ -110,7 +112,7 @@ target_include_directories(thirdparty SYSTEM PUBLIC
         ${glm_SOURCE_DIR}
         src/thirdparty
         )
-target_link_libraries(thirdparty glfw)
+target_link_libraries(thirdparty glfw EGL)
 
 ### Graphics Library ###
 # currently an internal directory with the

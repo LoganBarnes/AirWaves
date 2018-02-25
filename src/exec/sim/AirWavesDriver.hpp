@@ -1,6 +1,7 @@
 // ////////////////////////////////////////////////////////////
-// Created on 10/21/2017.
-// Copyright (c) 2017. All rights reserved.
+// Created on 2/25/18.
+// Copyright (c) 2018. All rights reserved.
+//
 //  ___________________________$$$$$$$\__________
 // | $$\    $$\                $$  __$$\      | ||
 // |_$$ |___$$ |_$$\______$$\__$$ |__$$ |_____|_||
@@ -12,32 +13,35 @@
 // |_____\_/_____$$ |_\_/_$$ |________________|_||
 //               \__|     \__|
 // The Visual Music Project
-// Created by Logan Barnes
+// Created by Logan T. Barnes
 // ////////////////////////////////////////////////////////////
 #pragma once
 
-#include <vmp/VmpTypes.hpp>
+#include <string>
 #include <memory>
-#include <vector>
+
+struct GLFWwindow;
 
 namespace vmp {
 
-class AirWaves
+void delete_glfw(const int *status);
+void delete_window(GLFWwindow *window);
+void delete_imgui(const bool *status);
+
+class AirWaves;
+
+class AirWavesDriver
 {
 public:
-    AirWaves(int width, int height);
-    ~AirWaves();
-
-    void configure_gui(int width, int height);
+    explicit AirWavesDriver(const std::string &title = "AirWaves", int width = 0, int height = 0, int samples = 4);
+    ~AirWavesDriver();
 
 private:
-    std::unique_ptr<vmp::Transport> transport_;
+    std::unique_ptr<int, decltype(&delete_glfw)> glfw_;
+    std::unique_ptr<GLFWwindow, decltype(&delete_window)> window_;
+    std::unique_ptr<bool, decltype(&delete_imgui)> imgui_;
 
-    //TODO: should be stored in VMP::Output()
-    float output_amplitude_{1.0};
-
-    std::vector<Source> sines_;
-    std::vector<Source> saws_;
+    std::unique_ptr<AirWaves> air_waves_;
 };
 
 } // namespace vmp

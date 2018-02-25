@@ -14,16 +14,9 @@
 // The Visual Music Project
 // Created by Logan Barnes
 // ////////////////////////////////////////////////////////////
-#include <sim-driver/OpenGLSimulation.hpp>
-#include "AirWaves.hpp"
+#include "sim/AirWavesDriver.hpp"
 
 int main()
 {
-    try {
-        sim::OpenGLSimulation<vmp::AirWaves>({"Air Waves"}).runNoFasterThanRealTimeLoop();
-    } catch (const std::exception &e) {
-        std::cerr << "ERROR program failed: " << e.what() << std::endl;
-        return EXIT_FAILURE;
-    }
-    return EXIT_SUCCESS;
+    vmp::AirWavesDriver driver;
 }

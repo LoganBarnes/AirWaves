@@ -23,21 +23,20 @@
 
 namespace vmp {
 
-AirWaves::AirWaves(int, int, sim::SimData *pSimData)
-    : simData_(*pSimData), transport_{std::make_unique<vmp::Transport>()}
+AirWaves::AirWaves(int, int) : transport_{std::make_unique<vmp::Transport>()}
 {
 }
 
 AirWaves::~AirWaves() = default;
 
-void AirWaves::onGuiRender(int, int)
+void AirWaves::configure_gui(int, int)
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
     ImGui::SetNextWindowPos(ImVec2(0, 0));
     if (ImGui::Begin("Window", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-        if (!simData_.paused) {
-            ImGui::Text("Framerate: %.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
-        }
+        //        if (!simData_.paused) {
+        ImGui::Text("Framerate: %.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
+        //        }
         transport_->configure_gui();
 
         ImGui::Separator();

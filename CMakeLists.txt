@@ -15,13 +15,14 @@
 # Created by Logan Barnes
 ##############################################################
 cmake_minimum_required(VERSION 3.7.0 FATAL_ERROR)
-project(AirWaves LANGUAGES CXX)
+project(AirWaves)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(VMP_BUILD_TESTS "Build unit tests created with GoogleTest framework" OFF)
 option(VMP_UPDATE_REPOS "Update thirdpary git repos" OFF)
+option(VMP_USE_DEV_FLAGS "Compile with all the flags" OFF)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
@@ -36,20 +37,6 @@ else ()
     set(UPDATE_STATUS 1)
 endif ()
 
-### SimulationDriver ###
-download_project(PROJ sim
-        PREFIX thirdparty
-        GIT_REPOSITORY https://github.com/LoganBarnes/SimulationDriver.git
-        GIT_TAG master
-        UPDATE_DISCONNECTED ${UPDATE_STATUS}
-        QUIET
-        )
-
-set(SIM_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-
-# compile sim with current project
-add_subdirectory(${sim_SOURCE_DIR} ${sim_BINARY_DIR})
-
 ### RtAudio ###
 download_project(PROJ rtAudio
         PREFIX thirdparty
@@ -62,6 +49,68 @@ download_project(PROJ rtAudio
 # compile RtAudio with current project
 add_subdirectory(${rtAudio_SOURCE_DIR} ${rtAudio_BINARY_DIR})
 target_include_directories(rtaudio_static SYSTEM PUBLIC ${rtAudio_SOURCE_DIR})
+
+### GLFW ###
+download_project(PROJ glfw
+        PREFIX thirdparty
+        GIT_REPOSITORY https://github.com/glfw/glfw.git
+        GIT_TAG master
+        UPDATE_DISCONNECTED ${UPDATE_STATUS}
+        QUIET
+        )
+
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(GLFW_USE_OSMESA ${SIM_OFFSCREEN} CACHE BOOL "" FORCE)
+
+# compile glfw with current project
+add_subdirectory(${glfw_SOURCE_DIR} ${glfw_BINARY_DIR})
+
+### GLM ###
+download_project(PROJ glm
+        PREFIX thirdparty
+        GIT_REPOSITORY https://github.com/g-truc/glm.git
+        GIT_TAG master
+        UPDATE_DISCONNECTED 1
+        ${QUIET_FLAG}
+        )
+
+### ImGui ###
+download_project(PROJ imgui
+        PREFIX thirdparty
+        GIT_REPOSITORY https://github.com/ocornut/imgui.git
+        GIT_TAG v1.53
+        UPDATE_DISCONNECTED ${UPDATE_STATUS}
+        QUIET
+        )
+
+add_library(thirdparty
+        # imgui
+        ${imgui_SOURCE_DIR}/imconfig.h
+        ${imgui_SOURCE_DIR}/imgui.cpp
+        ${imgui_SOURCE_DIR}/imgui.h
+        ${imgui_SOURCE_DIR}/imgui_demo.cpp
+        ${imgui_SOURCE_DIR}/imgui_draw.cpp
+        ${imgui_SOURCE_DIR}/imgui_internal.h
+        ${imgui_SOURCE_DIR}/stb_rect_pack.h
+        ${imgui_SOURCE_DIR}/stb_textedit.h
+        ${imgui_SOURCE_DIR}/stb_truetype.h
+        src/thirdparty/imgui_impl_glfw_gl3.cpp
+        src/thirdparty/imgui_impl_glfw_gl3.h
+        # glad
+        src/thirdparty/glad/glad.c
+        src/thirdparty/glad/glad.h
+        src/thirdparty/KHR/khrplatform.h
+        )
+
+target_include_directories(thirdparty SYSTEM PUBLIC
+        ${glfw_SOURCE_DIR}/include
+        ${imgui_SOURCE_DIR}
+        ${glm_SOURCE_DIR}
+        src/thirdparty
+        )
+target_link_libraries(thirdparty glfw)
 
 ### Graphics Library ###
 # currently an internal directory with the
@@ -76,19 +125,20 @@ set(GL_SOURCE
         )
 
 add_library(graphics ${GL_SOURCE})
-target_include_directories(graphics PUBLIC src
-        ${sim_BINARY_DIR}/thirdparty/glm-src
-        ${sim_SOURCE_DIR}/src/thirdparty)
+target_include_directories(graphics PUBLIC src)
+target_link_libraries(graphics thirdparty)
 
 #############################
 ### Project Configuration ###
 #############################
-if (NOT MSVC)
-    set(INTENSE_FLAGS -Wall -Wextra -Winit-self -Winit-self
-            -Wold-style-cast -Woverloaded-virtual -Werror
-            -Wmissing-declarations -pedantic -Wuninitialized)
-else ()
-    set(INTENSE_FLAGS -WX)
+if (VMP_USE_DEV_FLAGS)
+    if (NOT MSVC)
+        set(INTENSE_FLAGS -Wall -Wextra -Winit-self -Winit-self
+                -Wold-style-cast -Woverloaded-virtual -Werror
+                -Wmissing-declarations -pedantic -Wuninitialized)
+    else ()
+        set(INTENSE_FLAGS -WX)
+    endif ()
 endif ()
 
 
@@ -117,14 +167,18 @@ target_link_libraries(vmp rtaudio_static graphics)
 target_compile_options(vmp PRIVATE ${INTENSE_FLAGS} $<$<CONFIG:Debug>:${PROFILE_FLAGS}>)
 
 set(EXEC_SOURCE_FILES
+        src/exec/sim/AirWavesDriver.cpp
+        src/exec/sim/AirWavesDriver.hpp
+
         src/exec/AirWaves.cpp
         src/exec/AirWaves.hpp
         src/exec/main.cpp
         src/exec/Transport.cpp
         src/exec/Transport.hpp
         )
+
 add_executable(AirWaves ${EXEC_SOURCE_FILES})
-target_link_libraries(AirWaves vmp SimDriver)
+target_link_libraries(AirWaves vmp)
 target_compile_options(AirWaves PRIVATE ${INTENSE_FLAGS})
 
 add_executable(sound-test src/exec/simple_sound_test.cpp)

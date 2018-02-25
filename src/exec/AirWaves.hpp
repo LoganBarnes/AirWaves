@@ -28,8 +28,11 @@ public:
     AirWaves(int width, int height);
     ~AirWaves();
 
-    void configure_gui(int width, int height);
+    void configure_gui(int width, int height, bool paused);
     void render(int width, int height, double alpha);
+
+    void play_or_pause();
+    void stop_or_reset();
 
 private:
     std::unique_ptr<vmp::Transport> transport_;

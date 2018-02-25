@@ -136,6 +136,8 @@ AirWavesDriver::AirWavesDriver(const std::string &title, int width, int height, 
     glfwGetFramebufferSize(window_.get(), &w, &h);
 
     air_waves_ = std::make_unique<AirWaves>(w, h);
+
+    register_callbacks();
 }
 
 AirWavesDriver::~AirWavesDriver() = default;
@@ -186,18 +188,74 @@ void AirWavesDriver::render(double alpha)
     // Therefore we create the frame twice so we the updates will be present by the time we render.
     if (paused_) {
         ImGui_ImplGlfwGL3_NewFrame();
-        air_waves_->configure_gui(w, h);
+        air_waves_->configure_gui(w, h, paused_);
         ImGui::Render();
     }
 
     ImGui_ImplGlfwGL3_NewFrame();
-    air_waves_->configure_gui(w, h);
+    air_waves_->configure_gui(w, h, paused_);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     air_waves_->render(w, h, alpha);
     ImGui::Render();
     glfwSwapBuffers(window_.get());
+}
+
+void AirWavesDriver::register_callbacks()
+{
+    glfwSetWindowUserPointer(window_.get(), this);
+
+    glfwSetFramebufferSizeCallback(window_.get(), [](GLFWwindow *window, int width, int height) {
+        static_cast<AirWavesDriver *>(glfwGetWindowUserPointer(window))->handle_resize(width, height);
+    });
+
+    glfwSetKeyCallback(window_.get(), [](GLFWwindow *window, int key, int scancode, int action, int mods) {
+        static_cast<AirWavesDriver *>(glfwGetWindowUserPointer(window))
+            ->handle_key_event(window, key, scancode, action, mods);
+    });
+}
+
+void AirWavesDriver::handle_resize(int, int)
+{
+}
+
+void AirWavesDriver::handle_key_event(GLFWwindow *window, int key, int, int action, int)
+{
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
+        glfwSetWindowShouldClose(window, true);
+    }
+
+    ImGuiIO &io = ImGui::GetIO();
+
+    if (action == GLFW_PRESS) {
+        io.KeysDown[key] = true;
+    } else if (action == GLFW_RELEASE) {
+        io.KeysDown[key] = false;
+    }
+    io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
+    io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
+    io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
+    io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
+
+    if (io.WantCaptureKeyboard) {
+        return;
+    }
+
+    if (action == GLFW_RELEASE) {
+        switch (key) {
+        case GLFW_KEY_SPACE:
+            air_waves_->play_or_pause();
+            break;
+        case GLFW_KEY_ENTER:
+            if (io.KeyShift) {
+                air_waves_->stop_or_reset();
+            }
+            break;
+        default:
+            break;
+        }
+    }
 }
 
 } // namespace vmp

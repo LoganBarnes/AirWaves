@@ -50,7 +50,11 @@ private:
     std::size_t frames_ = 0;
     double total_time_ = 0.0;
 
+    void register_callbacks();
     void render(double alpha);
+
+    void handle_resize(int width, int height);
+    void handle_key_event(GLFWwindow *window, int key, int scancode, int action, int mods);
 };
 
 } // namespace vmp

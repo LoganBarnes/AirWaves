@@ -29,14 +29,14 @@ AirWaves::AirWaves(int, int) : transport_{std::make_unique<vmp::Transport>()}
 
 AirWaves::~AirWaves() = default;
 
-void AirWaves::configure_gui(int, int)
+void AirWaves::configure_gui(int, int, bool paused)
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
     ImGui::SetNextWindowPos(ImVec2(0, 0));
     if (ImGui::Begin("Window", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-        //        if (!simData_.paused) {
-        ImGui::Text("Framerate: %.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
-        //        }
+        if (!paused) {
+            ImGui::Text("Framerate: %.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
+        }
         transport_->configure_gui();
 
         ImGui::Separator();
@@ -68,6 +68,24 @@ void AirWaves::configure_gui(int, int)
 
 void AirWaves::render(int, int, double)
 {
+}
+
+void AirWaves::play_or_pause()
+{
+    if (VMP::is_paused()) {
+        VMP::resume();
+    } else {
+        VMP::pause();
+    }
+}
+
+void AirWaves::stop_or_reset()
+{
+    if (VMP::is_paused()) {
+        VMP::reset();
+    } else {
+        VMP::pause();
+    }
 }
 
 } // namespace vmp

@@ -147,7 +147,9 @@ if (VMP_USE_DEV_FLAGS)
     endif ()
 endif ()
 
-add_definitions(-DNOMINMAX) # silly microsoft
+if (MSVC)
+    add_definitions(-DNOMINMAX -D_CRT_SECURE_NO_WARNINGS) # silly microsoft
+endif()
 
 ############################
 ### Visual Music Project ###

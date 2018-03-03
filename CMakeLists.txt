@@ -13,7 +13,7 @@
 #               \__|     \__|
 # The Visual Music Project
 # Created by Logan Barnes
-##############################################################
+###############################################################
 cmake_minimum_required(VERSION 3.7.0 FATAL_ERROR)
 project(AirWaves)
 
@@ -21,8 +21,10 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(VMP_BUILD_TESTS "Build unit tests created with GoogleTest framework" OFF)
+option(VMP_BUILD_GL_TESTS "Build unit tests for graphics classes too" ON)
 option(VMP_UPDATE_REPOS "Update thirdpary git repos" OFF)
 option(VMP_USE_DEV_FLAGS "Compile with all the flags" OFF)
+option(VMP_USE_OSMESA "Use OS Mesa for offscreen rendering" OFF)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
@@ -62,7 +64,7 @@ download_project(PROJ glfw
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-set(GLFW_USE_OSMESA ${SIM_OFFSCREEN} CACHE BOOL "" FORCE)
+set(GLFW_USE_OSMESA ${VMP_USE_OSMESA} CACHE BOOL "" FORCE)
 
 # compile glfw with current project
 add_subdirectory(${glfw_SOURCE_DIR} ${glfw_BINARY_DIR})
@@ -72,8 +74,8 @@ download_project(PROJ glm
         PREFIX thirdparty
         GIT_REPOSITORY https://github.com/g-truc/glm.git
         GIT_TAG master
-        UPDATE_DISCONNECTED 1
-        ${QUIET_FLAG}
+        UPDATE_DISCONNECTED ${UPDATE_STATUS}
+        QUIET
         )
 
 ### ImGui ###
@@ -116,12 +118,16 @@ target_link_libraries(thirdparty glfw)
 # currently an internal directory with the
 # intent of becoming its own project
 set(GL_SOURCE
-        src/gl/buffer.hpp
-        src/gl/framebuffer.cpp
-        src/gl/framebuffer.hpp
-        src/gl/gl_types.hpp
-        src/gl/vertex_array.cpp
-        src/gl/vertex_array.hpp
+        src/gl/Buffer.hpp
+        src/gl/Framebuffer.cpp
+        src/gl/Framebuffer.hpp
+        src/gl/GLTypes.hpp
+        src/gl/Program.cpp
+        src/gl/Program.hpp
+        src/gl/ProgramManager.cpp
+        src/gl/ProgramManager.hpp
+        src/gl/VertexArray.cpp
+        src/gl/VertexArray.hpp
         )
 
 add_library(graphics ${GL_SOURCE})
@@ -222,6 +228,14 @@ if (${VMP_BUILD_TESTS})
     set(TEST_SOURCE_FILES
             src/testing/AudioDeviceTests.cpp
             )
+
+    if (VMP_BUILD_GL_TESTS)
+        set(TEST_SOURCE_FILES
+                ${TEST_SOURCE_FILES}
+
+                src/testing/gl/ProgramManagerTests.cpp
+                )
+    endif ()
 
     add_executable(vmp-tests ${TEST_SOURCE_FILES})
     add_test(NAME vmp-test COMMAND vmp-tests)

@@ -18,19 +18,19 @@ matrix:
             - mesa-utils
             - xorg-dev
             - libglu1-mesa-dev
-            - libegl1-mesa-dev
+            - libosmesa-dev
             - libasound2
             - alsa-utils
             - alsa-oss
             - libasound2-dev
             - lcov
       env:
-        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
+        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6 && OSMESA=ON && GLTESTS=ON"
 
     - os: osx
       osx_image: xcode8
       env:
-        - MATRIX_EVAL="CC=clang && CXX=clang++"
+        - MATRIX_EVAL="CC=clang && CXX=clang++ && OSMESA=OFF && GLTESTS=OFF"
 
 before_install:
     - eval "${MATRIX_EVAL}"
@@ -63,8 +63,6 @@ install:
     fi
   - cmake --version
 
-
-
 script:
   ############################################################################
   # Build project and run CPU based tests
@@ -72,16 +70,29 @@ script:
   - cd ${TRAVIS_BUILD_DIR}
   - mkdir cmake-build-debug
   - cd cmake-build-debug
-  - cmake -DCMAKE_BUILD_TYPE=Debug -DVMP_BUILD_TESTS=ON ..
-  - make -j
   - |
-    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then make AirWaves_coverage -j; fi;
+    cmake \
+      -DCMAKE_BUILD_TYPE=Debug \
+      -DVMP_USE_DEV_FLAGS=ON \
+      -DVMP_BUILD_TESTS=ON \
+      -DVMP_BUILD_GL_TESTS=${GLTESTS} \
+      -DVMP_USE_OSMESA=${OSMESA} \
+      ..
+  - make -j
+  - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then make AirWaves_coverage -j; fi;
   - ctest
 
   - cd ${TRAVIS_BUILD_DIR}
   - mkdir cmake-build-release
   - cd cmake-build-release
-  - cmake -DCMAKE_BUILD_TYPE=Release -DVMP_BUILD_TESTS=ON ..
+  - |
+    cmake \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DVMP_USE_DEV_FLAGS=ON \
+      -DVMP_BUILD_TESTS=ON \
+      -DVMP_BUILD_GL_TESTS=${GLTESTS} \
+      -DVMP_USE_OSMESA=${OSMESA} \
+      ..
   - make -j
   - ctest
 

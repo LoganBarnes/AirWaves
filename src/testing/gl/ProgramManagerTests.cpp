@@ -33,9 +33,8 @@ TEST(ProgramManagerTests, VaryingLengthProgramsAreCreated)
         throw std::runtime_error("GLFW init failed");
     }
 
+    // can only do OpenGL 2.1 with default linux OS Mesa install
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-    glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_EGL_CONTEXT_API);
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     int width = 640;

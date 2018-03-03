@@ -47,7 +47,12 @@ before_build:
 build_script:
   - mkdir build
   - cd build
-  - cmake -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DVMP_BUILD_TESTS=ON ..
+  - cmake ^
+      -DCMAKE_BUILD_TYPE=%CONFIGURATION% ^
+      -DVMP_BUILD_TESTS=ON ^
+      -DVMP_BUILD_GL_TESTS=OFF ^
+      -DVMP_USE_DEV_FLAGS=ON ^
+      ..
   - cmake --build . --config %CONFIGURATION% -- /m
 
 test_script:

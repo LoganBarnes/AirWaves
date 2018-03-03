@@ -112,7 +112,7 @@ target_include_directories(thirdparty SYSTEM PUBLIC
         ${glm_SOURCE_DIR}
         src/thirdparty
         )
-target_link_libraries(thirdparty glfw EGL)
+target_link_libraries(thirdparty glfw)
 
 ### Graphics Library ###
 # currently an internal directory with the

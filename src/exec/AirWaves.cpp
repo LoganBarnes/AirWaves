@@ -30,6 +30,15 @@
 
 namespace vmp {
 
+namespace {
+
+const glm::mat4 &identity() {
+    static glm::mat4 ident(1);
+    return ident;
+}
+
+} // namespace
+
 AirWaves::AirWaves(int width, int height)
     : transport_{std::make_unique<vmp::Transport>()}, camera_{std::make_unique<gl::Camera>()}
 {
@@ -97,8 +106,7 @@ void AirWaves::render(int, int, double)
     glpl_.fbo->use([&] {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glpl_.program->use([&] {
-            glm::mat4 identity(1);
-            glpl_.program->set_matrix_uniform("screen_from_world", glm::value_ptr(identity));
+            glpl_.program->set_matrix_uniform("screen_from_world", glm::value_ptr(identity()));
             glpl_.program->set_bool_uniform("use_tex", false);
             glpl_.vao->render(GL_TRIANGLE_STRIP, 0, 4);
         });

@@ -30,9 +30,9 @@ class VertexArrayWrapper
 public:
     template <typename T>
     explicit VertexArrayWrapper(GLuint program,
-                         const Buffer<T> &vbo,
-                         GLsizei total_stride,
-                         const std::vector<VAOElement> &elements);
+                                const Buffer<T> &vbo,
+                                GLsizei total_stride,
+                                const std::vector<VAOElement> &elements);
 
     void bind() const;
     void unbind() const;
@@ -51,18 +51,18 @@ private:
 
 template <typename T>
 std::shared_ptr<VertexArrayWrapper> create_shared_vertex_array(GLuint program,
-                                                        const Buffer<T> &vbo,
-                                                        GLsizei total_stride,
-                                                        const std::vector<VAOElement> &elements)
+                                                               const Buffer<T> &vbo,
+                                                               GLsizei total_stride,
+                                                               const std::vector<VAOElement> &elements)
 {
     return std::make_shared<VertexArrayWrapper>(program, vbo, total_stride, elements);
 }
 
 template <typename T>
 VertexArrayWrapper::VertexArrayWrapper(GLuint program,
-                         const Buffer<T> &vbo,
-                         const GLsizei total_stride,
-                         const std::vector<VAOElement> &elements)
+                                       const Buffer<T> &vbo,
+                                       const GLsizei total_stride,
+                                       const std::vector<VAOElement> &elements)
 {
     GLuint vao;
     glGenVertexArrays(1, &vao);

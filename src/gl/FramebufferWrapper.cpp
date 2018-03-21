@@ -185,11 +185,11 @@ GLuint FramebufferWrapper<Dim>::get_framebuffer_id() const
 
 template <int Dim>
 std::shared_ptr<FramebufferWrapper<Dim>> create_shared_framebuffer(glm::vec<Dim, unsigned> dim,
-                                                            const float *array,
-                                                            GLint internal_format,
-                                                            GLenum format,
-                                                            GLint filter_type,
-                                                            GLint wrap_type)
+                                                                   const float *array,
+                                                                   GLint internal_format,
+                                                                   GLenum format,
+                                                                   GLint filter_type,
+                                                                   GLint wrap_type)
 {
     return std::make_shared<FramebufferWrapper<Dim>>(dim, array, internal_format, format, filter_type, wrap_type);
 }

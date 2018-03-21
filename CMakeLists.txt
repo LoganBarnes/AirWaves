@@ -124,8 +124,8 @@ set(GL_SOURCE
         src/gl/GLFunctions.cpp
         src/gl/GLFunctions.hpp
         src/gl/GLTypes.hpp
-        src/gl/ProgramWrapper.cpp
-        src/gl/ProgramWrapper.hpp
+        src/gl/Program.cpp
+        src/gl/Program.hpp
         src/gl/ProgramManager.cpp
         src/gl/ProgramManager.hpp
         src/gl/VertexArrayWrapper.cpp

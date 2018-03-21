@@ -23,10 +23,9 @@
 
 namespace gl {
 
-namespace detail
-{
+namespace detail {
 
-template<int Dim>
+template <int Dim>
 class FramebufferWrapper
 {
 public:
@@ -40,7 +39,7 @@ public:
     void bind() const;
     void unbind() const;
 
-    template<typename UsageFunc>
+    template <typename UsageFunc>
     void use(const UsageFunc &usage_func) const;
 
     GLuint get_texture_id() const;
@@ -51,7 +50,7 @@ private:
     std::shared_ptr<GLuint> framebuffer_;
 };
 
-template<int Dim>
+template <int Dim>
 std::shared_ptr<FramebufferWrapper<Dim>> create_shared_framebuffer(glm::vec<Dim, unsigned> dim,
                                                                    const float *array = nullptr,
                                                                    GLint internal_format = GL_RGBA32F,

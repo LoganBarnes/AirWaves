@@ -16,7 +16,7 @@
 // Created by Logan T. Barnes
 // ////////////////////////////////////////////////////////////
 #include "GLFunctions.hpp"
-#include <gl/ProgramWrapper.hpp>
+#include <gl/Program.hpp>
 
 namespace gl {
 

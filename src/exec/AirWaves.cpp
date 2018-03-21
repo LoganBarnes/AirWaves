@@ -21,11 +21,13 @@
 #include <vmp/audio/sources/SineSource.hpp>
 #include <vmp/VMPConfig.hpp>
 #include <gl/GLFunctions.hpp>
+#include <gl/Program.hpp>
 #include <imgui.h>
 
 namespace vmp {
 
-AirWaves::AirWaves(int, int) : transport_{std::make_unique<vmp::Transport>()} {
+AirWaves::AirWaves(int, int) : transport_{std::make_unique<vmp::Transport>()}
+{
     glpl_.program = gl::create_program(vmp::shader_path() + "orb.vert", vmp::shader_path() + "orb.frag");
 }
 
@@ -68,7 +70,12 @@ void AirWaves::configure_gui(int, int, bool paused)
     ImGui::PopStyleVar();
 }
 
-void AirWaves::render(int, int, double) {}
+void AirWaves::render(int, int, double)
+{
+    glpl_.program->use([] {
+
+    });
+}
 
 void AirWaves::play_or_pause()
 {

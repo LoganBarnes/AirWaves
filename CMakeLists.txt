@@ -119,17 +119,17 @@ target_link_libraries(thirdparty glfw)
 # intent of becoming its own project
 set(GL_SOURCE
         src/gl/BufferWrapper.hpp
-        src/gl/Framebuffer.cpp
-        src/gl/Framebuffer.hpp
+        src/gl/FramebufferWrapper.cpp
+        src/gl/FramebufferWrapper.hpp
         src/gl/GLFunctions.cpp
         src/gl/GLFunctions.hpp
         src/gl/GLTypes.hpp
-        src/gl/Program.cpp
-        src/gl/Program.hpp
+        src/gl/ProgramWrapper.cpp
+        src/gl/ProgramWrapper.hpp
         src/gl/ProgramManager.cpp
         src/gl/ProgramManager.hpp
-        src/gl/VertexArray.cpp
-        src/gl/VertexArray.hpp
+        src/gl/VertexArrayWrapper.cpp
+        src/gl/VertexArrayWrapper.hpp
         )
 
 add_library(graphics ${GL_SOURCE})

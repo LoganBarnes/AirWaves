@@ -23,21 +23,24 @@
 
 namespace gl {
 
-template <int Dim>
-class Framebuffer
+namespace detail
+{
+
+template<int Dim>
+class FramebufferWrapper
 {
 public:
-    explicit Framebuffer(glm::vec<Dim, unsigned> dim,
-                         const float *array = nullptr,
-                         GLint internal_format = GL_RGBA32F,
-                         GLenum format = GL_RGBA,
-                         GLint filter_type = GL_NEAREST,
-                         GLint wrap_type = GL_REPEAT);
+    explicit FramebufferWrapper(glm::vec<Dim, unsigned> dim,
+                                const float *array = nullptr,
+                                GLint internal_format = GL_RGBA32F,
+                                GLenum format = GL_RGBA,
+                                GLint filter_type = GL_NEAREST,
+                                GLint wrap_type = GL_REPEAT);
 
     void bind() const;
     void unbind() const;
 
-    template <typename UsageFunc>
+    template<typename UsageFunc>
     void use(const UsageFunc &usage_func) const;
 
     GLuint get_texture_id() const;
@@ -48,12 +51,14 @@ private:
     std::shared_ptr<GLuint> framebuffer_;
 };
 
-template <int Dim>
-std::shared_ptr<Framebuffer<Dim>> create_shared_framebuffer(glm::vec<Dim, unsigned> dim,
-                                                            const float *array = nullptr,
-                                                            GLint internal_format = GL_RGBA32F,
-                                                            GLenum format = GL_RGBA,
-                                                            GLint filter_type = GL_NEAREST,
-                                                            GLint wrap_type = GL_REPEAT);
+template<int Dim>
+std::shared_ptr<FramebufferWrapper<Dim>> create_shared_framebuffer(glm::vec<Dim, unsigned> dim,
+                                                                   const float *array = nullptr,
+                                                                   GLint internal_format = GL_RGBA32F,
+                                                                   GLenum format = GL_RGBA,
+                                                                   GLint filter_type = GL_NEAREST,
+                                                                   GLint wrap_type = GL_REPEAT);
+
+} // namespace detail
 
 } // namespace gl

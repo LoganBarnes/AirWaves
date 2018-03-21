@@ -16,14 +16,18 @@
 // ////////////////////////////////////////////////////////////
 #include "AirWaves.hpp"
 #include "Transport.hpp"
-#include <imgui.h>
 #include <vmp/VMP.hpp>
 #include <vmp/audio/sources/SawSource.hpp>
 #include <vmp/audio/sources/SineSource.hpp>
+#include <vmp/VMPConfig.hpp>
+#include <gl/GLFunctions.hpp>
+#include <imgui.h>
 
 namespace vmp {
 
-AirWaves::AirWaves(int, int) : transport_{std::make_unique<vmp::Transport>()} {}
+AirWaves::AirWaves(int, int) : transport_{std::make_unique<vmp::Transport>()} {
+    glpl_.program = gl::create_program(vmp::shader_path() + "orb.vert", vmp::shader_path() + "orb.frag");
+}
 
 AirWaves::~AirWaves() = default;
 

@@ -24,7 +24,7 @@ namespace gl {
 class ProgramManager
 {
 public:
-    static std::shared_ptr<Program> create_program(const std::vector<std::string> &shader_filenames);
+    static Program create_program(const std::vector<std::string> &shader_filenames);
 };
 
 } // namespace gl

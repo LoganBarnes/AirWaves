@@ -16,12 +16,12 @@
 // Created by Logan T. Barnes
 // ////////////////////////////////////////////////////////////
 #include "ProgramManager.hpp"
-#include <gl/Program.hpp>
+#include <gl/ProgramWrapper.hpp>
 
 namespace gl {
 
-std::shared_ptr<Program> ProgramManager::create_program(const std::vector<std::string> &shader_filenames)
+Program ProgramManager::create_program(const std::vector<std::string> &shader_filenames)
 {
-    return std::make_shared<Program>(shader_filenames);
+    return std::make_shared<detail::ProgramWrapper>(shader_filenames);
 }
 } // namespace gl

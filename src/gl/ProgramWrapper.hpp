@@ -22,13 +22,17 @@
 
 namespace gl {
 
-class Program
+namespace detail {
+
+class ProgramWrapper
 {
 public:
-    explicit Program(const std::vector<std::string> &shader_filenames);
+    explicit ProgramWrapper(const std::vector<std::string> &shader_filenames);
 
 private:
     std::shared_ptr<GLuint> program_;
 };
+
+} // namespace detail
 
 } // namespace gl

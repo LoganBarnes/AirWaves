@@ -15,10 +15,12 @@
 // The Visual Music Project
 // Created by Logan T. Barnes
 // ////////////////////////////////////////////////////////////
-#include "Framebuffer.hpp"
+#include "FramebufferWrapper.hpp"
 #include <glm/gtc/vec1.hpp>
 
 namespace gl {
+
+namespace detail {
 
 namespace {
 
@@ -123,7 +125,7 @@ std::shared_ptr<GLuint> create_framebuffer(const glm::uvec3 &dim, GLenum tex_typ
 } // namespace
 
 template <>
-Framebuffer<1>::Framebuffer(
+FramebufferWrapper<1>::FramebufferWrapper(
     glm::uvec1 dim, const float *array, GLint internal_format, GLenum format, GLint filter_type, GLint wrap_type)
 {
     glm::uvec3 full_dim = {dim.x, 1, 1};
@@ -132,7 +134,7 @@ Framebuffer<1>::Framebuffer(
 }
 
 template <>
-Framebuffer<2>::Framebuffer(
+FramebufferWrapper<2>::FramebufferWrapper(
     glm::uvec2 dim, const float *array, GLint internal_format, GLenum format, GLint filter_type, GLint wrap_type)
 {
     glm::uvec3 full_dim = {dim.x, dim.y, 1};
@@ -141,7 +143,7 @@ Framebuffer<2>::Framebuffer(
 }
 
 template <>
-Framebuffer<3>::Framebuffer(
+FramebufferWrapper<3>::FramebufferWrapper(
     glm::uvec3 dim, const float *array, GLint internal_format, GLenum format, GLint filter_type, GLint wrap_type)
 {
     texture_ = create_texture(dim, GL_TEXTURE_3D, array, internal_format, format, filter_type, wrap_type);
@@ -149,20 +151,20 @@ Framebuffer<3>::Framebuffer(
 }
 
 template <int Dim>
-void Framebuffer<Dim>::bind() const
+void FramebufferWrapper<Dim>::bind() const
 {
     glBindFramebuffer(GL_FRAMEBUFFER, *framebuffer_);
 }
 
 template <int Dim>
-void Framebuffer<Dim>::unbind() const
+void FramebufferWrapper<Dim>::unbind() const
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 template <int Dim>
 template <typename UsageFunc>
-void Framebuffer<Dim>::use(const UsageFunc &usage_func) const
+void FramebufferWrapper<Dim>::use(const UsageFunc &usage_func) const
 {
     bind();
     usage_func();
@@ -170,37 +172,39 @@ void Framebuffer<Dim>::use(const UsageFunc &usage_func) const
 }
 
 template <int Dim>
-GLuint Framebuffer<Dim>::get_texture_id() const
+GLuint FramebufferWrapper<Dim>::get_texture_id() const
 {
     return *texture_;
 }
 
 template <int Dim>
-GLuint Framebuffer<Dim>::get_framebuffer_id() const
+GLuint FramebufferWrapper<Dim>::get_framebuffer_id() const
 {
     return *framebuffer_;
 }
 
 template <int Dim>
-std::shared_ptr<Framebuffer<Dim>> create_shared_framebuffer(glm::vec<Dim, unsigned> dim,
+std::shared_ptr<FramebufferWrapper<Dim>> create_shared_framebuffer(glm::vec<Dim, unsigned> dim,
                                                             const float *array,
                                                             GLint internal_format,
                                                             GLenum format,
                                                             GLint filter_type,
                                                             GLint wrap_type)
 {
-    return std::make_shared<Framebuffer<Dim>>(dim, array, internal_format, format, filter_type, wrap_type);
+    return std::make_shared<FramebufferWrapper<Dim>>(dim, array, internal_format, format, filter_type, wrap_type);
 }
 
-template class Framebuffer<1>;
-template class Framebuffer<2>;
-template class Framebuffer<3>;
+template class FramebufferWrapper<1>;
+template class FramebufferWrapper<2>;
+template class FramebufferWrapper<3>;
 
-template std::shared_ptr<Framebuffer<1>>
+template std::shared_ptr<FramebufferWrapper<1>>
 create_shared_framebuffer(glm::uvec1, const float *, GLint, GLenum, GLint, GLint);
-template std::shared_ptr<Framebuffer<2>>
+template std::shared_ptr<FramebufferWrapper<2>>
 create_shared_framebuffer(glm::uvec2, const float *, GLint, GLenum, GLint, GLint);
-template std::shared_ptr<Framebuffer<3>>
+template std::shared_ptr<FramebufferWrapper<3>>
 create_shared_framebuffer(glm::uvec3, const float *, GLint, GLenum, GLint, GLint);
+
+} // namespace detail
 
 } // namespace gl

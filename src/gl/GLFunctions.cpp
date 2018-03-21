@@ -16,13 +16,13 @@
 // Created by Logan T. Barnes
 // ////////////////////////////////////////////////////////////
 #include "GLFunctions.hpp"
-#include <gl/Program.hpp>
+#include <gl/ProgramWrapper.hpp>
 
 namespace gl {
 
-std::unique_ptr<Program> create_program(const std::vector<std::string> &shader_filenames)
+Program create_program(const std::vector<std::string> &shader_filenames)
 {
-    return std::make_unique<Program>(shader_filenames);
+    return std::make_shared<detail::ProgramWrapper>(shader_filenames);
 }
 
 } // namespace gl

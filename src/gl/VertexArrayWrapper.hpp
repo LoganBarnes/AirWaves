@@ -23,11 +23,13 @@
 
 namespace gl {
 
-class VertexArray
+namespace detail {
+
+class VertexArrayWrapper
 {
 public:
     template <typename T>
-    explicit VertexArray(GLuint program,
+    explicit VertexArrayWrapper(GLuint program,
                          const Buffer<T> &vbo,
                          GLsizei total_stride,
                          const std::vector<VAOElement> &elements);
@@ -48,16 +50,16 @@ private:
 };
 
 template <typename T>
-std::shared_ptr<VertexArray> create_shared_vertex_array(GLuint program,
+std::shared_ptr<VertexArrayWrapper> create_shared_vertex_array(GLuint program,
                                                         const Buffer<T> &vbo,
                                                         GLsizei total_stride,
                                                         const std::vector<VAOElement> &elements)
 {
-    return std::make_shared<VertexArray>(program, vbo, total_stride, elements);
+    return std::make_shared<VertexArrayWrapper>(program, vbo, total_stride, elements);
 }
 
 template <typename T>
-VertexArray::VertexArray(GLuint program,
+VertexArrayWrapper::VertexArrayWrapper(GLuint program,
                          const Buffer<T> &vbo,
                          const GLsizei total_stride,
                          const std::vector<VAOElement> &elements)
@@ -75,7 +77,7 @@ VertexArray::VertexArray(GLuint program,
 }
 
 template <typename IboType>
-void VertexArray::render(GLenum mode, int start, int num_elements, const Buffer<IboType> &ibo)
+void VertexArrayWrapper::render(GLenum mode, int start, int num_elements, const Buffer<IboType> &ibo)
 {
     bind();
 
@@ -89,5 +91,7 @@ void VertexArray::render(GLenum mode, int start, int num_elements, const Buffer<
 
     unbind();
 }
+
+} // namespace detail
 
 } // namespace gl

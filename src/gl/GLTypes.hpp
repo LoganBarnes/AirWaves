@@ -28,32 +28,33 @@ namespace detail {
 template <typename T>
 class BufferWrapper;
 
+template <int Dim>
+class FramebufferWrapper;
+
+class VertexArrayWrapper;
+class ProgramWrapper;
+
 } // namespace detail
 
-template <int Dim>
-class Framebuffer;
-
-class Program;
 class ProgramManager;
-class VertexArray;
 
 template <typename T>
 using Buffer = std::shared_ptr<detail::BufferWrapper<T>>;
 
 template <int Dim>
-using FramebufferHandle = std::shared_ptr<Framebuffer<Dim>>;
+using Framebuffer = std::shared_ptr<detail::FramebufferWrapper<Dim>>;
 
-using ProgramHandle = std::shared_ptr<Program>;
-using VertexArrayHandle = std::shared_ptr<Program>;
+using Program = std::shared_ptr<detail::ProgramWrapper>;
+using VertexArray = std::shared_ptr<detail::VertexArrayWrapper>;
 
 template <typename VboType = float, typename IboType = unsigned>
 struct Pipeline
 {
-    ProgramHandle program{nullptr};
+    Program program{nullptr};
     Buffer<VboType> vbo{nullptr};
     Buffer<IboType> ibo{nullptr};
-    VertexArrayHandle vao{nullptr};
-    FramebufferHandle<2> fbo{nullptr};
+    VertexArray vao{nullptr};
+    Framebuffer<2> fbo{nullptr};
 };
 
 struct VAOElement

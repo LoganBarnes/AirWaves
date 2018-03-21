@@ -15,16 +15,18 @@
 // The Visual Music Project
 // Created by Logan T. Barnes
 // ////////////////////////////////////////////////////////////
-#include "VertexArray.hpp"
+#include "VertexArrayWrapper.hpp"
 
 namespace gl {
 
-void VertexArray::bind() const
+namespace detail {
+
+void VertexArrayWrapper::bind() const
 {
     glBindVertexArray(*vao_);
 }
 
-void VertexArray::unbind() const
+void VertexArrayWrapper::unbind() const
 {
     glBindVertexArray(0);
 }
@@ -32,7 +34,7 @@ void VertexArray::unbind() const
 /**
  * @warning assumes a VBO is bound
  */
-void VertexArray::set_attributes(GLuint program, GLsizei total_stride, const std::vector<VAOElement> &elements)
+void VertexArrayWrapper::set_attributes(GLuint program, GLsizei total_stride, const std::vector<VAOElement> &elements)
 {
     bind();
 
@@ -84,5 +86,7 @@ void VertexArray::set_attributes(GLuint program, GLsizei total_stride, const std
 
     unbind();
 }
+
+} // namespace detail
 
 } // namespace gl

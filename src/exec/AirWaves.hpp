@@ -17,6 +17,7 @@
 #pragma once
 
 #include <vmp/VmpTypes.hpp>
+#include <gl/GLTypes.hpp>
 #include <memory>
 #include <vector>
 
@@ -36,6 +37,7 @@ public:
 
 private:
     std::unique_ptr<vmp::Transport> transport_;
+    gl::Pipeline<> glpl_;
 
     //TODO: should be stored in VMP::Output()
     float output_amplitude_{1.0};

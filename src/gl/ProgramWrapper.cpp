@@ -15,11 +15,13 @@
 // The Visual Music Project
 // Created by Logan T. Barnes
 // ////////////////////////////////////////////////////////////
-#include "Program.hpp"
+#include "ProgramWrapper.hpp"
 #include <unordered_map>
 #include <fstream>
 
 namespace gl {
+
+namespace detail {
 
 namespace {
 
@@ -160,7 +162,7 @@ std::shared_ptr<GLuint> create_program(const IdVec &shader_ids)
 
 } // namespace
 
-Program::Program(const std::vector<std::string> &shader_filenames)
+ProgramWrapper::ProgramWrapper(const std::vector<std::string> &shader_filenames)
 {
     IdVec shaders;
 
@@ -168,5 +170,7 @@ Program::Program(const std::vector<std::string> &shader_filenames)
         shaders.emplace_back(create_shader(filename));
     }
 }
+
+} // namespace detail
 
 } // namespace gl

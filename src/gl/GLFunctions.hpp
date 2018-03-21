@@ -25,9 +25,9 @@
 namespace gl {
 
 template <typename... Shaders>
-std::unique_ptr<Program> create_program(const std::string &shader_filename, const Shaders... shader_filenames);
+Program create_program(const std::string &shader_filename, const Shaders... shader_filenames);
 
-std::unique_ptr<Program> create_program(const std::vector<std::string> &shader_filenames);
+Program create_program(const std::vector<std::string> &shader_filenames);
 
 namespace detail {
 
@@ -49,11 +49,11 @@ void append_filenames(std::vector<std::string> *filename_list, const std::string
 } // namespace detail
 
 template <typename... Shaders>
-std::unique_ptr<Program> create_program(const std::string &shader_filename, const Shaders... shader_filenames)
+Program create_program(const std::string &shader_filename, const Shaders... shader_filenames)
 {
     std::vector<std::string> filenames;
     detail::append_filenames(&filenames, shader_filename, shader_filenames...);
-    create_program(filenames);
+    return create_program(filenames);
 }
 
 } // namespace gl

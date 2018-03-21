@@ -127,27 +127,28 @@ std::shared_ptr<GLuint> create_framebuffer(const glm::uvec3 &dim, GLenum tex_typ
 template <>
 FramebufferWrapper<1>::FramebufferWrapper(
     glm::uvec1 dim, const float *array, GLint internal_format, GLenum format, GLint filter_type, GLint wrap_type)
+    : full_dim_{dim.x, 1, 1}
 {
-    glm::uvec3 full_dim = {dim.x, 1, 1};
-    texture_ = create_texture(full_dim, GL_TEXTURE_1D, array, internal_format, format, filter_type, wrap_type);
-    framebuffer_ = create_framebuffer(full_dim, GL_TEXTURE_1D, *texture_);
+    texture_ = create_texture(full_dim_, GL_TEXTURE_1D, array, internal_format, format, filter_type, wrap_type);
+    framebuffer_ = create_framebuffer(full_dim_, GL_TEXTURE_1D, *texture_);
 }
 
 template <>
 FramebufferWrapper<2>::FramebufferWrapper(
     glm::uvec2 dim, const float *array, GLint internal_format, GLenum format, GLint filter_type, GLint wrap_type)
+    : full_dim_{dim.x, dim.y, 1}
 {
-    glm::uvec3 full_dim = {dim.x, dim.y, 1};
-    texture_ = create_texture(full_dim, GL_TEXTURE_2D, array, internal_format, format, filter_type, wrap_type);
-    framebuffer_ = create_framebuffer(full_dim, GL_TEXTURE_2D, *texture_);
+    texture_ = create_texture(full_dim_, GL_TEXTURE_2D, array, internal_format, format, filter_type, wrap_type);
+    framebuffer_ = create_framebuffer(full_dim_, GL_TEXTURE_2D, *texture_);
 }
 
 template <>
 FramebufferWrapper<3>::FramebufferWrapper(
     glm::uvec3 dim, const float *array, GLint internal_format, GLenum format, GLint filter_type, GLint wrap_type)
+    : full_dim_{dim}
 {
-    texture_ = create_texture(dim, GL_TEXTURE_3D, array, internal_format, format, filter_type, wrap_type);
-    framebuffer_ = create_framebuffer(dim, GL_TEXTURE_3D, *texture_);
+    texture_ = create_texture(full_dim_, GL_TEXTURE_3D, array, internal_format, format, filter_type, wrap_type);
+    framebuffer_ = create_framebuffer(full_dim_, GL_TEXTURE_3D, *texture_);
 }
 
 template <int Dim>

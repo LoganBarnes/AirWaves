@@ -49,6 +49,7 @@ public:
 private:
     std::shared_ptr<GLuint> texture_;
     std::shared_ptr<GLuint> framebuffer_;
+    glm::uvec3 full_dim_;
 };
 
 template <int Dim>
@@ -56,6 +57,7 @@ template <typename UsageFunc>
 void FramebufferWrapper<Dim>::use(const UsageFunc &usage_func) const
 {
     bind();
+    glViewport(0, 0, full_dim_.x, full_dim_.y);
     usage_func();
     unbind();
 }

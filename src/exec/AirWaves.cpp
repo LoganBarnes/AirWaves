@@ -89,13 +89,18 @@ void AirWaves::configure_gui(int, int, bool paused)
 void AirWaves::render(int, int, double)
 {
     glpl_.fbo->use([&] {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glpl_.program->use([&] {
-            //        glpl_.program->set_bool_uniform();
+            glpl_.program->set_bool_uniform("use_tex", false);
             glpl_.vao->render(GL_TRIANGLE_STRIP, 0, 4);
         });
     });
 
-    glpl_.program->use([&] { glpl_.vao->render(GL_TRIANGLE_STRIP, 0, 4); });
+    glpl_.program->use([&] {
+        glpl_.program->set_bool_uniform("use_tex", tmp_use_fbo_);
+        glpl_.program->set_texture_uniform("tex", glpl_.fbo->get_texture_id());
+        glpl_.vao->render(GL_TRIANGLE_STRIP, 0, 4);
+    });
 }
 
 void AirWaves::play_or_pause()

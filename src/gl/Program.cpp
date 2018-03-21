@@ -18,6 +18,7 @@
 #include "Program.hpp"
 #include <unordered_map>
 #include <fstream>
+#include <sstream>
 
 namespace gl {
 
@@ -171,6 +172,70 @@ ProgramWrapper::ProgramWrapper(const std::vector<std::string> &shader_filenames)
     }
 
     program_ = create_program(shaders);
+}
+
+void ProgramWrapper::set_bool_uniform(const std::string &uniform, const bool value) const
+{
+    glProgramUniform1i(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), value);
+}
+
+void ProgramWrapper::set_int_uniform(const std::string &uniform,
+                                     const int *value,
+                                     const int size,
+                                     const int count) const
+{
+    switch (size) {
+    case 1:
+        glProgramUniform1iv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
+        break;
+    case 2:
+        glProgramUniform2iv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
+        break;
+    case 3:
+        glProgramUniform3iv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
+        break;
+    case 4:
+        glProgramUniform4iv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
+        break;
+    default: {
+        std::stringstream msg;
+        msg << "ivec" << size << " uniform does not exist";
+        throw std::runtime_error(msg.str());
+    }
+    } // switch
+}
+
+void ProgramWrapper::set_uint_uniform(const std::string &uniform,
+                                      const unsigned *value,
+                                      const int size,
+                                      const int count) const
+{
+    switch (size) {
+    case 1:
+        glProgramUniform1uiv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
+        break;
+    case 2:
+        glProgramUniform2uiv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
+        break;
+    case 3:
+        glProgramUniform3uiv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
+        break;
+    case 4:
+        glProgramUniform4uiv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
+        break;
+    default: {
+        std::stringstream msg;
+        msg << "uvec" << size << " uniform does not exist";
+        throw std::runtime_error(msg.str());
+    }
+    } // switch
+}
+
+void ProgramWrapper::set_texture_uniform(const std::string &uniform, const GLuint &texture, int active_tex) const
+{
+    glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + active_tex));
+    glProgramUniform1i(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), active_tex);
+    glBindTexture(GL_TEXTURE_2D, texture);
 }
 
 GLuint ProgramWrapper::get_id() const

@@ -15,52 +15,68 @@
 // The Visual Music Project
 // Created by Logan T. Barnes
 // ////////////////////////////////////////////////////////////
-//#include <gl/ProgramManager.hpp>
+#include <gl/ProgramManager.hpp>
+#include <vmp/VMPConfig.hpp>
 #include <gmock/gmock.h>
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 namespace {
 
-TEST(ProgramManagerTests, VaryingLengthProgramsAreCreated)
+class ProgramManagerTests : public ::testing::Test
 {
-    // Set the error callback before any other GLFW calls so we get proper error reporting
-    glfwSetErrorCallback([](int error, const char *description) {
-        std::cerr << "ERROR: (" << error << ") " << description << std::endl;
-    });
+protected:
+    void SetUp() final
+    {
+        // Set the error callback before any other GLFW calls so we get proper error reporting
+        glfwSetErrorCallback([](int error, const char *description) {
+            std::cerr << "ERROR: (" << error << ") " << description << std::endl;
+        });
 
-    if (glfwInit() == 0) {
-        throw std::runtime_error("GLFW init failed");
+        if (glfwInit() == 0) {
+            throw std::runtime_error("GLFW init failed");
+        }
+
+        // can only do OpenGL 2.1 with default linux OS Mesa install
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+        int width = 640;
+        int height = 480;
+
+        window_ = glfwCreateWindow(width, height, "", nullptr, nullptr);
+
+        if (window_ == nullptr) {
+            glfwTerminate();
+            throw std::runtime_error("GLFW window creation failed");
+        }
+
+        glfwMakeContextCurrent(window_);
+        glfwSwapInterval(1);
+
+        if (gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)) == 0) {
+            glfwDestroyWindow(window_);
+            glfwTerminate();
+            throw std::runtime_error("Failed load OpenGL Glad functions");
+        }
+
+        std::cout << "\nOpenGL version " << GLVersion.major << "." << GLVersion.minor << " loaded.\n" << std::endl;
     }
 
-    // can only do OpenGL 2.1 with default linux OS Mesa install
-    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-    int width = 640;
-    int height = 480;
-
-    GLFWwindow *window = glfwCreateWindow(width, height, "", nullptr, nullptr);
-
-    if (window == nullptr) {
+    void TearDown() final
+    {
+        glfwDestroyWindow(window_);
         glfwTerminate();
-        throw std::runtime_error("GLFW window creation failed");
     }
 
-    glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
+private:
+    GLFWwindow *window_{nullptr};
+};
 
-    if (gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)) == 0) {
-        glfwDestroyWindow(window);
-        glfwTerminate();
-        throw std::runtime_error("Failed load OpenGL Glad functions");
-    }
+TEST_F(ProgramManagerTests, VaryingLengthProgramsAreCreated)
+{
+    gl::ProgramManager pm;
 
-    std::cout << "\nOpenGL version " << GLVersion.major << "." << GLVersion.minor << " loaded.\n" << std::endl;
-
-    glfwDestroyWindow(window);
-    glfwTerminate();
-    //        gl::ProgramManager pm;
+    pm.create_program({vmp::testing::shader_path() + "shader.vert", vmp::testing::shader_path() + "shader.frag"});
 }
 
 } // namespace

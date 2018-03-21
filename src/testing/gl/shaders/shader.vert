@@ -1,5 +1,5 @@
 // ////////////////////////////////////////////////////////////
-// Created on 2/25/18.
+// Created on 3/21/18.
 // Copyright (c) 2018. All rights reserved.
 //
 //  ___________________________$$$$$$$\__________
@@ -15,16 +15,9 @@
 // The Visual Music Project
 // Created by Logan T. Barnes
 // ////////////////////////////////////////////////////////////
-#pragma once
+#version 120
 
-#include <gl/GLTypes.hpp>
-
-namespace gl {
-
-class ProgramManager
+void main()
 {
-public:
-    static std::shared_ptr<Program> create_program(const std::vector<std::string> &shader_filenames);
-};
-
-} // namespace gl
+	gl_Position = vec4(vec3(0.0), 1.0);
+}

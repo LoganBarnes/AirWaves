@@ -23,16 +23,12 @@
 
 namespace gl {
 
-struct VAOElement
-{
-    std::string name;
-    GLint size;
-    GLenum type;
-    void *pointer;
-};
+namespace detail {
 
 template <typename T>
-class Buffer;
+class BufferWrapper;
+
+} // namespace detail
 
 template <int Dim>
 class Framebuffer;
@@ -41,14 +37,31 @@ class Program;
 class ProgramManager;
 class VertexArray;
 
+template <typename T>
+using Buffer = std::shared_ptr<detail::BufferWrapper<T>>;
+
+template <int Dim>
+using FramebufferHandle = std::shared_ptr<Framebuffer<Dim>>;
+
+using ProgramHandle = std::shared_ptr<Program>;
+using VertexArrayHandle = std::shared_ptr<Program>;
+
 template <typename VboType = float, typename IboType = unsigned>
 struct Pipeline
 {
-    std::shared_ptr<GLuint> program{nullptr};
-    std::shared_ptr<Buffer<VboType>> vbo{nullptr};
-    std::shared_ptr<Buffer<IboType>> ibo{nullptr};
-    std::shared_ptr<VertexArray> vao{nullptr};
-    std::shared_ptr<Framebuffer<2>> fbo{nullptr};
+    ProgramHandle program{nullptr};
+    Buffer<VboType> vbo{nullptr};
+    Buffer<IboType> ibo{nullptr};
+    VertexArrayHandle vao{nullptr};
+    FramebufferHandle<2> fbo{nullptr};
+};
+
+struct VAOElement
+{
+    std::string name;
+    GLint size;
+    GLenum type;
+    void *pointer;
 };
 
 } // namespace gl

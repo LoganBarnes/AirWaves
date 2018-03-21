@@ -118,7 +118,7 @@ target_link_libraries(thirdparty glfw)
 # currently an internal directory with the
 # intent of becoming its own project
 set(GL_SOURCE
-        src/gl/Buffer.hpp
+        src/gl/BufferWrapper.hpp
         src/gl/Framebuffer.cpp
         src/gl/Framebuffer.hpp
         src/gl/GLFunctions.cpp
@@ -153,6 +153,8 @@ if (MSVC)
     add_definitions(-DNOMINMAX -D_CRT_SECURE_NO_WARNINGS) # silly microsoft
 endif()
 
+configure_file(src/VmpConfig.hpp.in ${CMAKE_BINARY_DIR}/vmp/VMPConfig.hpp)
+
 ############################
 ### Visual Music Project ###
 ############################
@@ -170,10 +172,13 @@ set(VMP_SOURCE_FILES
         src/vmp/VMP.cpp
         src/vmp/VMP.hpp
         src/vmp/VmpTypes.hpp
+
+        src/shaders/orb.frag
+        src/shaders/orb.vert
         )
 
 add_library(vmp ${VMP_SOURCE_FILES})
-target_include_directories(vmp PUBLIC src)
+target_include_directories(vmp PUBLIC src ${CMAKE_BINARY_DIR})
 target_link_libraries(vmp rtaudio_static graphics)
 target_compile_options(vmp PRIVATE ${INTENSE_FLAGS} $<$<CONFIG:Debug>:${PROFILE_FLAGS}>)
 
@@ -238,6 +243,8 @@ if (${VMP_BUILD_TESTS})
                 ${TEST_SOURCE_FILES}
 
                 src/testing/gl/ProgramManagerTests.cpp
+                src/testing/gl/shaders/shader.frag
+                src/testing/gl/shaders/shader.vert
                 )
     endif ()
 

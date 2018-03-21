@@ -1,5 +1,5 @@
 // ////////////////////////////////////////////////////////////
-// Created on 2/25/18.
+// Created on 3/21/18.
 // Copyright (c) 2018. All rights reserved.
 //
 //  ___________________________$$$$$$$\__________
@@ -17,14 +17,21 @@
 // ////////////////////////////////////////////////////////////
 #pragma once
 
-#include <gl/GLTypes.hpp>
+#include <string>
 
-namespace gl {
-
-class ProgramManager
+namespace vmp
 {
-public:
-    static std::shared_ptr<Program> create_program(const std::vector<std::string> &shader_filenames);
-};
 
-} // namespace gl
+inline std::string shader_path() {
+    return "@CMAKE_CURRENT_SOURCE_DIR@/src/shaders/";
+}
+
+namespace testing {
+
+inline std::string shader_path() {
+    return "@CMAKE_CURRENT_SOURCE_DIR@/src/testing/gl/shaders/";
+}
+
+} // namespace testing
+
+} // namespace vmp

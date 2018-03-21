@@ -22,12 +22,17 @@
 
 namespace gl {
 
+namespace detail {
+
 template <typename T>
-class Buffer
+class BufferWrapper
 {
 public:
-    Buffer(const T *data, std::size_t num_elements, GLenum type = GL_ARRAY_BUFFER, GLenum usage = GL_STATIC_DRAW);
-    explicit Buffer(const std::vector<T> &data, GLenum type = GL_ARRAY_BUFFER, GLenum usage = GL_STATIC_DRAW);
+    BufferWrapper(const T *data,
+                  std::size_t num_elements,
+                  GLenum type = GL_ARRAY_BUFFER,
+                  GLenum usage = GL_STATIC_DRAW);
+    explicit BufferWrapper(const std::vector<T> &data, GLenum type = GL_ARRAY_BUFFER, GLenum usage = GL_STATIC_DRAW);
 
     void bind() const;
     void unbind() const;
@@ -45,23 +50,23 @@ private:
 };
 
 template <typename T>
-std::shared_ptr<Buffer<T>> create_shared_buffer(const T *data,
-                                                std::size_t num_elements,
-                                                GLenum type = GL_ARRAY_BUFFER,
-                                                GLenum usage = GL_STATIC_DRAW)
+std::shared_ptr<BufferWrapper<T>> create_shared_buffer(const T *data,
+                                                       std::size_t num_elements,
+                                                       GLenum type = GL_ARRAY_BUFFER,
+                                                       GLenum usage = GL_STATIC_DRAW)
 {
-    return std::make_shared<Buffer<T>>(data, num_elements, type, usage);
+    return std::make_shared<BufferWrapper<T>>(data, num_elements, type, usage);
 }
 
 template <typename T>
-std::shared_ptr<Buffer<T>>
+std::shared_ptr<BufferWrapper<T>>
 create_shared_buffer(const std::vector<T> &data, GLenum type = GL_ARRAY_BUFFER, GLenum usage = GL_STATIC_DRAW)
 {
-    return std::make_shared<Buffer<T>>(data, type, usage);
+    return std::make_shared<BufferWrapper<T>>(data, type, usage);
 }
 
 template <typename T>
-Buffer<T>::Buffer(const T *data, std::size_t num_elements, GLenum type, GLenum usage) : type_(type)
+BufferWrapper<T>::BufferWrapper(const T *data, std::size_t num_elements, GLenum type, GLenum usage) : type_(type)
 {
     GLuint buf;
     glGenBuffers(1, &buf);
@@ -76,23 +81,24 @@ Buffer<T>::Buffer(const T *data, std::size_t num_elements, GLenum type, GLenum u
 }
 
 template <typename T>
-Buffer<T>::Buffer(const std::vector<T> &data, GLenum type, GLenum usage) : Buffer(data.data(), data.size(), type, usage)
+BufferWrapper<T>::BufferWrapper(const std::vector<T> &data, GLenum type, GLenum usage)
+    : BufferWrapper(data.data(), data.size(), type, usage)
 {}
 
 template <typename T>
-void Buffer<T>::bind() const
+void BufferWrapper<T>::bind() const
 {
     glBindBuffer(type_, *buffer_);
 }
 
 template <typename T>
-void Buffer<T>::unbind() const
+void BufferWrapper<T>::unbind() const
 {
     glBindBuffer(type_, 0);
 }
 
 template <typename T>
-void Buffer<T>::update(size_t element_offset, const T *data, size_t num_elements) const
+void BufferWrapper<T>::update(size_t element_offset, const T *data, size_t num_elements) const
 {
     constexpr auto type_size_bytes = sizeof(T);
 
@@ -105,24 +111,24 @@ void Buffer<T>::update(size_t element_offset, const T *data, size_t num_elements
 }
 
 template <typename T>
-void Buffer<T>::update(size_t element_offset, const std::vector<T> &data) const
+void BufferWrapper<T>::update(size_t element_offset, const std::vector<T> &data) const
 {
     update(element_offset, data.data(), data.size());
 }
 
 template <typename T>
-GLuint Buffer<T>::get_buffer_id() const
+GLuint BufferWrapper<T>::get_buffer_id() const
 {
     return *buffer_;
 }
 
 template <typename T>
-GLenum Buffer<T>::get_buffer_type() const
+GLenum BufferWrapper<T>::get_buffer_type() const
 {
     return type_;
 }
 template <typename T>
-GLenum Buffer<T>::get_data_type() const
+GLenum BufferWrapper<T>::get_data_type() const
 {
     if (std::is_same<T, unsigned char>::value) {
         return GL_UNSIGNED_BYTE;
@@ -138,5 +144,7 @@ GLenum Buffer<T>::get_data_type() const
     }
     throw std::runtime_error("No OpenGL data type equivalent");
 }
+
+} // namespace detail
 
 } // namespace gl

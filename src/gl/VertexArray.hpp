@@ -36,7 +36,7 @@ public:
     void unbind() const;
 
     template <typename IboType = unsigned>
-    void render(GLenum mode, int start, int num_elements, const Buffer<IboType> *ibo = nullptr);
+    void render(GLenum mode, int start, int num_elements, const Buffer<IboType> &ibo = nullptr);
 
 private:
     std::shared_ptr<GLuint> vao_;
@@ -69,13 +69,13 @@ VertexArray::VertexArray(GLuint program,
         delete id;
     });
 
-    vbo.bind();
+    vbo->bind();
     set_attributes(program, total_stride, elements);
-    vbo.unbind();
+    vbo->unbind();
 }
 
 template <typename IboType>
-void VertexArray::render(GLenum mode, int start, int num_elements, const Buffer<IboType> *ibo)
+void VertexArray::render(GLenum mode, int start, int num_elements, const Buffer<IboType> &ibo)
 {
     bind();
 

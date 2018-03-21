@@ -20,8 +20,8 @@
 
 namespace gl {
 
-std::unique_ptr<Program> ProgramManager::create_program(const std::vector<std::string> &shader_filenames)
+std::shared_ptr<Program> ProgramManager::create_program(const std::vector<std::string> &shader_filenames)
 {
-    return std::make_unique<Program>(shader_filenames);
+    return std::make_shared<Program>(shader_filenames);
 }
 } // namespace gl

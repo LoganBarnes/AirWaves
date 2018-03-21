@@ -78,6 +78,8 @@ download_project(PROJ glm
         QUIET
         )
 
+add_definitions(-DGLM_FORCE_RADIANS -DGLM_ENABLE_EXPERIMENTAL)
+
 ### ImGui ###
 download_project(PROJ imgui
         PREFIX thirdparty
@@ -118,6 +120,9 @@ target_link_libraries(thirdparty glfw)
 # currently an internal directory with the
 # intent of becoming its own project
 set(GL_SOURCE
+        src/gl/camera/Camera.cpp
+        src/gl/camera/Camera.hpp
+
         src/gl/Buffer.hpp
         src/gl/Framebuffer.cpp
         src/gl/Framebuffer.hpp

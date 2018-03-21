@@ -20,9 +20,7 @@
 
 namespace vmp {
 
-Output::Output(vmp::MainStream &main_stream) : main_stream_(main_stream)
-{
-}
+Output::Output(vmp::MainStream &main_stream) : main_stream_(main_stream) {}
 
 void Output::set_amplitude(double amplitude)
 {

@@ -1,5 +1,5 @@
 // ////////////////////////////////////////////////////////////
-// Created on 2/25/18.
+// Created on 3/21/18.
 // Copyright (c) 2018. All rights reserved.
 //
 //  ___________________________$$$$$$$\__________
@@ -15,20 +15,13 @@
 // The Visual Music Project
 // Created by Logan T. Barnes
 // ////////////////////////////////////////////////////////////
-#pragma once
+#version 410
+#extension GL_ARB_separate_shader_objects : enable
 
-#include <gl/GLTypes.hpp>
-#include <vector>
+layout(location = 0) out vec4 out_color;
 
-namespace gl {
-
-class Program
+void main()
 {
-public:
-    explicit Program(const std::vector<std::string> &shader_filenames);
-
-private:
-    std::shared_ptr<GLuint> program_;
-};
-
-} // namespace gl
+    vec3 normal = gl_FrontFacing ? vertex.world_normal : -vertex.world_normal;
+	out_color = vec4(normal * 0.5 + 0.5, 1.0);
+}

@@ -16,7 +16,12 @@
 // Created by Logan T. Barnes
 // ////////////////////////////////////////////////////////////
 #include "ProgramManager.hpp"
+#include <gl/Program.hpp>
 
 namespace gl {
 
+std::unique_ptr<Program> ProgramManager::create_program(const std::vector<std::string> &shader_filenames)
+{
+    return std::make_unique<Program>(shader_filenames);
+}
 } // namespace gl

@@ -1,5 +1,5 @@
 // ////////////////////////////////////////////////////////////
-// Created on 2/25/18.
+// Created on 3/20/18.
 // Copyright (c) 2018. All rights reserved.
 //
 //  ___________________________$$$$$$$\__________
@@ -15,20 +15,14 @@
 // The Visual Music Project
 // Created by Logan T. Barnes
 // ////////////////////////////////////////////////////////////
-#pragma once
-
-#include <gl/GLTypes.hpp>
-#include <vector>
+#include "GLFunctions.hpp"
+#include <gl/Program.hpp>
 
 namespace gl {
 
-class Program
+std::unique_ptr<Program> create_program(const std::vector<std::string> &shader_filenames)
 {
-public:
-    explicit Program(const std::vector<std::string> &shader_filenames);
-
-private:
-    std::shared_ptr<GLuint> program_;
-};
+    return std::make_unique<Program>(shader_filenames);
+}
 
 } // namespace gl

@@ -128,10 +128,10 @@ void delete_imgui(const bool *status)
 }
 
 AirWavesDriver::AirWavesDriver(const std::string &title, int width, int height, int samples)
-    : glfw_(init_glfw()),
-      window_(init_window(width, height, title, samples)),
-      imgui_(init_imgui(window_.get())),
-      air_waves_(nullptr)
+    : glfw_(init_glfw())
+    , window_(init_window(width, height, title, samples))
+    , imgui_(init_imgui(window_.get()))
+    , air_waves_(nullptr)
 {
     int w, h;
     glfwGetFramebufferSize(window_.get(), &w, &h);
@@ -217,9 +217,7 @@ void AirWavesDriver::register_callbacks()
     });
 }
 
-void AirWavesDriver::handle_resize(int, int)
-{
-}
+void AirWavesDriver::handle_resize(int, int) {}
 
 void AirWavesDriver::handle_key_event(GLFWwindow *window, int key, int, int action, int)
 {

@@ -60,7 +60,7 @@ void VertexArray::set_attributes(GLuint program, GLsizei total_stride, const std
                                    vaoElmt.type, // Type
                                    total_stride, // Stride, 0 = tightly packed
                                    vaoElmt.pointer // Array buffer offset
-                                   );
+            );
             break;
         case GL_DOUBLE:
             glVertexAttribLPointer(position,
@@ -68,7 +68,7 @@ void VertexArray::set_attributes(GLuint program, GLsizei total_stride, const std
                                    vaoElmt.type, // Type
                                    total_stride, // Stride, 0 = tightly packed
                                    vaoElmt.pointer // Array buffer offset
-                                   );
+            );
             break;
         default:
             glVertexAttribPointer(position,
@@ -77,7 +77,7 @@ void VertexArray::set_attributes(GLuint program, GLsizei total_stride, const std
                                   GL_FALSE, // Normalized
                                   total_stride, // Stride, 0 = tightly packed
                                   vaoElmt.pointer // Array buffer offset
-                                  );
+            );
             break;
         }
     }

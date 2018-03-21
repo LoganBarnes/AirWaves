@@ -1,5 +1,5 @@
 // ////////////////////////////////////////////////////////////
-// Created on 2/25/18.
+// Created on 3/21/18.
 // Copyright (c) 2018. All rights reserved.
 //
 //  ___________________________$$$$$$$\__________
@@ -15,20 +15,15 @@
 // The Visual Music Project
 // Created by Logan T. Barnes
 // ////////////////////////////////////////////////////////////
-#pragma once
+#version 410
+#extension GL_ARB_separate_shader_objects : enable
 
-#include <gl/GLTypes.hpp>
-#include <vector>
-
-namespace gl {
-
-class Program
+out gl_PerVertex
 {
-public:
-    explicit Program(const std::vector<std::string> &shader_filenames);
-
-private:
-    std::shared_ptr<GLuint> program_;
+  vec4 gl_Position;
 };
 
-} // namespace gl
+void main()
+{
+	gl_Position = vec4(vec3(0.0), 1.0);
+}

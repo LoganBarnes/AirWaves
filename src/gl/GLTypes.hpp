@@ -31,12 +31,14 @@ struct VAOElement
     void *pointer;
 };
 
-template <int Dim>
-class Framebuffer;
-
 template <typename T>
 class Buffer;
 
+template <int Dim>
+class Framebuffer;
+
+class Program;
+class ProgramManager;
 class VertexArray;
 
 template <typename VboType = float, typename IboType = unsigned>
@@ -49,4 +51,4 @@ struct Pipeline
     std::shared_ptr<Framebuffer<2>> fbo{nullptr};
 };
 
-} // namespace
+} // namespace gl

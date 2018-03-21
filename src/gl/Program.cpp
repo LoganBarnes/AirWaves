@@ -23,6 +23,8 @@ namespace gl {
 
 namespace {
 
+using IdVec = std::vector<std::shared_ptr<GLuint>>;
+
 const std::unordered_map<std::string, GLenum> &shader_types()
 {
     static std::unordered_map<std::string, GLenum> ext_map{{".vert", GL_VERTEX_SHADER},
@@ -103,8 +105,6 @@ std::shared_ptr<GLuint> create_shader(GLenum shader_type, const std::string &fil
     return shader_id;
 }
 
-} // namespace
-
 std::shared_ptr<GLuint> create_shader(const std::string &filename)
 {
     size_t dot = filename.find_last_of(".");
@@ -157,6 +157,8 @@ std::shared_ptr<GLuint> create_program(const IdVec &shader_ids)
 
     return program_id;
 } // create_program
+
+} // namespace
 
 Program::Program(const std::vector<std::string> &shader_filenames)
 {

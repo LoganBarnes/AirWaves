@@ -77,8 +77,7 @@ Buffer<T>::Buffer(const T *data, std::size_t num_elements, GLenum type, GLenum u
 
 template <typename T>
 Buffer<T>::Buffer(const std::vector<T> &data, GLenum type, GLenum usage) : Buffer(data.data(), data.size(), type, usage)
-{
-}
+{}
 
 template <typename T>
 void Buffer<T>::bind() const

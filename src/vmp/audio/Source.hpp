@@ -39,8 +39,7 @@ public:
 
     template <typename T>
     explicit Source(T source) : self_{std::make_unique<SourceSound<T>>(std::move(source))}
-    {
-    }
+    {}
 
     Sound *sound() const;
 

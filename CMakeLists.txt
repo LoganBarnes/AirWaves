@@ -121,6 +121,8 @@ set(GL_SOURCE
         src/gl/Buffer.hpp
         src/gl/Framebuffer.cpp
         src/gl/Framebuffer.hpp
+        src/gl/GLFunctions.cpp
+        src/gl/GLFunctions.hpp
         src/gl/GLTypes.hpp
         src/gl/Program.cpp
         src/gl/Program.hpp

@@ -23,9 +23,7 @@
 
 namespace vmp {
 
-AirWaves::AirWaves(int, int) : transport_{std::make_unique<vmp::Transport>()}
-{
-}
+AirWaves::AirWaves(int, int) : transport_{std::make_unique<vmp::Transport>()} {}
 
 AirWaves::~AirWaves() = default;
 
@@ -66,9 +64,7 @@ void AirWaves::configure_gui(int, int, bool paused)
     ImGui::PopStyleVar();
 }
 
-void AirWaves::render(int, int, double)
-{
-}
+void AirWaves::render(int, int, double) {}
 
 void AirWaves::play_or_pause()
 {

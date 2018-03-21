@@ -20,8 +20,8 @@
 #include <vmp/audio/sources/SawSource.hpp>
 #include <vmp/audio/sources/SineSource.hpp>
 #include <vmp/VMPConfig.hpp>
-#include <gl/GLFunctions.hpp>
 #include <gl/Program.hpp>
+#include <gl/Buffer.hpp>
 #include <imgui.h>
 
 namespace vmp {
@@ -29,6 +29,9 @@ namespace vmp {
 AirWaves::AirWaves(int, int) : transport_{std::make_unique<vmp::Transport>()}
 {
     glpl_.program = gl::create_program(vmp::shader_path() + "orb.vert", vmp::shader_path() + "orb.frag");
+
+    std::vector<float> quad = {-0.5f, -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f};
+    glpl_.vbo = gl::create_buffer(quad);
 }
 
 AirWaves::~AirWaves() = default;

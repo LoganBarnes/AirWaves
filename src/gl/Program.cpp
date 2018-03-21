@@ -175,4 +175,9 @@ ProgramWrapper::ProgramWrapper(const std::vector<std::string> &shader_filenames)
 
 } // namespace detail
 
+Program create_program(const std::vector<std::string> &shader_filenames)
+{
+    return std::make_shared<detail::ProgramWrapper>(shader_filenames);
+}
+
 } // namespace gl

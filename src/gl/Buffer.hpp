@@ -28,11 +28,7 @@ template <typename T>
 class BufferWrapper
 {
 public:
-    BufferWrapper(const T *data,
-                  std::size_t num_elements,
-                  GLenum type = GL_ARRAY_BUFFER,
-                  GLenum usage = GL_STATIC_DRAW);
-    explicit BufferWrapper(const std::vector<T> &data, GLenum type = GL_ARRAY_BUFFER, GLenum usage = GL_STATIC_DRAW);
+    BufferWrapper(const T *data, std::size_t num_elements, GLenum type, GLenum usage);
 
     void bind() const;
     void unbind() const;
@@ -50,22 +46,6 @@ private:
 };
 
 template <typename T>
-std::shared_ptr<BufferWrapper<T>> create_shared_buffer(const T *data,
-                                                       std::size_t num_elements,
-                                                       GLenum type = GL_ARRAY_BUFFER,
-                                                       GLenum usage = GL_STATIC_DRAW)
-{
-    return std::make_shared<BufferWrapper<T>>(data, num_elements, type, usage);
-}
-
-template <typename T>
-std::shared_ptr<BufferWrapper<T>>
-create_shared_buffer(const std::vector<T> &data, GLenum type = GL_ARRAY_BUFFER, GLenum usage = GL_STATIC_DRAW)
-{
-    return std::make_shared<BufferWrapper<T>>(data, type, usage);
-}
-
-template <typename T>
 BufferWrapper<T>::BufferWrapper(const T *data, std::size_t num_elements, GLenum type, GLenum usage) : type_(type)
 {
     GLuint buf;
@@ -79,11 +59,6 @@ BufferWrapper<T>::BufferWrapper(const T *data, std::size_t num_elements, GLenum 
     glBufferData(type_, static_cast<GLsizeiptr>(num_elements * sizeof(T)), data, usage);
     unbind();
 }
-
-template <typename T>
-BufferWrapper<T>::BufferWrapper(const std::vector<T> &data, GLenum type, GLenum usage)
-    : BufferWrapper(data.data(), data.size(), type, usage)
-{}
 
 template <typename T>
 void BufferWrapper<T>::bind() const
@@ -127,6 +102,7 @@ GLenum BufferWrapper<T>::get_buffer_type() const
 {
     return type_;
 }
+
 template <typename T>
 GLenum BufferWrapper<T>::get_data_type() const
 {
@@ -146,5 +122,18 @@ GLenum BufferWrapper<T>::get_data_type() const
 }
 
 } // namespace detail
+
+template <typename T>
+Buffer<T>
+create_buffer(const T *data, std::size_t num_elements, GLenum type = GL_ARRAY_BUFFER, GLenum usage = GL_STATIC_DRAW)
+{
+    return std::make_shared<detail::BufferWrapper<T>>(data, num_elements, type, usage);
+}
+
+template <typename T>
+Buffer<T> create_buffer(const std::vector<T> &data, GLenum type = GL_ARRAY_BUFFER, GLenum usage = GL_STATIC_DRAW)
+{
+    return create_buffer(data.data(), data.size(), type, usage);
+}
 
 } // namespace gl

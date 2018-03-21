@@ -118,11 +118,9 @@ target_link_libraries(thirdparty glfw)
 # currently an internal directory with the
 # intent of becoming its own project
 set(GL_SOURCE
-        src/gl/BufferWrapper.hpp
+        src/gl/Buffer.hpp
         src/gl/FramebufferWrapper.cpp
         src/gl/FramebufferWrapper.hpp
-        src/gl/GLFunctions.cpp
-        src/gl/GLFunctions.hpp
         src/gl/GLTypes.hpp
         src/gl/Program.cpp
         src/gl/Program.hpp

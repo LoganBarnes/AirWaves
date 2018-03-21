@@ -95,6 +95,21 @@ void AirWaves::configure_gui(int, int, bool paused)
             VMP::Output().remove_source(saws_.back());
             saws_.pop_back();
         }
+
+        //        for (auto& sine : sines_) {
+        if (!sines_.empty()) {
+            auto &sine = sines_.front();
+            auto *sine_source = sine.detail_data<SineSource<double, 256, 2>>();
+
+            ImGui::PushID(sine_source);
+
+            static float freq = 440.f;
+            if (ImGui::DragFloat("Freq", &freq)) {
+                sine_source->set_frequency(freq);
+            }
+
+            ImGui::PopID();
+        }
     }
     ImGui::Checkbox("TMP use fbo", &tmp_use_fbo_);
 

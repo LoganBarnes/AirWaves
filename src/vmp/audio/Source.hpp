@@ -25,6 +25,15 @@ class Source
 {
 public:
     template <typename T>
+    explicit Source(T source);
+
+    Sound *sound() const;
+
+    template <typename T>
+    T *detail_data() const;
+
+private:
+    template <typename T>
     class SourceSound : public Sound
     {
     public:
@@ -34,16 +43,21 @@ public:
         {
             data_.create_data(buffer, num_frames, channels);
         }
+
         T data_;
     };
 
-    template <typename T>
-    explicit Source(T source) : self_{std::make_unique<SourceSound<T>>(std::move(source))}
-    {}
-
-    Sound *sound() const;
-
     std::shared_ptr<Sound> self_;
 };
+
+template <typename T>
+Source::Source(T source) : self_(std::make_shared<SourceSound<T>>(std::move(source)))
+{}
+
+template <typename T>
+T *Source::detail_data() const
+{
+    return &(static_cast<SourceSound<T> *>(self_.get())->data_);
+}
 
 } // namespace vmp

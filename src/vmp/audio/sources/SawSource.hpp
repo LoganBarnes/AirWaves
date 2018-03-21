@@ -41,10 +41,12 @@ public:
         }
     }
 
+    void set_frequency(T) {}
+
 private:
     std::array<T, 2> last_values_{{0, 0}};
     static constexpr T max_amplitude_{0.2};
-    static constexpr T freq_scale_{0.005};
+    T freq_scale_{0.005};
 };
 
 } // namespace

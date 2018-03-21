@@ -119,8 +119,8 @@ target_link_libraries(thirdparty glfw)
 # intent of becoming its own project
 set(GL_SOURCE
         src/gl/Buffer.hpp
-        src/gl/FramebufferWrapper.cpp
-        src/gl/FramebufferWrapper.hpp
+        src/gl/Framebuffer.cpp
+        src/gl/Framebuffer.hpp
         src/gl/GLTypes.hpp
         src/gl/Program.cpp
         src/gl/Program.hpp

@@ -32,6 +32,6 @@ void main()
     if (use_tex) {
         out_color = texture(tex, vertex.tex_coords);
     } else {
-        out_color = vec4(1.0);
+        out_color = vec4(vertex.tex_coords, 1.0, 1.0);
     }
 }

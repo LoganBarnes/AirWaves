@@ -23,17 +23,26 @@
 #include <gl/Program.hpp>
 #include <gl/Buffer.hpp>
 #include <gl/VertexArray.hpp>
+#include <gl/Framebuffer.hpp>
 #include <imgui.h>
 
 namespace vmp {
 
-AirWaves::AirWaves(int, int) : transport_{std::make_unique<vmp::Transport>()}
+AirWaves::AirWaves(int width, int height) : transport_{std::make_unique<vmp::Transport>()}
 {
     glpl_.program = gl::create_program(vmp::shader_path() + "orb.vert", vmp::shader_path() + "orb.frag");
 
-    std::vector<float> quad = {-0.5f, -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f};
+    std::vector<float> quad
+        = {-0.5f, -0.5f, 0.f, 0.f, 0.5f, -0.5f, 1.f, 0.f, -0.5f, 0.5f, 0.f, 1.f, 0.5f, 0.5f, 1.f, 1.f};
     glpl_.vbo = gl::create_buffer(quad);
-    glpl_.vao = gl::create_vertex_array(glpl_.program, glpl_.vbo, 0, {{"screen_position", 2, GL_FLOAT, nullptr}});
+
+    float *float_ptr = nullptr;
+    glpl_.vao = gl::create_vertex_array(glpl_.program,
+                                        glpl_.vbo,
+                                        sizeof(float) * 4,
+                                        {{"screen_position", 2, GL_FLOAT, float_ptr},
+                                         {"tex_coords", 2, GL_FLOAT, float_ptr + 2}});
+    glpl_.fbo = gl::create_framebuffer(static_cast<unsigned>(width), static_cast<unsigned>(height));
 }
 
 AirWaves::~AirWaves() = default;
@@ -71,12 +80,21 @@ void AirWaves::configure_gui(int, int, bool paused)
             saws_.pop_back();
         }
     }
+    ImGui::Checkbox("TMP use fbo", &tmp_use_fbo_);
+
     ImGui::End();
     ImGui::PopStyleVar();
 }
 
 void AirWaves::render(int, int, double)
 {
+    glpl_.fbo->use([&] {
+        glpl_.program->use([&] {
+            //        glpl_.program->set_bool_uniform();
+            glpl_.vao->render(GL_TRIANGLE_STRIP, 0, 4);
+        });
+    });
+
     glpl_.program->use([&] { glpl_.vao->render(GL_TRIANGLE_STRIP, 0, 4); });
 }
 

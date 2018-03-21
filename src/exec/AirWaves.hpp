@@ -42,6 +42,8 @@ private:
     //TODO: should be stored in VMP::Output()
     float output_amplitude_{1.0};
 
+    bool tmp_use_fbo_{false};
+
     std::vector<Source> sines_;
     std::vector<Source> saws_;
 };

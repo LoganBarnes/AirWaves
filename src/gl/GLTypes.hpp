@@ -31,8 +31,9 @@ class BufferWrapper;
 template <int Dim>
 class FramebufferWrapper;
 
-class VertexArrayWrapper;
 class ProgramWrapper;
+class TextureWrapper;
+class VertexArrayWrapper;
 
 } // namespace detail
 
@@ -45,6 +46,7 @@ template <int Dim>
 using Framebuffer = std::shared_ptr<detail::FramebufferWrapper<Dim>>;
 
 using Program = std::shared_ptr<detail::ProgramWrapper>;
+using Texture = std::shared_ptr<detail::TextureWrapper>;
 using VertexArray = std::shared_ptr<detail::VertexArrayWrapper>;
 
 template <typename VboType = float, typename IboType = unsigned>
@@ -54,6 +56,7 @@ struct Pipeline
     Buffer<VboType> vbo{nullptr};
     Buffer<IboType> ibo{nullptr};
     VertexArray vao{nullptr};
+    Texture tex{nullptr};
     Framebuffer<2> fbo{nullptr};
 };
 

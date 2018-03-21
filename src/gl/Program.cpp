@@ -16,6 +16,7 @@
 // Created by Logan T. Barnes
 // ////////////////////////////////////////////////////////////
 #include "Program.hpp"
+#include "Texture.hpp"
 #include <unordered_map>
 #include <fstream>
 #include <sstream>
@@ -231,11 +232,11 @@ void ProgramWrapper::set_uint_uniform(const std::string &uniform,
     } // switch
 }
 
-void ProgramWrapper::set_texture_uniform(const std::string &uniform, const GLuint &texture, int active_tex) const
+void ProgramWrapper::set_texture_uniform(const std::string &uniform, const Texture &texture, int active_tex) const
 {
     glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + active_tex));
     glProgramUniform1i(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), active_tex);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    texture->bind();
 }
 
 GLuint ProgramWrapper::get_id() const

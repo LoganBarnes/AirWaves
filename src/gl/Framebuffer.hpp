@@ -43,11 +43,11 @@ public:
     template <typename UsageFunc>
     void use(const UsageFunc &usage_func) const;
 
-    GLuint get_texture_id() const;
-    GLuint get_framebuffer_id() const;
+    Texture get_texture() const;
+    GLuint get_id() const;
 
 private:
-    std::shared_ptr<GLuint> texture_;
+    Texture texture_;
     std::shared_ptr<GLuint> framebuffer_;
     glm::uvec3 full_dim_;
 };

@@ -126,6 +126,8 @@ set(GL_SOURCE
         src/gl/Program.hpp
         src/gl/ProgramManager.cpp
         src/gl/ProgramManager.hpp
+        src/gl/Texture.cpp
+        src/gl/Texture.hpp
         src/gl/VertexArray.cpp
         src/gl/VertexArray.hpp
         )

@@ -98,7 +98,7 @@ void AirWaves::render(int, int, double)
 
     glpl_.program->use([&] {
         glpl_.program->set_bool_uniform("use_tex", tmp_use_fbo_);
-        glpl_.program->set_texture_uniform("tex", glpl_.fbo->get_texture_id());
+        glpl_.program->set_texture_uniform("tex", glpl_.fbo->get_texture());
         glpl_.vao->render(GL_TRIANGLE_STRIP, 0, 4);
     });
 }

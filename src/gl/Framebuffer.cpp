@@ -16,6 +16,7 @@
 // Created by Logan T. Barnes
 // ////////////////////////////////////////////////////////////
 #include "Framebuffer.hpp"
+#include <gl/Texture.hpp>
 #include <glm/gtc/vec1.hpp>
 
 namespace gl {
@@ -23,47 +24,6 @@ namespace gl {
 namespace detail {
 
 namespace {
-
-std::shared_ptr<GLuint> create_texture(const glm::uvec3 &dim,
-                                       GLenum tex_type,
-                                       const float *array = nullptr,
-                                       GLint internal_format = GL_RGBA32F,
-                                       GLenum format = GL_RGBA,
-                                       GLint filter_type = GL_NEAREST,
-                                       GLint wrap_type = GL_REPEAT)
-{
-    GLuint tex;
-    glGenTextures(1, &tex);
-    std::shared_ptr<GLuint> texture(new GLuint(tex), [](auto *pID) {
-        glDeleteTextures(1, pID);
-        delete pID;
-    });
-
-    glBindTexture(tex_type, tex);
-
-    glTexParameteri(tex_type, GL_TEXTURE_WRAP_S, wrap_type);
-    glTexParameteri(tex_type, GL_TEXTURE_WRAP_T, wrap_type);
-
-    glTexParameteri(tex_type, GL_TEXTURE_MIN_FILTER, filter_type);
-    glTexParameteri(tex_type, GL_TEXTURE_MAG_FILTER, filter_type);
-
-    switch (tex_type) {
-    case GL_TEXTURE_3D:
-        glTexImage3D(tex_type, 0, internal_format, dim.x, dim.y, dim.z, 0, format, GL_FLOAT, array);
-        break;
-    case GL_TEXTURE_2D:
-        glTexImage2D(tex_type, 0, internal_format, dim.x, dim.y, 0, format, GL_FLOAT, array);
-        break;
-    case GL_TEXTURE_1D:
-        glTexImage1D(tex_type, 0, internal_format, dim.x, 0, format, GL_FLOAT, array);
-        break;
-    default:
-        assert(false);
-        break;
-    }
-
-    return texture;
-} // create_texture
 
 std::shared_ptr<GLuint> create_framebuffer(const glm::uvec3 &dim, GLenum tex_type, GLuint texture)
 {
@@ -130,7 +90,7 @@ FramebufferWrapper<1>::FramebufferWrapper(
     : full_dim_{dim.x, 1, 1}
 {
     texture_ = create_texture(full_dim_, GL_TEXTURE_1D, array, internal_format, format, filter_type, wrap_type);
-    framebuffer_ = create_framebuffer(full_dim_, GL_TEXTURE_1D, *texture_);
+    framebuffer_ = create_framebuffer(full_dim_, GL_TEXTURE_1D, texture_->get_id());
 }
 
 template <>
@@ -139,7 +99,7 @@ FramebufferWrapper<2>::FramebufferWrapper(
     : full_dim_{dim.x, dim.y, 1}
 {
     texture_ = create_texture(full_dim_, GL_TEXTURE_2D, array, internal_format, format, filter_type, wrap_type);
-    framebuffer_ = create_framebuffer(full_dim_, GL_TEXTURE_2D, *texture_);
+    framebuffer_ = create_framebuffer(full_dim_, GL_TEXTURE_2D, texture_->get_id());
 }
 
 template <>
@@ -148,7 +108,7 @@ FramebufferWrapper<3>::FramebufferWrapper(
     : full_dim_{dim}
 {
     texture_ = create_texture(full_dim_, GL_TEXTURE_3D, array, internal_format, format, filter_type, wrap_type);
-    framebuffer_ = create_framebuffer(full_dim_, GL_TEXTURE_3D, *texture_);
+    framebuffer_ = create_framebuffer(full_dim_, GL_TEXTURE_3D, texture_->get_id());
 }
 
 template <int Dim>
@@ -164,13 +124,13 @@ void FramebufferWrapper<Dim>::unbind() const
 }
 
 template <int Dim>
-GLuint FramebufferWrapper<Dim>::get_texture_id() const
+Texture FramebufferWrapper<Dim>::get_texture() const
 {
-    return *texture_;
+    return texture_;
 }
 
 template <int Dim>
-GLuint FramebufferWrapper<Dim>::get_framebuffer_id() const
+GLuint FramebufferWrapper<Dim>::get_id() const
 {
     return *framebuffer_;
 }

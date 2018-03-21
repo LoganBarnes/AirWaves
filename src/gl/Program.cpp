@@ -232,6 +232,55 @@ void ProgramWrapper::set_uint_uniform(const std::string &uniform,
     } // switch
 }
 
+void ProgramWrapper::set_float_uniform(const std::string &uniform,
+                                       const float *value,
+                                       const int size,
+                                       const int count) const
+{
+    switch (size) {
+    case 1:
+        glProgramUniform1fv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
+        break;
+    case 2:
+        glProgramUniform2fv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
+        break;
+    case 3:
+        glProgramUniform3fv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
+        break;
+    case 4:
+        glProgramUniform4fv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
+        break;
+    default: {
+        std::stringstream msg;
+        msg << "vec" << size << " uniform does not exist";
+        throw std::runtime_error(msg.str());
+    }
+    } // switch
+}
+
+void ProgramWrapper::set_matrix_uniform(const std::string &uniform,
+                                        const float *value,
+                                        const int size,
+                                        const int count) const
+{
+    switch (size) {
+    case 2:
+        glProgramUniformMatrix2fv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, GL_FALSE, value);
+        break;
+    case 3:
+        glProgramUniformMatrix3fv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, GL_FALSE, value);
+        break;
+    case 4:
+        glProgramUniformMatrix4fv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, GL_FALSE, value);
+        break;
+    default: {
+        std::stringstream msg;
+        msg << "mat" << size << " uniform does not exist";
+        throw std::runtime_error(msg.str());
+    }
+    } // switch
+}
+
 void ProgramWrapper::set_texture_uniform(const std::string &uniform, const Texture &texture, int active_tex) const
 {
     glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + active_tex));

@@ -36,6 +36,8 @@ public:
     void set_bool_uniform(const std::string &uniform, bool value) const;
     void set_int_uniform(const std::string &uniform, const int *value, int size = 1, int count = 1) const;
     void set_uint_uniform(const std::string &uniform, const unsigned *value, int size = 1, int count = 1) const;
+    void set_float_uniform(const std::string &uniform, const float *value, int size = 1, int count = 1) const;
+    void set_matrix_uniform(const std::string &uniform, const float *value, int size = 4, int count = 1) const;
     void set_texture_uniform(const std::string &uniform, const Texture &texture, int active_tex = 0) const;
 
     GLuint get_id() const;

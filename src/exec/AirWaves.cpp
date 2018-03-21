@@ -22,6 +22,7 @@
 #include <vmp/VMPConfig.hpp>
 #include <gl/Program.hpp>
 #include <gl/Buffer.hpp>
+#include <gl/VertexArray.hpp>
 #include <imgui.h>
 
 namespace vmp {
@@ -32,6 +33,7 @@ AirWaves::AirWaves(int, int) : transport_{std::make_unique<vmp::Transport>()}
 
     std::vector<float> quad = {-0.5f, -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f};
     glpl_.vbo = gl::create_buffer(quad);
+    glpl_.vao = gl::create_vertex_array(glpl_.program, glpl_.vbo, 0, {{"screen_position", 2, GL_FLOAT, nullptr}});
 }
 
 AirWaves::~AirWaves() = default;
@@ -75,9 +77,7 @@ void AirWaves::configure_gui(int, int, bool paused)
 
 void AirWaves::render(int, int, double)
 {
-    glpl_.program->use([] {
-
-    });
+    glpl_.program->use([&] { glpl_.vao->render(GL_TRIANGLE_STRIP, 0, 4); });
 }
 
 void AirWaves::play_or_pause()

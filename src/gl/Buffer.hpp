@@ -36,7 +36,7 @@ public:
     void update(size_t element_offset, const T *data, size_t num_elements) const;
     void update(size_t element_offset, const std::vector<T> &data) const;
 
-    GLuint get_buffer_id() const;
+    GLuint get_id() const;
     GLenum get_buffer_type() const;
     GLenum get_data_type() const;
 
@@ -92,7 +92,7 @@ void BufferWrapper<T>::update(size_t element_offset, const std::vector<T> &data)
 }
 
 template <typename T>
-GLuint BufferWrapper<T>::get_buffer_id() const
+GLuint BufferWrapper<T>::get_id() const
 {
     return *buffer_;
 }

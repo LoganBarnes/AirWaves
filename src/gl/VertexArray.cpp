@@ -15,7 +15,7 @@
 // The Visual Music Project
 // Created by Logan T. Barnes
 // ////////////////////////////////////////////////////////////
-#include "VertexArrayWrapper.hpp"
+#include "VertexArray.hpp"
 
 namespace gl {
 
@@ -34,15 +34,17 @@ void VertexArrayWrapper::unbind() const
 /**
  * @warning assumes a VBO is bound
  */
-void VertexArrayWrapper::set_attributes(GLuint program, GLsizei total_stride, const std::vector<VAOElement> &elements)
+void VertexArrayWrapper::set_attributes(GLuint program_id,
+                                        GLsizei total_stride,
+                                        const std::vector<VAOElement> &elements)
 {
     bind();
 
     for (const auto &vaoElmt : elements) {
-        int pos = glGetAttribLocation(program, vaoElmt.name.c_str());
+        int pos = glGetAttribLocation(program_id, vaoElmt.name.c_str());
         if (pos < 0) {
             std::stringstream msg;
-            msg << "attrib location " << vaoElmt.name << " not found for program " << program;
+            msg << "attrib location " << vaoElmt.name << " not found for program id " << program_id;
 
             throw std::runtime_error(msg.str());
         }

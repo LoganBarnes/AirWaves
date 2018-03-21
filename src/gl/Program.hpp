@@ -33,6 +33,8 @@ public:
     template <typename UsageFunc>
     void use(const UsageFunc &usage_func) const;
 
+    GLuint get_id() const;
+
 private:
     std::shared_ptr<GLuint> program_;
 };

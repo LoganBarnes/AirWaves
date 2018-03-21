@@ -126,8 +126,8 @@ set(GL_SOURCE
         src/gl/Program.hpp
         src/gl/ProgramManager.cpp
         src/gl/ProgramManager.hpp
-        src/gl/VertexArrayWrapper.cpp
-        src/gl/VertexArrayWrapper.hpp
+        src/gl/VertexArray.cpp
+        src/gl/VertexArray.hpp
         )
 
 add_library(graphics ${GL_SOURCE})

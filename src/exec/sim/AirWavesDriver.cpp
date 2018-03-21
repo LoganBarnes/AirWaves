@@ -109,6 +109,26 @@ std::unique_ptr<bool, decltype(&delete_imgui)> init_imgui(GLFWwindow *window)
     return imgui;
 }
 
+void set_gl_defaults()
+{
+    glEnable(GL_DEPTH_TEST);
+
+    glEnable(GL_PRIMITIVE_RESTART);
+    glPrimitiveRestartIndex(0xFFFFFFFF);
+
+    glEnable(GL_PROGRAM_POINT_SIZE);
+
+    glEnable(GL_POLYGON_OFFSET_LINE);
+    glPolygonOffset(-1, -1);
+
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+
+    glFrontFace(GL_CCW);
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+}
+
 } // namespace
 
 void delete_glfw(const int *status)
@@ -139,6 +159,7 @@ AirWavesDriver::AirWavesDriver(const std::string &title, int width, int height, 
     air_waves_ = std::make_unique<AirWaves>(w, h);
 
     register_callbacks();
+    set_gl_defaults();
 }
 
 AirWavesDriver::~AirWavesDriver() = default;

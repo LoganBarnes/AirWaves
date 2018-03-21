@@ -173,6 +173,11 @@ ProgramWrapper::ProgramWrapper(const std::vector<std::string> &shader_filenames)
     program_ = create_program(shaders);
 }
 
+GLuint ProgramWrapper::get_id() const
+{
+    return *program_;
+}
+
 } // namespace detail
 
 Program create_program(const std::vector<std::string> &shader_filenames)

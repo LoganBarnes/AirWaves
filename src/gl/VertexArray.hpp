@@ -18,6 +18,8 @@
 #pragma once
 
 #include <gl/GLTypes.hpp>
+#include <gl/Program.hpp>
+#include <gl/Buffer.hpp>
 #include <vector>
 #include <sstream>
 
@@ -29,7 +31,7 @@ class VertexArrayWrapper
 {
 public:
     template <typename T>
-    explicit VertexArrayWrapper(GLuint program,
+    explicit VertexArrayWrapper(const Program &program,
                                 const Buffer<T> &vbo,
                                 GLsizei total_stride,
                                 const std::vector<VAOElement> &elements);
@@ -46,20 +48,11 @@ private:
     /**
      * @warning assumes a VBO is bound
      */
-    void set_attributes(GLuint program, GLsizei total_stride, const std::vector<VAOElement> &elements);
+    void set_attributes(GLuint program_id, GLsizei total_stride, const std::vector<VAOElement> &elements);
 };
 
 template <typename T>
-std::shared_ptr<VertexArrayWrapper> create_shared_vertex_array(GLuint program,
-                                                               const Buffer<T> &vbo,
-                                                               GLsizei total_stride,
-                                                               const std::vector<VAOElement> &elements)
-{
-    return std::make_shared<VertexArrayWrapper>(program, vbo, total_stride, elements);
-}
-
-template <typename T>
-VertexArrayWrapper::VertexArrayWrapper(GLuint program,
+VertexArrayWrapper::VertexArrayWrapper(const Program &program,
                                        const Buffer<T> &vbo,
                                        const GLsizei total_stride,
                                        const std::vector<VAOElement> &elements)
@@ -72,7 +65,7 @@ VertexArrayWrapper::VertexArrayWrapper(GLuint program,
     });
 
     vbo->bind();
-    set_attributes(program, total_stride, elements);
+    set_attributes(program->get_id(), total_stride, elements);
     vbo->unbind();
 }
 
@@ -93,5 +86,14 @@ void VertexArrayWrapper::render(GLenum mode, int start, int num_elements, const 
 }
 
 } // namespace detail
+
+template <typename T>
+VertexArray create_vertex_array(const Program &program,
+                                const Buffer<T> &vbo,
+                                GLsizei total_stride,
+                                const std::vector<VAOElement> &elements)
+{
+    return std::make_shared<detail::VertexArrayWrapper>(program, vbo, total_stride, elements);
+}
 
 } // namespace gl

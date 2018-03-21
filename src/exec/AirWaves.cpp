@@ -32,7 +32,8 @@ namespace vmp {
 
 namespace {
 
-const glm::mat4 &identity() {
+const glm::mat4 &identity()
+{
     static glm::mat4 ident(1);
     return ident;
 }

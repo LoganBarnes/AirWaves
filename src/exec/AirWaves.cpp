@@ -24,25 +24,31 @@
 #include <gl/Buffer.hpp>
 #include <gl/VertexArray.hpp>
 #include <gl/Framebuffer.hpp>
+#include <gl/camera/Camera.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
 
 namespace vmp {
 
-AirWaves::AirWaves(int width, int height) : transport_{std::make_unique<vmp::Transport>()}
+AirWaves::AirWaves(int width, int height)
+    : transport_{std::make_unique<vmp::Transport>()}, camera_{std::make_unique<gl::Camera>()}
 {
     glpl_.program = gl::create_program(vmp::shader_path() + "orb.vert", vmp::shader_path() + "orb.frag");
 
-    std::vector<float> quad
-        = {-0.5f, -0.5f, 0.f, 0.f, 0.5f, -0.5f, 1.f, 0.f, -0.5f, 0.5f, 0.f, 1.f, 0.5f, 0.5f, 1.f, 1.f};
+    std::vector<float> quad = {-0.5f, -0.5f, 0.f, 0.f, 0.f, 0.5f, -0.5f, 0.f, 1.f, 0.f,
+                               -0.5f, 0.5f,  0.f, 0.f, 1.f, 0.5f, 0.5f,  0.f, 1.f, 1.f};
     glpl_.vbo = gl::create_buffer(quad);
 
     float *float_ptr = nullptr;
     glpl_.vao = gl::create_vertex_array(glpl_.program,
                                         glpl_.vbo,
-                                        sizeof(float) * 4,
-                                        {{"screen_position", 2, GL_FLOAT, float_ptr},
-                                         {"tex_coords", 2, GL_FLOAT, float_ptr + 2}});
+                                        sizeof(float) * 5,
+                                        {{"world_position", 3, GL_FLOAT, float_ptr},
+                                         {"tex_coords", 2, GL_FLOAT, float_ptr + 3}});
     glpl_.fbo = gl::create_framebuffer(static_cast<unsigned>(width), static_cast<unsigned>(height));
+
+    camera_->setAspectRatio(width * 1.f / height);
+    camera_->lookAt({0, 0, 5}, {0, 0, 0});
 }
 
 AirWaves::~AirWaves() = default;
@@ -91,12 +97,16 @@ void AirWaves::render(int, int, double)
     glpl_.fbo->use([&] {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glpl_.program->use([&] {
+            glm::mat4 identity(1);
+            glpl_.program->set_matrix_uniform("screen_from_world", glm::value_ptr(identity));
             glpl_.program->set_bool_uniform("use_tex", false);
             glpl_.vao->render(GL_TRIANGLE_STRIP, 0, 4);
         });
     });
 
     glpl_.program->use([&] {
+        glpl_.program->set_matrix_uniform("screen_from_world",
+                                          glm::value_ptr(camera_->getPerspectiveScreenFromWorldMatrix()));
         glpl_.program->set_bool_uniform("use_tex", tmp_use_fbo_);
         glpl_.program->set_texture_uniform("tex", glpl_.fbo->get_texture());
         glpl_.vao->render(GL_TRIANGLE_STRIP, 0, 4);

@@ -40,6 +40,11 @@ class VertexArrayWrapper;
 class ProgramManager;
 
 template <typename T>
+class TCamera;
+
+using Camera = TCamera<float>;
+
+template <typename T>
 using Buffer = std::shared_ptr<detail::BufferWrapper<T>>;
 
 template <int Dim>

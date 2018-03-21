@@ -18,8 +18,10 @@
 #version 410
 #extension GL_ARB_separate_shader_objects : enable
 
-layout(location = 0) in vec2 screen_position;
+layout(location = 0) in vec3 world_position;
 layout(location = 1) in vec2 tex_coords;
+
+uniform mat4 screen_from_world = mat4(1);
 
 out Vertex {
     vec2 tex_coords;
@@ -33,5 +35,5 @@ out gl_PerVertex
 void main()
 {
     vertex.tex_coords = tex_coords;
-	gl_Position = vec4(screen_position, 0.0, 1.0);
+	gl_Position = screen_from_world * vec4(world_position, 1.0);
 }

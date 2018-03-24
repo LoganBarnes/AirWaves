@@ -1,5 +1,5 @@
 // ////////////////////////////////////////////////////////////
-// Created on 2/25/18.
+// Created on 3/24/18.
 // Copyright (c) 2018. All rights reserved.
 //
 //  ___________________________$$$$$$$\__________
@@ -17,32 +17,24 @@
 // ////////////////////////////////////////////////////////////
 #pragma once
 
-#include <gl/GLTypes.hpp>
-#include <unordered_map>
+#include <glad/glad.h>
+
+struct GLFWwindow;
 
 namespace gl {
 
-class ProgramManager
+namespace testing {
+
+class GLInstance
 {
 public:
-    static Program create_program(const std::vector<std::string> &shader_filenames);
-
-    static ProgramManager &instance();
-
-    ProgramManager(ProgramManager &) = delete;
-    ProgramManager(const ProgramManager &) = delete;
-    ProgramManager(ProgramManager &&) noexcept = delete;
-
-    ProgramManager &operator=(ProgramManager &) = delete;
-    ProgramManager &operator=(const ProgramManager &) = delete;
-    ProgramManager &operator=(ProgramManager &&) noexcept = delete;
+    GLInstance();
+    ~GLInstance();
 
 private:
-    ProgramManager() = default;
-
-    Program detail_create_program(const std::vector<std::string> &shader_filenames);
-
-    std::unordered_map<std::string, std::weak_ptr<detail::ProgramWrapper>> programs_;
+    GLFWwindow *window_;
 };
+
+} // namespace testing
 
 } // namespace gl

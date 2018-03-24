@@ -247,9 +247,13 @@ if (${VMP_BUILD_TESTS})
         set(TEST_SOURCE_FILES
                 ${TEST_SOURCE_FILES}
 
+                src/testing/gl/shaders/shader1.frag
+                src/testing/gl/shaders/shader1.vert
+                src/testing/gl/shaders/shader2.frag
+
+                src/testing/gl/GLInstance.cpp
+                src/testing/gl/GLInstance.hpp
                 src/testing/gl/ProgramManagerTests.cpp
-                src/testing/gl/shaders/shader.frag
-                src/testing/gl/shaders/shader.vert
                 )
     endif ()
 

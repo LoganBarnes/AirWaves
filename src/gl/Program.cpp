@@ -17,6 +17,7 @@
 // ////////////////////////////////////////////////////////////
 #include "Program.hpp"
 #include "Texture.hpp"
+#include "ProgramManager.hpp"
 #include <unordered_map>
 #include <fstream>
 #include <sstream>
@@ -297,7 +298,7 @@ GLuint ProgramWrapper::get_id() const
 
 Program create_program(const std::vector<std::string> &shader_filenames)
 {
-    return std::make_shared<detail::ProgramWrapper>(shader_filenames);
+    return ProgramManager::create_program(shader_filenames);
 }
 
 } // namespace gl

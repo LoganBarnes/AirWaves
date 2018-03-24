@@ -16,67 +16,59 @@
 // Created by Logan T. Barnes
 // ////////////////////////////////////////////////////////////
 #include <gl/ProgramManager.hpp>
+#include <gl/Program.hpp>
 #include <vmp/VMPConfig.hpp>
+#include "GLInstance.hpp"
 #include <gmock/gmock.h>
-#include <GLFW/glfw3.h>
 
 namespace {
 
 class ProgramManagerTests : public ::testing::Test
 {
-protected:
-    void SetUp() final
-    {
-        // Set the error callback before any other GLFW calls so we get proper error reporting
-        glfwSetErrorCallback([](int error, const char *description) {
-            std::cerr << "ERROR: (" << error << ") " << description << std::endl;
-        });
-
-        if (glfwInit() == 0) {
-            throw std::runtime_error("GLFW init failed");
-        }
-
-        // can only do OpenGL 2.1 with default linux OS Mesa install
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-        int width = 640;
-        int height = 480;
-
-        window_ = glfwCreateWindow(width, height, "", nullptr, nullptr);
-
-        if (window_ == nullptr) {
-            glfwTerminate();
-            throw std::runtime_error("GLFW window creation failed");
-        }
-
-        glfwMakeContextCurrent(window_);
-        glfwSwapInterval(1);
-
-        if (gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)) == 0) {
-            glfwDestroyWindow(window_);
-            glfwTerminate();
-            throw std::runtime_error("Failed load OpenGL Glad functions");
-        }
-
-        std::cout << "\nOpenGL version " << GLVersion.major << "." << GLVersion.minor << " loaded.\n" << std::endl;
-    }
-
-    void TearDown() final
-    {
-        glfwDestroyWindow(window_);
-        glfwTerminate();
-    }
-
 private:
-    GLFWwindow *window_{nullptr};
+    gl::testing::GLInstance gl_instance_;
 };
 
-TEST_F(ProgramManagerTests, VaryingLengthProgramsAreCreated)
+TEST_F(ProgramManagerTests, SameShadersReturnSameProgram)
 {
-    gl::ProgramManager pm;
+    gl::Program program1 = gl::ProgramManager::create_program(
+        {vmp::testing::shader_path() + "shader1.vert", vmp::testing::shader_path() + "shader1.frag"});
 
-    pm.create_program({vmp::testing::shader_path() + "shader.vert", vmp::testing::shader_path() + "shader.frag"});
+    gl::Program program2 = gl::ProgramManager::create_program(
+        {vmp::testing::shader_path() + "shader1.vert", vmp::testing::shader_path() + "shader2.frag"});
+
+    gl::Program program3 = gl::ProgramManager::create_program(
+        {vmp::testing::shader_path() + "shader1.vert", vmp::testing::shader_path() + "shader1.frag"});
+
+    gl::Program program4 = gl::ProgramManager::create_program(
+        {vmp::testing::shader_path() + "shader1.vert", vmp::testing::shader_path() + "shader2.frag"});
+
+    EXPECT_EQ(program1, program3);
+    EXPECT_EQ(program2, program4);
+
+    EXPECT_NE(program1, program2);
+}
+
+TEST_F(ProgramManagerTests, ProgramIsDeletedOutOfScope)
+{
+    gl::detail::ProgramWrapper *orig_ptr;
+    {
+        gl::Program program1 = gl::ProgramManager::create_program(
+            {vmp::testing::shader_path() + "shader1.vert", vmp::testing::shader_path() + "shader1.frag"});
+
+        orig_ptr = program1.get();
+    }
+    // no more shared pointers for program1. Next program with same shaders should be different.
+
+    // create another program with different shaders just to make sure the previous memory isn't used again
+    gl::Program other_program = gl::ProgramManager::create_program(
+        {vmp::testing::shader_path() + "shader1.vert", vmp::testing::shader_path() + "shader2.frag"});
+
+    // same shaders as program1 but the object should be different now
+    gl::Program program2 = gl::ProgramManager::create_program(
+        {vmp::testing::shader_path() + "shader1.vert", vmp::testing::shader_path() + "shader1.frag"});
+
+    EXPECT_NE(orig_ptr, program2.get());
 }
 
 } // namespace

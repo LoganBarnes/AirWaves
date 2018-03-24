@@ -159,7 +159,7 @@ if (MSVC)
     add_definitions(-DNOMINMAX -D_CRT_SECURE_NO_WARNINGS) # silly microsoft
 endif()
 
-configure_file(src/VmpConfig.hpp.in ${CMAKE_BINARY_DIR}/vmp/VMPConfig.hpp)
+configure_file(src/VMPConfig.hpp.in ${CMAKE_BINARY_DIR}/vmp/VMPConfig.hpp)
 
 ############################
 ### Visual Music Project ###

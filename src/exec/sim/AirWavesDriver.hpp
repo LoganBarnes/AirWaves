@@ -54,7 +54,10 @@ private:
     void render(double alpha);
 
     void handle_resize(int width, int height);
+    void handle_mouse_button_event(GLFWwindow *window, int button, int action, int mods);
+    void handle_scroll_event(GLFWwindow *window, double xoffset, double yoffset);
     void handle_key_event(GLFWwindow *window, int key, int scancode, int action, int mods);
+    void handle_char_event(GLFWwindow *window, unsigned codepoint);
 };
 
 } // namespace vmp

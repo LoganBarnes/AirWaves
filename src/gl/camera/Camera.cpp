@@ -237,7 +237,6 @@ void TCamera<T>::setOrthoFar(T orthoFar)
 }
 
 template class TCamera<float>;
-
 template class TCamera<double>;
 
 } // namespace gl

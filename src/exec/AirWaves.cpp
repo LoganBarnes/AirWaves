@@ -108,7 +108,6 @@ void AirWaves::configure_gui(int, int, bool paused)
             if (ImGui::DragInt("Frequency", &freq)) {
                 sine_source->set_frequency(freq);
             }
-
             ImGui::PopID();
         }
 
@@ -124,7 +123,6 @@ void AirWaves::configure_gui(int, int, bool paused)
             if (ImGui::DragInt("Frequency", &freq)) {
                 saw_source->set_frequency(freq);
             }
-
             ImGui::PopID();
         }
     }

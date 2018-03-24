@@ -232,32 +232,46 @@ void AirWavesDriver::register_callbacks()
         static_cast<AirWavesDriver *>(glfwGetWindowUserPointer(window))->handle_resize(width, height);
     });
 
+    glfwSetMouseButtonCallback(window_.get(), [](GLFWwindow *window, int button, int action, int mods) {
+        static_cast<AirWavesDriver *>(glfwGetWindowUserPointer(window))
+            ->handle_mouse_button_event(window, button, action, mods);
+    });
+
+    glfwSetScrollCallback(window_.get(), [](GLFWwindow *window, double xoffset, double yoffset) {
+        static_cast<AirWavesDriver *>(glfwGetWindowUserPointer(window))->handle_scroll_event(window, xoffset, yoffset);
+    });
+
     glfwSetKeyCallback(window_.get(), [](GLFWwindow *window, int key, int scancode, int action, int mods) {
         static_cast<AirWavesDriver *>(glfwGetWindowUserPointer(window))
             ->handle_key_event(window, key, scancode, action, mods);
+    });
+
+    glfwSetCharCallback(window_.get(), [](GLFWwindow *window, unsigned codepoint) {
+        static_cast<AirWavesDriver *>(glfwGetWindowUserPointer(window))->handle_char_event(window, codepoint);
     });
 }
 
 void AirWavesDriver::handle_resize(int, int) {}
 
-void AirWavesDriver::handle_key_event(GLFWwindow *window, int key, int, int action, int)
+void AirWavesDriver::handle_mouse_button_event(GLFWwindow *window, int button, int action, int mods)
+{
+    ImGui_ImplGlfwGL3_MouseButtonCallback(window, button, action, mods);
+}
+
+void AirWavesDriver::handle_scroll_event(GLFWwindow *window, double xoffset, double yoffset)
+{
+    ImGui_ImplGlfwGL3_ScrollCallback(window, xoffset, yoffset);
+}
+
+void AirWavesDriver::handle_key_event(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
         glfwSetWindowShouldClose(window, true);
     }
 
+    ImGui_ImplGlfwGL3_KeyCallback(window, key, scancode, action, mods);
+
     ImGuiIO &io = ImGui::GetIO();
-
-    if (action == GLFW_PRESS) {
-        io.KeysDown[key] = true;
-    } else if (action == GLFW_RELEASE) {
-        io.KeysDown[key] = false;
-    }
-    io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
-    io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
-    io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
-    io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
-
     if (io.WantCaptureKeyboard) {
         return;
     }
@@ -276,6 +290,11 @@ void AirWavesDriver::handle_key_event(GLFWwindow *window, int key, int, int acti
             break;
         }
     }
+}
+
+void AirWavesDriver::handle_char_event(GLFWwindow *window, unsigned codepoint)
+{
+    ImGui_ImplGlfwGL3_CharCallback(window, codepoint);
 }
 
 } // namespace vmp

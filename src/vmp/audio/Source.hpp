@@ -30,7 +30,7 @@ public:
     Sound *sound() const;
 
     template <typename T>
-    T *detail_data() const;
+    T *get_as() const;
 
 private:
     template <typename T>
@@ -55,9 +55,13 @@ Source::Source(T source) : self_(std::make_shared<SourceSound<T>>(std::move(sour
 {}
 
 template <typename T>
-T *Source::detail_data() const
+T *Source::get_as() const
 {
-    return &(static_cast<SourceSound<T> *>(self_.get())->data_);
+    auto sound_source = dynamic_cast<SourceSound<T> *>(self_.get());
+    if (sound_source) {
+        return &(sound_source->data_);
+    }
+    return nullptr;
 }
 
 } // namespace vmp

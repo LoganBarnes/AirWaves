@@ -44,6 +44,8 @@ public:
         }
     }
 
+    T get_frequency() const { return frequency_; }
+
     void set_frequency(T freq)
     {
         frequency_ = freq;

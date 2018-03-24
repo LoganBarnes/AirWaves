@@ -96,21 +96,40 @@ void AirWaves::configure_gui(int, int, bool paused)
             saws_.pop_back();
         }
 
-        // for (auto& sine : sines_) {
-        if (!sines_.empty()) {
-            auto &sine = sines_.front();
-            auto *sine_source = sine.detail_data<SineSource<double, 256, 2>>();
+        ImGui::Separator();
+        ImGui::Text("Sine Waves");
+        for (auto &sine : sines_) {
+            auto *sine_source = sine.get_as<SineSource<double, 256, 2>>();
+            assert(sine_source);
 
             ImGui::PushID(sine_source);
 
-            static int freq = 440;
-            if (ImGui::DragInt("Freq", &freq)) {
+            auto freq = static_cast<int>(std::nearbyint(sine_source->get_frequency()));
+            if (ImGui::DragInt("Frequency", &freq)) {
                 sine_source->set_frequency(freq);
             }
 
             ImGui::PopID();
         }
+
+        ImGui::Separator();
+        ImGui::Text("Saw Waves");
+        for (auto &saw : saws_) {
+            auto *saw_source = saw.get_as<SawSource<double, 256, 2>>();
+            assert(saw_source);
+
+            ImGui::PushID(saw_source);
+
+            auto freq = static_cast<int>(std::nearbyint(saw_source->get_frequency()));
+            if (ImGui::DragInt("Frequency", &freq)) {
+                saw_source->set_frequency(freq);
+            }
+
+            ImGui::PopID();
+        }
     }
+    ImGui::Separator();
+
     ImGui::Checkbox("TMP use fbo", &tmp_use_fbo_);
 
     ImGui::End();

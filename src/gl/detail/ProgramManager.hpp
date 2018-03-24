@@ -22,6 +22,8 @@
 
 namespace gl {
 
+namespace detail {
+
 class ProgramManager
 {
 public:
@@ -44,5 +46,7 @@ private:
 
     std::unordered_map<std::string, std::weak_ptr<detail::ProgramWrapper>> programs_;
 };
+
+} // namespace detail
 
 } // namespace gl

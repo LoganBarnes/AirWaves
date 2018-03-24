@@ -123,14 +123,15 @@ set(GL_SOURCE
         src/gl/camera/Camera.cpp
         src/gl/camera/Camera.hpp
 
+        src/gl/detail/ProgramManager.cpp
+        src/gl/detail/ProgramManager.hpp
+
         src/gl/Buffer.hpp
         src/gl/Framebuffer.cpp
         src/gl/Framebuffer.hpp
         src/gl/GLTypes.hpp
         src/gl/Program.cpp
         src/gl/Program.hpp
-        src/gl/ProgramManager.cpp
-        src/gl/ProgramManager.hpp
         src/gl/Texture.cpp
         src/gl/Texture.hpp
         src/gl/VertexArray.cpp

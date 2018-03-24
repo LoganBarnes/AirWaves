@@ -37,8 +37,6 @@ class VertexArrayWrapper;
 
 } // namespace detail
 
-class ProgramManager;
-
 template <typename T>
 class TCamera;
 

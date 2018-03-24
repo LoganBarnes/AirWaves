@@ -15,7 +15,6 @@
 // The Visual Music Project
 // Created by Logan T. Barnes
 // ////////////////////////////////////////////////////////////
-#include <gl/ProgramManager.hpp>
 #include <gl/Program.hpp>
 #include <vmp/VMPConfig.hpp>
 #include "GLInstance.hpp"
@@ -31,16 +30,16 @@ private:
 
 TEST_F(ProgramManagerTests, SameShadersReturnSameProgram)
 {
-    gl::Program program1 = gl::ProgramManager::create_program(
+    gl::Program program1 = gl::create_program(
         {vmp::testing::shader_path() + "shader1.vert", vmp::testing::shader_path() + "shader1.frag"});
 
-    gl::Program program2 = gl::ProgramManager::create_program(
+    gl::Program program2 = gl::create_program(
         {vmp::testing::shader_path() + "shader1.vert", vmp::testing::shader_path() + "shader2.frag"});
 
-    gl::Program program3 = gl::ProgramManager::create_program(
+    gl::Program program3 = gl::create_program(
         {vmp::testing::shader_path() + "shader1.vert", vmp::testing::shader_path() + "shader1.frag"});
 
-    gl::Program program4 = gl::ProgramManager::create_program(
+    gl::Program program4 = gl::create_program(
         {vmp::testing::shader_path() + "shader1.vert", vmp::testing::shader_path() + "shader2.frag"});
 
     EXPECT_EQ(program1, program3);
@@ -53,7 +52,7 @@ TEST_F(ProgramManagerTests, ProgramIsDeletedOutOfScope)
 {
     gl::detail::ProgramWrapper *orig_ptr;
     {
-        gl::Program program1 = gl::ProgramManager::create_program(
+        gl::Program program1 = gl::create_program(
             {vmp::testing::shader_path() + "shader1.vert", vmp::testing::shader_path() + "shader1.frag"});
 
         orig_ptr = program1.get();
@@ -61,11 +60,11 @@ TEST_F(ProgramManagerTests, ProgramIsDeletedOutOfScope)
     // no more shared pointers for program1. Next program with same shaders should be different.
 
     // create another program with different shaders just to make sure the previous memory isn't used again
-    gl::Program other_program = gl::ProgramManager::create_program(
+    gl::Program other_program = gl::create_program(
         {vmp::testing::shader_path() + "shader1.vert", vmp::testing::shader_path() + "shader2.frag"});
 
     // same shaders as program1 but the object should be different now
-    gl::Program program2 = gl::ProgramManager::create_program(
+    gl::Program program2 = gl::create_program(
         {vmp::testing::shader_path() + "shader1.vert", vmp::testing::shader_path() + "shader1.frag"});
 
     EXPECT_NE(orig_ptr, program2.get());

@@ -19,6 +19,7 @@
 
 #include <gl/GLTypes.hpp>
 #include <unordered_map>
+#include <vector>
 
 namespace gl {
 
@@ -27,7 +28,7 @@ namespace detail {
 class ProgramManager
 {
 public:
-    static Program create_program(const std::vector<std::string> &shader_filenames);
+    static gl::Program create_program(const std::vector<std::string> &shader_filenames);
 
     static ProgramManager &instance();
 
@@ -42,7 +43,7 @@ public:
 private:
     ProgramManager() = default;
 
-    Program detail_create_program(const std::vector<std::string> &shader_filenames);
+    gl::Program detail_create_program(const std::vector<std::string> &shader_filenames);
 
     std::unordered_map<std::string, std::weak_ptr<detail::ProgramWrapper>> programs_;
 };

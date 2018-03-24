@@ -22,7 +22,7 @@ namespace gl {
 
 namespace detail {
 
-Program ProgramManager::create_program(const std::vector<std::string> &shader_filenames)
+gl::Program ProgramManager::create_program(const std::vector<std::string> &shader_filenames)
 {
     return ProgramManager::instance().detail_create_program(shader_filenames);
 }
@@ -33,7 +33,7 @@ ProgramManager &ProgramManager::instance()
     return pm;
 }
 
-Program ProgramManager::detail_create_program(const std::vector<std::string> &shader_filenames)
+gl::Program ProgramManager::detail_create_program(const std::vector<std::string> &shader_filenames)
 {
     std::string key;
     for (const std::string &filename : shader_filenames) {

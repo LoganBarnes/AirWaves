@@ -96,15 +96,15 @@ void AirWaves::configure_gui(int, int, bool paused)
             saws_.pop_back();
         }
 
-        //        for (auto& sine : sines_) {
+        // for (auto& sine : sines_) {
         if (!sines_.empty()) {
             auto &sine = sines_.front();
             auto *sine_source = sine.detail_data<SineSource<double, 256, 2>>();
 
             ImGui::PushID(sine_source);
 
-            static float freq = 440.f;
-            if (ImGui::DragFloat("Freq", &freq)) {
+            static int freq = 440;
+            if (ImGui::DragInt("Freq", &freq)) {
                 sine_source->set_frequency(freq);
             }
 

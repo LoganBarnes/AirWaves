@@ -41,6 +41,8 @@ public:
 
     void set_output_amplitude(double amplitude);
 
+    unsigned get_sample_rate() const;
+
 private:
     MainStream();
     ~MainStream();

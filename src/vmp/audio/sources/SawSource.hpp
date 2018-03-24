@@ -17,6 +17,7 @@
 // ////////////////////////////////////////////////////////////
 #pragma once
 
+#include <vmp/audio/MainStream.hpp>
 #include <array>
 
 namespace vmp {
@@ -41,12 +42,17 @@ public:
         }
     }
 
-    void set_frequency(T) {}
+    void set_frequency(T freq)
+    {
+        frequency_ = freq;
+        freq_scale_ = frequency_ * 2.f / vmp::MainStream::instance().get_sample_rate();
+    }
 
 private:
     std::array<T, 2> last_values_{{0, 0}};
     static constexpr T max_amplitude_{0.2};
-    T freq_scale_{0.005};
+    T frequency_{440.0};
+    T freq_scale_{frequency_ * 2.f / vmp::MainStream::instance().get_sample_rate()};
 };
 
 } // namespace

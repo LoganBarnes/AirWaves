@@ -164,6 +164,10 @@ MainStream::MainStream() : audio_(std::make_unique<RtAudio>()), stream_{nullptr}
         throw std::runtime_error("Failed to open audio stream. " + e.getMessage());
     }
 }
+unsigned MainStream::get_sample_rate() const
+{
+    return audio_->getStreamSampleRate();
+}
 
 MainStream::~MainStream() = default;
 

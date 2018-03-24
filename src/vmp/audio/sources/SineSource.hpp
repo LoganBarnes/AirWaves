@@ -17,6 +17,7 @@
 // ////////////////////////////////////////////////////////////
 #pragma once
 
+#include <vmp/audio/MainStream.hpp>
 #include <glm/gtc/constants.hpp>
 #include <array>
 #include <cmath>
@@ -46,21 +47,14 @@ public:
     void set_frequency(T freq)
     {
         frequency_ = freq;
-        freq_scale_ = frequency_ * glm::pi<T>() / sample_rate_;
-    }
-
-    void set_sample_rate(T sample_rate)
-    {
-        sample_rate_ = sample_rate;
-        freq_scale_ = frequency_ * glm::pi<T>() / sample_rate_;
+        freq_scale_ = frequency_ * glm::two_pi<T>() / vmp::MainStream::instance().get_sample_rate();
     }
 
 private:
     std::array<T, 2> last_values_{{0, 0}};
     static constexpr T max_amplitude_{0.5};
     T frequency_{440.0};
-    T sample_rate_{44100.0};
-    T freq_scale_{frequency_ * glm::pi<T>() / sample_rate_};
+    T freq_scale_{frequency_ * glm::two_pi<T>() / vmp::MainStream::instance().get_sample_rate()};
 };
 
 } // namespace

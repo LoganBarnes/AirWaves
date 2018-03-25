@@ -48,7 +48,7 @@ private:
 template <typename UsageFunc>
 void ProgramWrapper::use(const UsageFunc &usage_func) const
 {
-    glUseProgram(*program_);
+    glUseProgram(get_id());
     usage_func();
 }
 

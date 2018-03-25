@@ -39,6 +39,8 @@ public:
     void bind() const;
     void unbind() const;
 
+    GLuint get_id() const;
+
     template <typename IboType = unsigned>
     void render(GLenum mode, int start, int num_elements, const Buffer<IboType> &ibo = nullptr);
 

@@ -114,7 +114,7 @@ FramebufferWrapper<3>::FramebufferWrapper(
 template <int Dim>
 void FramebufferWrapper<Dim>::bind() const
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, *framebuffer_);
+    glBindFramebuffer(GL_FRAMEBUFFER, get_id());
 }
 
 template <int Dim>

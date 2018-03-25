@@ -70,7 +70,7 @@ BufferWrapper<T>::BufferWrapper(const T *data, std::size_t num_elements, GLenum 
 template <typename T>
 void BufferWrapper<T>::bind() const
 {
-    glBindBuffer(buffer_type_, *buffer_);
+    glBindBuffer(buffer_type_, get_id());
 }
 
 template <typename T>

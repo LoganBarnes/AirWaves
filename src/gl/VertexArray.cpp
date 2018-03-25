@@ -23,12 +23,17 @@ namespace detail {
 
 void VertexArrayWrapper::bind() const
 {
-    glBindVertexArray(*vao_);
+    glBindVertexArray(get_id());
 }
 
 void VertexArrayWrapper::unbind() const
 {
     glBindVertexArray(0);
+}
+
+GLuint VertexArrayWrapper::get_id() const
+{
+    return *vao_;
 }
 
 /**

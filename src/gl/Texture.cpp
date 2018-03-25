@@ -60,7 +60,7 @@ TextureWrapper::TextureWrapper(const glm::uvec3 &dim,
 
 void TextureWrapper::bind() const
 {
-    glBindTexture(tex_type_, *texture_);
+    glBindTexture(tex_type_, get_id());
 }
 
 void TextureWrapper::set_filter_type(GLint filter_type)

@@ -22,13 +22,12 @@
 
 namespace {
 
-class ProgramManagerTests : public ::testing::Test
+class ProgramTests : public ::testing::Test
 {
-private:
     gl::testing::GLInstance gl_instance_;
 };
 
-TEST_F(ProgramManagerTests, SameShadersReturnSameProgram)
+TEST_F(ProgramTests, SameShadersReturnSameProgram)
 {
     gl::Program program1 = gl::create_program(
         {vmp::testing::shader_path() + "shader1.vert", vmp::testing::shader_path() + "shader1.frag"});
@@ -48,7 +47,7 @@ TEST_F(ProgramManagerTests, SameShadersReturnSameProgram)
     EXPECT_NE(program1, program2);
 }
 
-TEST_F(ProgramManagerTests, ProgramIsDeletedOutOfScope)
+TEST_F(ProgramTests, ProgramIsDeletedOutOfScope)
 {
     gl::detail::ProgramWrapper *orig_ptr;
     {

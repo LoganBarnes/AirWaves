@@ -57,7 +57,9 @@ GLInstance::GLInstance()
         throw std::runtime_error("Failed load OpenGL Glad functions");
     }
 
-    std::cout << "\nOpenGL version " << GLVersion.major << "." << GLVersion.minor << " loaded.\n" << std::endl;
+    if (GLVersion.major < 2 && GLVersion.minor < 1) {
+        std::cout << "\nOpenGL version " << GLVersion.major << "." << GLVersion.minor << " loaded.\n" << std::endl;
+    }
 }
 GLInstance::~GLInstance()
 {

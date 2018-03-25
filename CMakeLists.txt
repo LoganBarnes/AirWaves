@@ -130,6 +130,7 @@ set(GL_SOURCE
         src/gl/Framebuffer.cpp
         src/gl/Framebuffer.hpp
         src/gl/GLTypes.hpp
+        src/gl/GLUtil.hpp
         src/gl/Program.cpp
         src/gl/Program.hpp
         src/gl/Texture.cpp
@@ -233,6 +234,8 @@ if (${VMP_BUILD_TESTS})
         setup_target_for_coverage(${PROJECT_NAME}_coverage vmp-tests coverage)
         set(PROFILE_FLAGS -fprofile-arcs -ftest-coverage)
         set(PROFILE_LIBS gcov)
+        target_compile_options(graphics PRIVATE ${PROFILE_FLAGS})
+        target_link_libraries(graphics ${PROFILE_LIBS})
         target_compile_options(vmp PRIVATE ${PROFILE_FLAGS})
         target_link_libraries(vmp ${PROFILE_LIBS})
     endif ()
@@ -252,9 +255,10 @@ if (${VMP_BUILD_TESTS})
                 src/testing/gl/shaders/shader1.vert
                 src/testing/gl/shaders/shader2.frag
 
+                src/testing/gl/BufferTests.cpp
                 src/testing/gl/GLInstance.cpp
                 src/testing/gl/GLInstance.hpp
-                src/testing/gl/ProgramManagerTests.cpp
+                src/testing/gl/ProgramTests.cpp
                 )
     endif ()
 

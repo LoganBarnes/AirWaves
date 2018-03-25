@@ -17,7 +17,7 @@
 // ////////////////////////////////////////////////////////////
 #pragma once
 
-#include <gl/GLTypes.hpp>
+#include <gl/GLUtil.hpp>
 #include <vector>
 
 namespace gl {
@@ -33,20 +33,27 @@ public:
     void bind() const;
     void unbind() const;
 
-    void update(size_t element_offset, const T *data, size_t num_elements) const;
-    void update(size_t element_offset, const std::vector<T> &data) const;
+    void update(size_t start_index, size_t num_elements, const T *data) const;
+    void update(size_t start_index, const std::vector<T> &data) const;
 
     GLuint get_id() const;
     GLenum get_buffer_type() const;
     GLenum get_data_type() const;
+    std::size_t get_num_elements() const;
+
+    void get_data(T *data, std::size_t num_elements, std::size_t start_index = 0) const;
+    void get_data(std::vector<T> *data, std::size_t start_index = 0) const;
 
 private:
     std::shared_ptr<GLuint> buffer_;
-    GLenum type_;
+    std::size_t num_elements_;
+    GLenum buffer_type_;
+    GLenum data_type_;
 };
 
 template <typename T>
-BufferWrapper<T>::BufferWrapper(const T *data, std::size_t num_elements, GLenum type, GLenum usage) : type_(type)
+BufferWrapper<T>::BufferWrapper(const T *data, std::size_t num_elements, GLenum type, GLenum usage)
+    : num_elements_(num_elements), buffer_type_(type), data_type_(gl::gl_type<T>())
 {
     GLuint buf;
     glGenBuffers(1, &buf);
@@ -56,39 +63,39 @@ BufferWrapper<T>::BufferWrapper(const T *data, std::size_t num_elements, GLenum 
     });
 
     bind();
-    glBufferData(type_, static_cast<GLsizeiptr>(num_elements * sizeof(T)), data, usage);
+    glBufferData(buffer_type_, static_cast<GLsizeiptr>(num_elements_ * sizeof(T)), data, usage);
     unbind();
 }
 
 template <typename T>
 void BufferWrapper<T>::bind() const
 {
-    glBindBuffer(type_, *buffer_);
+    glBindBuffer(buffer_type_, *buffer_);
 }
 
 template <typename T>
 void BufferWrapper<T>::unbind() const
 {
-    glBindBuffer(type_, 0);
+    glBindBuffer(buffer_type_, 0);
 }
 
 template <typename T>
-void BufferWrapper<T>::update(size_t element_offset, const T *data, size_t num_elements) const
+void BufferWrapper<T>::update(size_t start_index, size_t num_elements, const T *data) const
 {
-    constexpr auto type_size_bytes = sizeof(T);
+    assert(num_elements + start_index <= num_elements_);
 
     bind();
-    glBufferSubData(type_,
-                    static_cast<GLintptr>(element_offset * type_size_bytes),
-                    static_cast<GLsizeiptr>(num_elements * type_size_bytes),
+    glBufferSubData(buffer_type_,
+                    static_cast<GLintptr>(start_index * sizeof(T)),
+                    static_cast<GLsizeiptr>(num_elements * sizeof(T)),
                     data);
     unbind();
 }
 
 template <typename T>
-void BufferWrapper<T>::update(size_t element_offset, const std::vector<T> &data) const
+void BufferWrapper<T>::update(size_t start_index, const std::vector<T> &data) const
 {
-    update(element_offset, data.data(), data.size());
+    update(start_index, data.size(), data.data());
 }
 
 template <typename T>
@@ -100,25 +107,36 @@ GLuint BufferWrapper<T>::get_id() const
 template <typename T>
 GLenum BufferWrapper<T>::get_buffer_type() const
 {
-    return type_;
+    return buffer_type_;
 }
 
 template <typename T>
 GLenum BufferWrapper<T>::get_data_type() const
 {
-    if (std::is_same<T, unsigned char>::value) {
-        return GL_UNSIGNED_BYTE;
-    }
-    if (std::is_same<T, unsigned short>::value) {
-        return GL_UNSIGNED_SHORT;
-    }
-    if (std::is_same<T, unsigned int>::value) {
-        return GL_UNSIGNED_INT;
-    }
-    if (std::is_same<T, float>::value) {
-        return GL_FLOAT;
-    }
-    throw std::runtime_error("No OpenGL data type equivalent");
+    return data_type_;
+}
+
+template <typename T>
+std::size_t BufferWrapper<T>::get_num_elements() const
+{
+    return num_elements_;
+}
+
+template <typename T>
+void BufferWrapper<T>::get_data(T *data, std::size_t num_elements, std::size_t start_index) const
+{
+    assert(num_elements + start_index <= num_elements_);
+    bind();
+    glGetBufferSubData(buffer_type_, start_index * sizeof(T), num_elements * sizeof(T), data);
+    unbind();
+}
+
+template <typename T>
+void BufferWrapper<T>::get_data(std::vector<T> *data, std::size_t start_index) const
+{
+    assert(data);
+    data->resize(num_elements_ - start_index);
+    get_data(data->data(), data->size(), start_index);
 }
 
 } // namespace detail

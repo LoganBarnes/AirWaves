@@ -75,6 +75,9 @@ void VertexArrayWrapper::render(GLenum mode, int start, int num_elements, const 
     bind();
 
     if (ibo) {
+        assert(ibo->get_data_type() == GL_UNSIGNED_BYTE || ibo->get_data_type() == GL_UNSIGNED_SHORT
+               || ibo->get_data_type() == GL_UNSIGNED_INT);
+
         ibo->bind();
         glDrawElements(mode, num_elements, ibo->get_data_type(), reinterpret_cast<void *>(start * sizeof(IboType)));
         ibo->unbind();

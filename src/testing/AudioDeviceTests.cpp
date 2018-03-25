@@ -29,12 +29,12 @@ TEST(AudioDeviceTests, DevicesCanBeQueried)
     for (unsigned int i = 0; i < devices; i++) {
         info = audio.getDeviceInfo(i);
         if (info.probed) {
-            std::cout << "device = " << i;
-            std::cout << "\n\tmaximum output channels = " << info.outputChannels
-                      << (info.isDefaultOutput ? " (default)\n" : "\n");
-            std::cout << "\tmaximum input channels  = " << info.inputChannels
-                      << (info.isDefaultInput ? " (default)\n" : "\n");
-            std::cout << "\tmaximum duplex channels = " << info.duplexChannels << "\n";
+            //            std::cout << "device = " << i;
+            //            std::cout << "\n\tmaximum output channels = " << info.outputChannels
+            //                      << (info.isDefaultOutput ? " (default)\n" : "\n");
+            //            std::cout << "\tmaximum input channels  = " << info.inputChannels
+            //                      << (info.isDefaultInput ? " (default)\n" : "\n");
+            //            std::cout << "\tmaximum duplex channels = " << info.duplexChannels << "\n";
         }
     }
 }

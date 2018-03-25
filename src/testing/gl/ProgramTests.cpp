@@ -69,4 +69,26 @@ TEST_F(ProgramTests, ProgramIsDeletedOutOfScope)
     EXPECT_NE(orig_ptr, program2.get());
 }
 
+TEST_F(ProgramTests, ThrowOnBadFilename)
+{
+    EXPECT_THROW(gl::create_program("not_a_file.vert"), std::exception);
+}
+
+TEST_F(ProgramTests, ThrowOnBadCompilation)
+{
+    EXPECT_THROW(gl::create_program(vmp::testing::shader_path() + "invalid.vert"), std::exception);
+}
+
+TEST_F(ProgramTests, ThrowOnBadLink)
+{
+    EXPECT_THROW(gl::create_program(vmp::testing::shader_path() + "bad_link.vert",
+                                    vmp::testing::shader_path() + "bad_link.frag"),
+                 std::exception);
+}
+
+TEST_F(ProgramTests, ThrowOnBadExtension)
+{
+    EXPECT_THROW(gl::create_program(vmp::testing::shader_path() + "bad_extension.glsl"), std::exception);
+}
+
 } // namespace

@@ -19,20 +19,30 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+// Can uncomment this to debug if something goes wrong.
+// Otherwise it throws off code coverage calculations.
+//#define CHECK_ERRORS
+
 namespace gl {
 
 namespace testing {
 
 GLInstance::GLInstance()
 {
+#ifdef CHECK_ERRORS
     // Set the error callback before any other GLFW calls so we get proper error reporting
     glfwSetErrorCallback([](int error, const char *description) {
         std::cerr << "ERROR: (" << error << ") " << description << std::endl;
     });
+#endif
 
-    if (glfwInit() == 0) {
+    auto init_err_stat = glfwInit();
+
+#ifdef CHECK_ERRORS
+    if (init_err_stat == 0) {
         throw std::runtime_error("GLFW init failed");
     }
+#endif
 
     // can only do OpenGL 2.1 with default linux OS Mesa install
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
@@ -43,15 +53,20 @@ GLInstance::GLInstance()
 
     window_ = glfwCreateWindow(width, height, "", nullptr, nullptr);
 
+#ifdef CHECK_ERRORS
     if (window_ == nullptr) {
         glfwTerminate();
         throw std::runtime_error("GLFW window creation failed");
     }
+#endif
 
     glfwMakeContextCurrent(window_);
     glfwSwapInterval(1);
 
-    if (gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)) == 0) {
+    auto glad_err_stat = gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
+
+#ifdef CHECK_ERRORS
+    if (glad_err_stat == 0) {
         glfwDestroyWindow(window_);
         glfwTerminate();
         throw std::runtime_error("Failed load OpenGL Glad functions");
@@ -60,6 +75,7 @@ GLInstance::GLInstance()
     if (GLVersion.major < 2 && GLVersion.minor < 1) {
         std::cout << "\nOpenGL version " << GLVersion.major << "." << GLVersion.minor << " loaded.\n" << std::endl;
     }
+#endif
 }
 GLInstance::~GLInstance()
 {

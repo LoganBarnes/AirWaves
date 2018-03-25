@@ -53,6 +53,23 @@ private:
 
 } // namespace detail
 
+Texture create_texture(unsigned width,
+                       unsigned height,
+                       const float *array = nullptr,
+                       GLint internal_format = GL_RGBA32F,
+                       GLenum format = GL_RGBA,
+                       GLint filter_type = GL_NEAREST,
+                       GLint wrap_type = GL_REPEAT,
+                       GLenum tex_type = GL_TEXTURE_2D);
+
+Texture create_texture(const glm::uvec2 &size,
+                       const float *array = nullptr,
+                       GLint internal_format = GL_RGBA32F,
+                       GLenum format = GL_RGBA,
+                       GLint filter_type = GL_NEAREST,
+                       GLint wrap_type = GL_REPEAT,
+                       GLenum tex_type = GL_TEXTURE_2D);
+
 Texture create_texture(const glm::uvec3 &dim,
                        GLenum tex_type,
                        const float *array = nullptr,

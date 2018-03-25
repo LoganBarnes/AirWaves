@@ -17,9 +17,9 @@
 // ////////////////////////////////////////////////////////////
 #version 120
 
-in vec3 colour;
+varying in vec3 color;
 
 void main()
 {
-	gl_FragColor = vec4(colour, 1.0);
+	gl_FragColor = vec4(color, 1.0);
 }

@@ -250,10 +250,14 @@ if (${VMP_BUILD_TESTS})
     if (VMP_BUILD_GL_TESTS)
         set(TEST_SOURCE_FILES
                 ${TEST_SOURCE_FILES}
-
+                src/testing/gl/shaders/bad_extension.glsl
+                src/testing/gl/shaders/bad_link.frag
+                src/testing/gl/shaders/bad_link.vert
+                src/testing/gl/shaders/invalid.vert
                 src/testing/gl/shaders/shader1.frag
                 src/testing/gl/shaders/shader1.vert
                 src/testing/gl/shaders/shader2.frag
+                src/testing/gl/shaders/uniforms.frag
 
                 src/testing/gl/BufferTests.cpp
                 src/testing/gl/GLInstance.cpp

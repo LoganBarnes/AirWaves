@@ -34,9 +34,10 @@ GLInstance::GLInstance()
     glfwSetErrorCallback([](int error, const char *description) {
         std::cerr << "ERROR: (" << error << ") " << description << std::endl;
     });
-#endif
 
-    auto init_err_stat = glfwInit();
+    auto init_err_stat =
+#endif
+        glfwInit();
 
 #ifdef CHECK_ERRORS
     if (init_err_stat == 0) {
@@ -63,7 +64,10 @@ GLInstance::GLInstance()
     glfwMakeContextCurrent(window_);
     glfwSwapInterval(1);
 
-    auto glad_err_stat = gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
+#ifdef CHECK_ERRORS
+    auto glad_err_stat =
+#endif
+        gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
 
 #ifdef CHECK_ERRORS
     if (glad_err_stat == 0) {

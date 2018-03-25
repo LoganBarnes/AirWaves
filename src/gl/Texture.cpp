@@ -87,6 +87,29 @@ GLuint TextureWrapper::get_id() const
 
 } // namespace detail
 
+Texture create_texture(unsigned width,
+                       unsigned height,
+                       const float *array,
+                       GLint internal_format,
+                       GLenum format,
+                       GLint filter_type,
+                       GLint wrap_type,
+                       GLenum tex_type)
+{
+    return create_texture({width, height}, array, internal_format, format, filter_type, wrap_type, tex_type);
+}
+
+Texture create_texture(const glm::uvec2 &size,
+                       const float *array,
+                       GLint internal_format,
+                       GLenum format,
+                       GLint filter_type,
+                       GLint wrap_type,
+                       GLenum tex_type)
+{
+    return create_texture({size.x, size.y, 1}, tex_type, array, internal_format, format, filter_type, wrap_type);
+}
+
 Texture create_texture(const glm::uvec3 &dim,
                        GLenum tex_type,
                        const float *array,

@@ -17,10 +17,10 @@
 // ////////////////////////////////////////////////////////////
 #version 120
 
-out vec3 color;
+varying out float color;
 
 void main()
 {
-    color = vec3(1.0);
+    color = 1.0;
 	gl_Position = vec4(vec3(0.0), 1.0);
 }

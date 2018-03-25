@@ -176,28 +176,31 @@ ProgramWrapper::ProgramWrapper(const std::vector<std::string> &shader_filenames)
     program_ = create_program(shaders);
 }
 
-void ProgramWrapper::set_bool_uniform(const std::string &uniform, const bool value) const
+bool ProgramWrapper::set_bool_uniform(const std::string &uniform, const bool value) const
 {
-    glProgramUniform1i(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), value);
+    auto location = glGetUniformLocation(get_id(), uniform.c_str());
+    glProgramUniform1i(get_id(), location, value);
+    return location != -1;
 }
 
-void ProgramWrapper::set_int_uniform(const std::string &uniform,
+bool ProgramWrapper::set_int_uniform(const std::string &uniform,
                                      const int *value,
                                      const int size,
                                      const int count) const
 {
+    auto location = glGetUniformLocation(get_id(), uniform.c_str());
     switch (size) {
     case 1:
-        glProgramUniform1iv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
+        glProgramUniform1iv(get_id(), location, count, value);
         break;
     case 2:
-        glProgramUniform2iv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
+        glProgramUniform2iv(get_id(), location, count, value);
         break;
     case 3:
-        glProgramUniform3iv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
+        glProgramUniform3iv(get_id(), location, count, value);
         break;
     case 4:
-        glProgramUniform4iv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
+        glProgramUniform4iv(get_id(), location, count, value);
         break;
     default: {
         std::stringstream msg;
@@ -205,51 +208,27 @@ void ProgramWrapper::set_int_uniform(const std::string &uniform,
         throw std::runtime_error(msg.str());
     }
     } // switch
+    return location != -1;
 }
 
-void ProgramWrapper::set_uint_uniform(const std::string &uniform,
-                                      const unsigned *value,
-                                      const int size,
-                                      const int count) const
-{
-    switch (size) {
-    case 1:
-        glProgramUniform1uiv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
-        break;
-    case 2:
-        glProgramUniform2uiv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
-        break;
-    case 3:
-        glProgramUniform3uiv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
-        break;
-    case 4:
-        glProgramUniform4uiv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
-        break;
-    default: {
-        std::stringstream msg;
-        msg << "uvec" << size << " uniform does not exist";
-        throw std::runtime_error(msg.str());
-    }
-    } // switch
-}
-
-void ProgramWrapper::set_float_uniform(const std::string &uniform,
+bool ProgramWrapper::set_float_uniform(const std::string &uniform,
                                        const float *value,
                                        const int size,
                                        const int count) const
 {
+    auto location = glGetUniformLocation(get_id(), uniform.c_str());
     switch (size) {
     case 1:
-        glProgramUniform1fv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
+        glProgramUniform1fv(get_id(), location, count, value);
         break;
     case 2:
-        glProgramUniform2fv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
+        glProgramUniform2fv(get_id(), location, count, value);
         break;
     case 3:
-        glProgramUniform3fv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
+        glProgramUniform3fv(get_id(), location, count, value);
         break;
     case 4:
-        glProgramUniform4fv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, value);
+        glProgramUniform4fv(get_id(), location, count, value);
         break;
     default: {
         std::stringstream msg;
@@ -257,22 +236,24 @@ void ProgramWrapper::set_float_uniform(const std::string &uniform,
         throw std::runtime_error(msg.str());
     }
     } // switch
+    return location != -1;
 }
 
-void ProgramWrapper::set_matrix_uniform(const std::string &uniform,
+bool ProgramWrapper::set_matrix_uniform(const std::string &uniform,
                                         const float *value,
                                         const int size,
                                         const int count) const
 {
+    auto location = glGetUniformLocation(get_id(), uniform.c_str());
     switch (size) {
     case 2:
-        glProgramUniformMatrix2fv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, GL_FALSE, value);
+        glProgramUniformMatrix2fv(get_id(), location, count, GL_FALSE, value);
         break;
     case 3:
-        glProgramUniformMatrix3fv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, GL_FALSE, value);
+        glProgramUniformMatrix3fv(get_id(), location, count, GL_FALSE, value);
         break;
     case 4:
-        glProgramUniformMatrix4fv(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), count, GL_FALSE, value);
+        glProgramUniformMatrix4fv(get_id(), location, count, GL_FALSE, value);
         break;
     default: {
         std::stringstream msg;
@@ -280,13 +261,16 @@ void ProgramWrapper::set_matrix_uniform(const std::string &uniform,
         throw std::runtime_error(msg.str());
     }
     } // switch
+    return location != -1;
 }
 
-void ProgramWrapper::set_texture_uniform(const std::string &uniform, const Texture &texture, int active_tex) const
+bool ProgramWrapper::set_texture_uniform(const std::string &uniform, const Texture &texture, int active_tex) const
 {
+    auto location = glGetUniformLocation(get_id(), uniform.c_str());
     glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + active_tex));
-    glProgramUniform1i(get_id(), glGetUniformLocation(get_id(), uniform.c_str()), active_tex);
+    glProgramUniform1i(get_id(), location, active_tex);
     texture->bind();
+    return location != -1;
 }
 
 GLuint ProgramWrapper::get_id() const

@@ -89,9 +89,9 @@ TEST_F(ProgramTests, ThrowOnBadCompilation)
 
 TEST_F(ProgramTests, ThrowOnBadLink)
 {
-    EXPECT_THROW(gl::create_program(vmp::testing::shader_path() + "bad_link.vert",
-                                    vmp::testing::shader_path() + "bad_link.frag"),
-                 std::exception);
+    std::vector<std::string> filenames
+        = {vmp::testing::shader_path() + "bad_link.vert", vmp::testing::shader_path() + "bad_link.frag"};
+    EXPECT_THROW(gl::create_program(filenames), std::exception);
 }
 
 TEST_F(ProgramTests, ThrowOnBadExtension)

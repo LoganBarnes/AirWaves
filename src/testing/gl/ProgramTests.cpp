@@ -104,9 +104,11 @@ TEST_F(ProgramTests, BoolUniform)
     auto program = gl::create_program(vmp::testing::shader_path() + "shader1.vert",
                                       vmp::testing::shader_path() + "uniforms.frag");
 
-    EXPECT_FALSE(program->set_bool_uniform("wrong_name", true));
+    program->use([&] {
+        EXPECT_FALSE(program->set_bool_uniform("wrong_name", true));
 
-    EXPECT_TRUE(program->set_bool_uniform("buniform", true));
+        EXPECT_TRUE(program->set_bool_uniform("buniform", true));
+    });
 }
 
 TEST_F(ProgramTests, IntUniform)
@@ -114,16 +116,18 @@ TEST_F(ProgramTests, IntUniform)
     auto program = gl::create_program(vmp::testing::shader_path() + "shader1.vert",
                                       vmp::testing::shader_path() + "uniforms.frag");
 
-    glm::ivec4 uniform = {1, 3, 5, 7};
-    EXPECT_FALSE(program->set_int_uniform("wrong_name", glm::value_ptr(uniform)));
+    program->use([&] {
+        glm::ivec4 uniform = {1, 3, 5, 7};
+        EXPECT_FALSE(program->set_int_uniform("wrong_name", glm::value_ptr(uniform)));
 
-    EXPECT_TRUE(program->set_int_uniform("iuniform", glm::value_ptr(uniform)));
-    EXPECT_TRUE(program->set_int_uniform("i2uniform", glm::value_ptr(uniform), 2));
-    EXPECT_TRUE(program->set_int_uniform("i3uniform", glm::value_ptr(uniform), 3));
-    EXPECT_TRUE(program->set_int_uniform("i4uniform", glm::value_ptr(uniform), 4));
+        EXPECT_TRUE(program->set_int_uniform("iuniform", glm::value_ptr(uniform)));
+        EXPECT_TRUE(program->set_int_uniform("i2uniform", glm::value_ptr(uniform), 2));
+        EXPECT_TRUE(program->set_int_uniform("i3uniform", glm::value_ptr(uniform), 3));
+        EXPECT_TRUE(program->set_int_uniform("i4uniform", glm::value_ptr(uniform), 4));
 
-    EXPECT_THROW(program->set_int_uniform("iuniform", glm::value_ptr(uniform), 0), std::exception);
-    EXPECT_THROW(program->set_int_uniform("iuniform", glm::value_ptr(uniform), 5), std::exception);
+        EXPECT_THROW(program->set_int_uniform("iuniform", glm::value_ptr(uniform), 0), std::exception);
+        EXPECT_THROW(program->set_int_uniform("iuniform", glm::value_ptr(uniform), 5), std::exception);
+    });
 }
 
 TEST_F(ProgramTests, FloatUniform)
@@ -131,16 +135,18 @@ TEST_F(ProgramTests, FloatUniform)
     auto program = gl::create_program(vmp::testing::shader_path() + "shader1.vert",
                                       vmp::testing::shader_path() + "uniforms.frag");
 
-    glm::vec4 uniform = {0.1f, 0.3f, 0.5f, 0.7f};
-    EXPECT_FALSE(program->set_float_uniform("wrong_name", glm::value_ptr(uniform)));
+    program->use([&] {
+        glm::vec4 uniform = {0.1f, 0.3f, 0.5f, 0.7f};
+        EXPECT_FALSE(program->set_float_uniform("wrong_name", glm::value_ptr(uniform)));
 
-    EXPECT_TRUE(program->set_float_uniform("funiform", glm::value_ptr(uniform)));
-    EXPECT_TRUE(program->set_float_uniform("f2uniform", glm::value_ptr(uniform), 2));
-    EXPECT_TRUE(program->set_float_uniform("f3uniform", glm::value_ptr(uniform), 3));
-    EXPECT_TRUE(program->set_float_uniform("f4uniform", glm::value_ptr(uniform), 4));
+        EXPECT_TRUE(program->set_float_uniform("funiform", glm::value_ptr(uniform)));
+        EXPECT_TRUE(program->set_float_uniform("f2uniform", glm::value_ptr(uniform), 2));
+        EXPECT_TRUE(program->set_float_uniform("f3uniform", glm::value_ptr(uniform), 3));
+        EXPECT_TRUE(program->set_float_uniform("f4uniform", glm::value_ptr(uniform), 4));
 
-    EXPECT_THROW(program->set_float_uniform("funiform", glm::value_ptr(uniform), 0), std::exception);
-    EXPECT_THROW(program->set_float_uniform("funiform", glm::value_ptr(uniform), 5), std::exception);
+        EXPECT_THROW(program->set_float_uniform("funiform", glm::value_ptr(uniform), 0), std::exception);
+        EXPECT_THROW(program->set_float_uniform("funiform", glm::value_ptr(uniform), 5), std::exception);
+    });
 }
 
 TEST_F(ProgramTests, MatrixUniform)
@@ -148,15 +154,17 @@ TEST_F(ProgramTests, MatrixUniform)
     auto program = gl::create_program(vmp::testing::shader_path() + "shader1.vert",
                                       vmp::testing::shader_path() + "uniforms.frag");
 
-    glm::mat4 uniform(1);
-    EXPECT_FALSE(program->set_matrix_uniform("wrong_name", glm::value_ptr(uniform)));
+    program->use([&] {
+        glm::mat4 uniform(1);
+        EXPECT_FALSE(program->set_matrix_uniform("wrong_name", glm::value_ptr(uniform)));
 
-    EXPECT_TRUE(program->set_matrix_uniform("m2uniform", glm::value_ptr(uniform), 2));
-    EXPECT_TRUE(program->set_matrix_uniform("m3uniform", glm::value_ptr(uniform), 3));
-    EXPECT_TRUE(program->set_matrix_uniform("m4uniform", glm::value_ptr(uniform), 4));
+        EXPECT_TRUE(program->set_matrix_uniform("m2uniform", glm::value_ptr(uniform), 2));
+        EXPECT_TRUE(program->set_matrix_uniform("m3uniform", glm::value_ptr(uniform), 3));
+        EXPECT_TRUE(program->set_matrix_uniform("m4uniform", glm::value_ptr(uniform), 4));
 
-    EXPECT_THROW(program->set_matrix_uniform("muniform", glm::value_ptr(uniform), 1), std::exception);
-    EXPECT_THROW(program->set_matrix_uniform("muniform", glm::value_ptr(uniform), 5), std::exception);
+        EXPECT_THROW(program->set_matrix_uniform("muniform", glm::value_ptr(uniform), 1), std::exception);
+        EXPECT_THROW(program->set_matrix_uniform("muniform", glm::value_ptr(uniform), 5), std::exception);
+    });
 }
 
 TEST_F(ProgramTests, TextureUniform)
@@ -165,9 +173,12 @@ TEST_F(ProgramTests, TextureUniform)
                                       vmp::testing::shader_path() + "uniforms.frag");
 
     auto tex = gl::create_texture(128, 128);
-    EXPECT_FALSE(program->set_texture_uniform("wrong_name", tex));
 
-    EXPECT_TRUE(program->set_texture_uniform("tex", tex));
+    program->use([&] {
+        EXPECT_FALSE(program->set_texture_uniform("wrong_name", tex));
+
+        EXPECT_TRUE(program->set_texture_uniform("tex", tex));
+    });
 }
 
 } // namespace

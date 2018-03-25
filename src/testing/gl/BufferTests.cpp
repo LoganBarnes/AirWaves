@@ -19,6 +19,7 @@
 #include <gmock/gmock.h>
 #include <gl/Buffer.hpp>
 #include <chrono>
+#include <random>
 
 namespace {
 

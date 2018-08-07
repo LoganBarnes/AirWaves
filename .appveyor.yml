@@ -53,7 +53,7 @@ build_script:
       -DVMP_BUILD_GL_TESTS=OFF ^
       -DVMP_USE_DEV_FLAGS=ON ^
       ..
-  - cmake --build . --config %CONFIGURATION% -- /m
+  - cmake --build . --config %CONFIGURATION% --parallel
 
 test_script:
   - ctest -C %CONFIGURATION%

@@ -17,7 +17,7 @@
 cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 project(AirWaves)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(VMP_BUILD_TESTS "Build unit tests created with GoogleTest framework" OFF)

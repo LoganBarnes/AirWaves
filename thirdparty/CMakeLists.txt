@@ -113,7 +113,10 @@ add_library(vmp-thirdparty INTERFACE)
 
 target_include_directories(vmp-thirdparty SYSTEM INTERFACE ${rtAudio-dl_SOURCE_DIR})
 target_link_libraries(vmp-thirdparty INTERFACE rtaudio_static glc)
-target_compile_options(vmp-thirdparty INTERFACE -fPIC)
+
+if (NOT MSVC)
+    target_compile_options(vmp-thirdparty INTERFACE -fPIC)
+endif ()
 
 ### AirWaves ###
 add_library(airwaves-thirdparty
@@ -137,4 +140,6 @@ target_include_directories(airwaves-thirdparty SYSTEM PUBLIC
 
 target_link_libraries(airwaves-thirdparty PUBLIC glfw vmp-thirdparty)
 
-target_compile_options(airwaves-thirdparty PRIVATE -fPIC)
+if (NOT MSVC)
+    target_compile_options(airwaves-thirdparty PRIVATE -fPIC)
+endif ()

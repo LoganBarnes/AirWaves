@@ -75,7 +75,7 @@ script:
       -DVMP_BUILD_GL_TESTS=${GLTESTS} \
       -DVMP_USE_OSMESA=${OSMESA} \
       ..
-  - make -j
+  - cmake --build . --parallel
   - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then make AirWaves_coverage -j; fi;
   - ctest
 
@@ -90,7 +90,7 @@ script:
       -DVMP_BUILD_GL_TESTS=${GLTESTS} \
       -DVMP_USE_OSMESA=${OSMESA} \
       ..
-  - make -j
+  - cmake --build . --parallel
   - ctest
 
 after_success:

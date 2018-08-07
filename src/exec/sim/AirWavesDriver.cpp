@@ -17,7 +17,7 @@
 // ////////////////////////////////////////////////////////////
 #include "AirWavesDriver.hpp"
 #include <exec/AirWaves.hpp>
-#include <glad/glad.h>
+#include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
@@ -93,15 +93,19 @@ init_window(int width, int height, const std::string &title, int samples)
     glfwMakeContextCurrent(window.get());
     glfwSwapInterval(1);
 
-    if (gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)) == 0) {
-        throw std::runtime_error("Failed load OpenGL Glad functions");
+    if (gl3wInit()) {
+        throw std::runtime_error("Failed load OpenGL functions");
     }
     return window;
 }
 
 std::unique_ptr<bool, decltype(&delete_imgui)> init_imgui(GLFWwindow *window)
 {
+    ImGui::CreateContext();
+
     std::unique_ptr<bool, decltype(&delete_imgui)> imgui(new bool(ImGui_ImplGlfwGL3_Init(window, false)), delete_imgui);
+
+    ImGui::StyleColorsDark();
 
     if (!imgui) {
         throw std::runtime_error("ImGui initialization failed");
@@ -143,8 +147,10 @@ void delete_window(GLFWwindow *window)
 }
 void delete_imgui(const bool *status)
 {
-    ImGui_ImplGlfwGL3_Shutdown();
-    delete status;
+    if (status) {
+        ImGui_ImplGlfwGL3_Shutdown();
+        delete status;
+    }
 }
 
 AirWavesDriver::AirWavesDriver(const std::string &title, int width, int height, int samples)
@@ -221,6 +227,18 @@ void AirWavesDriver::render(double alpha)
 
     air_waves_->render(w, h, alpha);
     ImGui::Render();
+
+#ifndef NDEBUG
+//    if (debugOpenGL_) {
+//        glDisable(GL_DEBUG_OUTPUT);
+//        ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
+//        glEnable(GL_DEBUG_OUTPUT);
+//    } else
+#endif
+    {
+        ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
+    }
+
     glfwSwapBuffers(window_.get());
 }
 
@@ -255,12 +273,12 @@ void AirWavesDriver::handle_resize(int, int) {}
 
 void AirWavesDriver::handle_mouse_button_event(GLFWwindow *window, int button, int action, int mods)
 {
-    ImGui_ImplGlfwGL3_MouseButtonCallback(window, button, action, mods);
+    ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
 }
 
 void AirWavesDriver::handle_scroll_event(GLFWwindow *window, double xoffset, double yoffset)
 {
-    ImGui_ImplGlfwGL3_ScrollCallback(window, xoffset, yoffset);
+    ImGui_ImplGlfw_ScrollCallback(window, xoffset, yoffset);
 }
 
 void AirWavesDriver::handle_key_event(GLFWwindow *window, int key, int scancode, int action, int mods)
@@ -269,7 +287,7 @@ void AirWavesDriver::handle_key_event(GLFWwindow *window, int key, int scancode,
         glfwSetWindowShouldClose(window, true);
     }
 
-    ImGui_ImplGlfwGL3_KeyCallback(window, key, scancode, action, mods);
+    ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
 
     ImGuiIO &io = ImGui::GetIO();
     if (io.WantCaptureKeyboard) {
@@ -294,7 +312,7 @@ void AirWavesDriver::handle_key_event(GLFWwindow *window, int key, int scancode,
 
 void AirWavesDriver::handle_char_event(GLFWwindow *window, unsigned codepoint)
 {
-    ImGui_ImplGlfwGL3_CharCallback(window, codepoint);
+    ImGui_ImplGlfw_CharCallback(window, codepoint);
 }
 
 } // namespace vmp

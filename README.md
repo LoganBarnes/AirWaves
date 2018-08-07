@@ -7,10 +7,10 @@ The Visual Music Project
 
 Linux
 -----
-Required packages if using ALSA (default):
+Required packages if using Pulse (default):
 
 ```bash
-sudo apt-get install libasound2 alsa-utils alsa-oss libasound2-dev
+sudo apt install libpulse-dev 
 ```
 
 [travis-badge]: https://travis-ci.org/LoganBarnes/AirWaves.svg?branch=master
